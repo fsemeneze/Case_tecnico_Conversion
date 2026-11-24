@@ -28,6 +28,11 @@ create table aprovacao_priv.aprovacao_tokens (
 
 create index idx_tokens_entrega on aprovacao_priv.aprovacao_tokens (entrega_id);
 
+-- RLS em tudo, inclusive no schema privado (defense in depth, skill supabase).
+-- Nenhuma política: ninguém lê tokens direto — só as funções SECURITY DEFINER.
+alter table aprovacao_priv.aprovacao_tokens enable row level security;
+revoke all on aprovacao_priv.aprovacao_tokens from anon;
+
 -- ---------------------------------------------------------------------------
 -- Criação de token (chamada pelo app, lado servidor)
 -- ---------------------------------------------------------------------------

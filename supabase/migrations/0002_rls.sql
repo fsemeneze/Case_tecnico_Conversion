@@ -16,7 +16,10 @@ alter table entregas enable row level security;
 alter table aprovacoes enable row level security;
 alter table entrega_historico enable row level security;
 alter table erros_importacao enable row level security;
-alter table aprovacao_priv.aprovacao_tokens enable row level security;
+
+-- aprovacao_priv.aprovacao_tokens: RLS é habilitado na migration 4,
+-- junto com a criação da tabela (e não tem políticas — ninguém lê
+-- direto, nem a equipe; só as funções SECURITY DEFINER).
 
 -- ---------------------------------------------------------------------------
 -- Políticas — time interno
@@ -76,4 +79,3 @@ revoke all on entregas from anon;
 revoke all on aprovacoes from anon;
 revoke all on entrega_historico from anon;
 revoke all on erros_importacao from anon;
-revoke all on aprovacao_priv.aprovacao_tokens from anon;
