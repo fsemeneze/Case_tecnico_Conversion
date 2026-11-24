@@ -1,7 +1,7 @@
 # Diagnóstico dos dados — controle de entregas
 
-Gerado automaticamente por `analysis/diagnostico.py` em 2026-11-23T21:27:56.
-Arquivo de origem: `dados\controle_entregas.csv`.
+Gerado automaticamente por `analysis/diagnostico.py` em 2026-11-23T21:30:33.
+Arquivo de origem: `dados/controle_entregas.csv`.
 Data de referência para "em atraso hoje": **2026-11-23**.
 
 ## 1. Visão geral

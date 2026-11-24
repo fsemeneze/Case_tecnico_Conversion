@@ -864,7 +864,11 @@ def main() -> int:
 
     brutas = ler_csv(args.csv)
     normalizadas, erros, extras = normalizar(brutas)
-    extras["arquivo"] = str(args.csv.relative_to(raiz)) if args.csv.is_relative_to(raiz) else str(args.csv)
+    extras["arquivo"] = (
+        str(args.csv.relative_to(raiz)).replace("\\", "/")
+        if args.csv.is_relative_to(raiz)
+        else str(args.csv).replace("\\", "/")
+    )
     metricas = calcular_metricas(normalizadas, brutas, extras, erros)
 
     args.out.mkdir(parents=True, exist_ok=True)

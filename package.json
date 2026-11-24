@@ -8,13 +8,12 @@
     "prebuild": "node scripts/preparar-docs.mjs",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
     "typecheck": "tsc --noEmit",
     "diagnostico": "python analysis/diagnostico.py",
     "test:diagnostico": "python -m unittest discover -s analysis -v"
   },
   "dependencies": {
-    "next": "^15.5.29",
+    "next": "^16.4.6",
     "react": "^19.3.1",
     "react-dom": "^19.3.1"
   },

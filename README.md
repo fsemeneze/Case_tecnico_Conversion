@@ -47,7 +47,7 @@ O diagnóstico responde às três dores do case:
 
 ## Como rodar
 
-Requisitos: Node.js 20+, Python 3.10+.
+Requisitos: Node.js 20.9+ (testado com Node 26 e Next 16) e Python 3.10+.
 
 ```bash
 # 1. dependências
