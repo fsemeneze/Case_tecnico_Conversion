@@ -1,0 +1,29 @@
+# Created by https://www.toptal.com/developers/gitignore/api/node,nextjs
+node_modules/
+.next/
+/out/
+build/
+dist/
+.vercel/
+*.tsbuildinfo
+next-env.d.ts
+
+# Ambiente (nunca versionar)
+.env
+.env.local
+.env.*.local
+!.env.example
+
+# Diagnóstico: manter saídas versionadas (são entregável),
+# mas ignorar arquivos temporários do Python.
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Sistema e editores
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/extensions.json

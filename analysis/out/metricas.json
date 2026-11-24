@@ -1,0 +1,400 @@
+{
+  "gerado_em": "2026-11-23T21:27:56",
+  "arquivo_origem": "dados\\controle_entregas.csv",
+  "data_referencia": "2026-11-23",
+  "total_linhas_origem": 1007,
+  "total_linhas_normalizadas": 1007,
+  "periodo": {
+    "min": "2025-11-01",
+    "max": "2026-11-17"
+  },
+  "clientes_brutos": 31,
+  "clientes_canonicos": 25,
+  "squads": {
+    "Squad Azul": 368,
+    "Squad Verde": 333,
+    "Squad Laranja": 306
+  },
+  "responsaveis": {
+    "Ana": 128,
+    "Marcos": 90,
+    "Felipe": 93,
+    "Diego": 81,
+    "Juliana": 89,
+    "Lucas": 107,
+    "Paula": 104,
+    "Bruno": 111,
+    "Camila": 106,
+    "Rafael": 98
+  },
+  "tipos": {
+    "Relatório": 303,
+    "Análise": 248,
+    "Conteúdo": 456
+  },
+  "subtipos_analise": {
+    "Mapeamento de conteúdo": 29,
+    "Palavras-chave": 45,
+    "Core Web Vitals": 37,
+    "Backlinks": 43,
+    "Análise não especificada": 30,
+    "Concorrência": 29,
+    "Indexação": 27,
+    "Auditoria técnica do site": 8
+  },
+  "status_normalizados": {
+    "aprovada": 799,
+    "entregue": 122,
+    "cancelada": 12,
+    "aguardando_aprovacao_entrega": 11,
+    "aguardando_cliente": 3,
+    "em_producao": 55,
+    "ajuste_solicitado": 5
+  },
+  "aprovacao_planejamento": {
+    "nao_aplica": 293,
+    "aprovada": 676,
+    "aprovada_com_ressalvas": 20,
+    "nao_informado": 13,
+    "recusada": 5
+  },
+  "aprovacao_entrega": {
+    "aprovada": 901,
+    "aprovada_com_ressalvas": 32,
+    "nao_informado": 69,
+    "recusada": 5
+  },
+  "atraso": {
+    "comparaveis": 888,
+    "atrasadas": 273,
+    "taxa": 30.7,
+    "dias_mediana": 6,
+    "dias_p90": 21,
+    "dias_maximo": 304,
+    "sem_data_prevista": 47,
+    "sem_data_entrega": 74,
+    "abertas_em_atraso_hoje": 71
+  },
+  "por_tipo": {
+    "Relatório": {
+      "entregas": 303,
+      "comparaveis": 296,
+      "atrasadas": 47,
+      "taxa": 15.9
+    },
+    "Análise": {
+      "entregas": 248,
+      "comparaveis": 210,
+      "atrasadas": 69,
+      "taxa": 32.9
+    },
+    "Conteúdo": {
+      "entregas": 456,
+      "comparaveis": 382,
+      "atrasadas": 157,
+      "taxa": 41.1
+    },
+    "Indefinido": {
+      "entregas": 0,
+      "comparaveis": 0,
+      "atrasadas": 0,
+      "taxa": null
+    }
+  },
+  "por_squad": {
+    "Squad Azul": {
+      "entregas": 368,
+      "comparaveis": 311,
+      "atrasadas": 81,
+      "taxa": 26.0
+    },
+    "Squad Verde": {
+      "entregas": 333,
+      "comparaveis": 300,
+      "atrasadas": 120,
+      "taxa": 40.0
+    },
+    "Squad Laranja": {
+      "entregas": 306,
+      "comparaveis": 277,
+      "atrasadas": 72,
+      "taxa": 26.0
+    }
+  },
+  "top_clientes_atraso": [
+    {
+      "cliente": "Grupo Vértice Saúde",
+      "entregas": 44,
+      "comparaveis": 39,
+      "atrasadas": 23
+    },
+    {
+      "cliente": "Escola Saber Mais",
+      "entregas": 51,
+      "comparaveis": 48,
+      "atrasadas": 21
+    },
+    {
+      "cliente": "Banco Prisma",
+      "entregas": 33,
+      "comparaveis": 32,
+      "atrasadas": 16
+    },
+    {
+      "cliente": "Seguros Confia",
+      "entregas": 45,
+      "comparaveis": 39,
+      "atrasadas": 15
+    },
+    {
+      "cliente": "Academia Força",
+      "entregas": 39,
+      "comparaveis": 36,
+      "atrasadas": 15
+    },
+    {
+      "cliente": "Advocacia Lima",
+      "entregas": 37,
+      "comparaveis": 34,
+      "atrasadas": 14
+    },
+    {
+      "cliente": "TechNova Software",
+      "entregas": 41,
+      "comparaveis": 35,
+      "atrasadas": 13
+    },
+    {
+      "cliente": "Pet&Cia",
+      "entregas": 44,
+      "comparaveis": 39,
+      "atrasadas": 12
+    },
+    {
+      "cliente": "Construtora Horizonte",
+      "entregas": 34,
+      "comparaveis": 33,
+      "atrasadas": 12
+    },
+    {
+      "cliente": "Distribuidora Sol",
+      "entregas": 44,
+      "comparaveis": 39,
+      "atrasadas": 11
+    }
+  ],
+  "observacoes": {
+    "outra": 24,
+    "revisão/refação": 31,
+    "revisão jurídica do cliente": 5,
+    "prazo renegociado": 27,
+    "cancelamento/suspensão": 10,
+    "regra contratual de prazo": 14,
+    "pedido de redistribuição": 6,
+    "pessoa saiu da empresa": 7
+  },
+  "flags": {
+    "aprovacao_sem_status_final": 134,
+    "sem_link": 59,
+    "link_repetido": 42,
+    "possivel_duplicata": 38,
+    "cliente_grafia_variante": 29,
+    "id_duplicado": 24,
+    "link_textual": 20,
+    "data_prevista_texto_ano_inferido": 17,
+    "data_entrega_texto_ano_inferido": 16,
+    "concluida_sem_data_entrega": 15,
+    "data_entrega_serial_excel": 14,
+    "data_prevista_serial_excel": 13,
+    "data_solicitacao_serial_excel": 10,
+    "data_solicitacao_texto_ano_inferido": 8,
+    "tipo_inferido": 4,
+    "revisoes_outlier": 3,
+    "revisoes_negativo": 3,
+    "revisoes_vazio": 2,
+    "revisoes_texto_convertido": 2,
+    "entrega_antes_solicitacao": 2,
+    "revisoes_texto_nao_numerico": 1
+  },
+  "fila_revisao": 47,
+  "ids_duplicados_distintos": 12,
+  "links_repetidos_distintos": 21,
+  "ciclo": {
+    "amostra": 933,
+    "mediana_dias": 9,
+    "p90_dias": 21,
+    "por_tipo": {
+      "Relatório": {
+        "amostra": 296,
+        "mediana_dias": 7
+      },
+      "Análise": {
+        "amostra": 225,
+        "mediana_dias": 14
+      },
+      "Conteúdo": {
+        "amostra": 412,
+        "mediana_dias": 11
+      }
+    }
+  },
+  "revisoes": {
+    "distribuicao": {
+      "0": 721,
+      "1": 228,
+      "2": 47,
+      "3": 2
+    },
+    "por_faixa": {
+      "0 revisões": {
+        "comparaveis": 646,
+        "atrasadas": 181,
+        "taxa": 28.0
+      },
+      "1 revisão": {
+        "comparaveis": 194,
+        "atrasadas": 77,
+        "taxa": 39.7
+      },
+      "2+ revisões": {
+        "comparaveis": 39,
+        "atrasadas": 15,
+        "taxa": 38.5
+      }
+    }
+  },
+  "contadores_qualidade": {
+    "data_prevista_texto_ano_inferido": 17,
+    "data_prevista_serial_excel": 13,
+    "sem_link": 59,
+    "data_solicitacao_texto_ano_inferido": 8,
+    "concluida_sem_data_entrega": 15,
+    "tipo_inferido": 4,
+    "data_entrega_texto_ano_inferido": 16,
+    "possivel_duplicata": 38,
+    "link_repetido": 42,
+    "data_entrega_serial_excel": 14,
+    "id_duplicado": 24,
+    "revisoes_outlier": 3,
+    "revisoes_negativo": 3,
+    "link_textual": 20,
+    "data_solicitacao_serial_excel": 10,
+    "revisoes_texto_nao_numerico": 1,
+    "revisoes_vazio": 2,
+    "revisoes_texto_convertido": 2,
+    "entrega_antes_solicitacao": 2,
+    "aprovacao_contraditoria": 4
+  },
+  "mapa_status": [
+    {
+      "status_original": "Aprovado",
+      "status_normalizado": "aprovada",
+      "linhas": 532
+    },
+    {
+      "status_original": "Entregue",
+      "status_normalizado": "entregue",
+      "linhas": 61
+    },
+    {
+      "status_original": "entregue",
+      "status_normalizado": "entregue",
+      "linhas": 60
+    },
+    {
+      "status_original": "aprovado",
+      "status_normalizado": "aprovada",
+      "linhas": 58
+    },
+    {
+      "status_original": "APROVADO",
+      "status_normalizado": "aprovada",
+      "linhas": 58
+    },
+    {
+      "status_original": "aprovado pelo cliente",
+      "status_normalizado": "aprovada",
+      "linhas": 57
+    },
+    {
+      "status_original": "ok",
+      "status_normalizado": "aprovada",
+      "linhas": 49
+    },
+    {
+      "status_original": "finalizado",
+      "status_normalizado": "aprovada",
+      "linhas": 45
+    },
+    {
+      "status_original": "Em produção",
+      "status_normalizado": "em_producao",
+      "linhas": 32
+    },
+    {
+      "status_original": "Cancelado",
+      "status_normalizado": "cancelada",
+      "linhas": 8
+    },
+    {
+      "status_original": "Entrega em aprovação",
+      "status_normalizado": "aguardando_aprovacao_entrega",
+      "linhas": 8
+    },
+    {
+      "status_original": "Em andamento",
+      "status_normalizado": "em_producao",
+      "linhas": 7
+    },
+    {
+      "status_original": "em produçao",
+      "status_normalizado": "em_producao",
+      "linhas": 6
+    },
+    {
+      "status_original": "fazendo",
+      "status_normalizado": "em_producao",
+      "linhas": 6
+    },
+    {
+      "status_original": "cancelado",
+      "status_normalizado": "cancelada",
+      "linhas": 4
+    },
+    {
+      "status_original": "em produção",
+      "status_normalizado": "em_producao",
+      "linhas": 4
+    },
+    {
+      "status_original": "Ajuste solicitado",
+      "status_normalizado": "ajuste_solicitado",
+      "linhas": 4
+    },
+    {
+      "status_original": "Aguardando cliente",
+      "status_normalizado": "aguardando_cliente",
+      "linhas": 3
+    },
+    {
+      "status_original": "aguardando aprovação",
+      "status_normalizado": "aguardando_aprovacao_entrega",
+      "linhas": 2
+    },
+    {
+      "status_original": "voltou pra ajuste",
+      "status_normalizado": "ajuste_solicitado",
+      "linhas": 1
+    },
+    {
+      "status_original": "com o cliente",
+      "status_normalizado": "aguardando_aprovacao_entrega",
+      "linhas": 1
+    },
+    {
+      "status_original": "enviado",
+      "status_normalizado": "entregue",
+      "linhas": 1
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+status_original,status_normalizado,linhas
+Aprovado,aprovada,532
+Entregue,entregue,61
+entregue,entregue,60
+aprovado,aprovada,58
+APROVADO,aprovada,58
+aprovado pelo cliente,aprovada,57
+ok,aprovada,49
+finalizado,aprovada,45
+Em produção,em_producao,32
+Cancelado,cancelada,8
+Entrega em aprovação,aguardando_aprovacao_entrega,8
+Em andamento,em_producao,7
+em produçao,em_producao,6
+fazendo,em_producao,6
+cancelado,cancelada,4
+em produção,em_producao,4
+Ajuste solicitado,ajuste_solicitado,4
+Aguardando cliente,aguardando_cliente,3
+aguardando aprovação,aguardando_aprovacao_entrega,2
+voltou pra ajuste,ajuste_solicitado,1
+com o cliente,aguardando_aprovacao_entrega,1
+enviado,entregue,1

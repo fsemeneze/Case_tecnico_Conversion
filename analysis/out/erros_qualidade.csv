@@ -1,0 +1,298 @@
+id,codigo,severidade,detalhe
+4,data_prevista_texto_ano_inferido,aviso,valor '10/nov'
+5,data_prevista_serial_excel,aviso,valor '45971'
+23,data_prevista_texto_ano_inferido,aviso,valor '10/nov'
+26,sem_link,aviso,entrega sem link de arquivo
+33,data_solicitacao_texto_ano_inferido,aviso,valor '6/nov'
+37,concluida_sem_data_entrega,critico,estado final sem data de entrega
+38,tipo_inferido,aviso,tipo '' vazio ou inválido
+40,concluida_sem_data_entrega,critico,estado final sem data de entrega
+43,data_entrega_texto_ano_inferido,aviso,valor '21/nov'
+991,possivel_duplicata,critico,"mesmo cliente, título e datas de outra linha"
+991,link_repetido,critico,link usado em 2 linhas
+44,sem_link,aviso,entrega sem link de arquivo
+44,data_prevista_serial_excel,aviso,valor '45981'
+52,data_entrega_serial_excel,aviso,valor '45984'
+61,sem_link,aviso,entrega sem link de arquivo
+67,sem_link,aviso,entrega sem link de arquivo
+73,possivel_duplicata,critico,"mesmo cliente, título e datas de outra linha"
+73,link_repetido,critico,link usado em 2 linhas
+75,data_prevista_texto_ano_inferido,aviso,valor '14/dez'
+76,data_prevista_texto_ano_inferido,aviso,valor '9/dez'
+986,possivel_duplicata,critico,"mesmo cliente, título e datas de outra linha"
+986,link_repetido,critico,link usado em 2 linhas
+81,id_duplicado,critico,id aparece 2x na base
+81,possivel_duplicata,critico,"mesmo cliente, título e datas de outra linha"
+81,link_repetido,critico,link usado em 2 linhas
+86,data_prevista_serial_excel,aviso,valor '46001'
+99,data_solicitacao_texto_ano_inferido,aviso,valor '1/dez'
+104,data_entrega_texto_ano_inferido,aviso,valor '15/dez'
+108,possivel_duplicata,critico,"mesmo cliente, título e datas de outra linha"
+108,link_repetido,critico,link usado em 2 linhas
+108,revisoes_outlier,aviso,valor '99'
+113,sem_link,aviso,entrega sem link de arquivo
+129,revisoes_negativo,aviso,valor '-1'
+134,data_entrega_texto_ano_inferido,aviso,valor '20/dez'
+137,link_textual,aviso,link não é URL: 'no e-mail'
+995,possivel_duplicata,critico,"mesmo cliente, título e datas de outra linha"
+995,link_repetido,critico,link usado em 2 linhas
+142,link_textual,aviso,link não é URL: 'ver drive'
+147,possivel_duplicata,critico,"mesmo cliente, título e datas de outra linha"
+147,link_repetido,critico,link usado em 2 linhas
+811,id_duplicado,critico,id aparece 2x na base
+811,possivel_duplicata,critico,"mesmo cliente, título e datas de outra linha"
+811,link_repetido,critico,link usado em 2 linhas
+156,data_solicitacao_texto_ano_inferido,aviso,valor '28/dez'
+161,data_solicitacao_serial_excel,aviso,valor '46020'
+164,link_repetido,critico,link usado em 2 linhas
+164,data_solicitacao_texto_ano_inferido,aviso,valor '29/dez'
+167,data_entrega_serial_excel,aviso,valor '46035'
+168,link_textual,aviso,link não é URL: 'no e-mail'
+992,possivel_duplicata,critico,"mesmo cliente, título e datas de outra linha"
+992,link_repetido,critico,link usado em 2 linhas
+172,data_prevista_texto_ano_inferido,aviso,valor '10/jan'
+195,link_textual,aviso,link não é URL: 'ver drive'
+196,sem_link,aviso,entrega sem link de arquivo
+196,data_solicitacao_texto_ano_inferido,aviso,valor '1/jan'
+219,data_solicitacao_serial_excel,aviso,valor '46041'
+225,link_textual,aviso,link não é URL: 'pasta do cliente'
+226,revisoes_texto_nao_numerico,aviso,valor '1 ou 2'
+228,data_entrega_serial_excel,aviso,valor '46054'
+234,data_entrega_serial_excel,aviso,valor '46061'
+236,concluida_sem_data_entrega,critico,estado final sem data de entrega
+240,tipo_inferido,aviso,tipo '' vazio ou inválido
+243,link_textual,aviso,link não é URL: 'pasta do cliente'
+245,link_textual,aviso,link não é URL: 'pasta do cliente'
+258,data_prevista_texto_ano_inferido,aviso,valor '10/fev'
+261,data_entrega_serial_excel,aviso,valor '46058'
+537,id_duplicado,critico,id aparece 2x na base
+537,possivel_duplicata,critico,"mesmo cliente, título e datas de outra linha"
+537,link_repetido,critico,link usado em 2 linhas
+275,data_entrega_texto_ano_inferido,aviso,valor '19/fev'
+282,concluida_sem_data_entrega,critico,estado final sem data de entrega
+295,possivel_duplicata,critico,"mesmo cliente, título e datas de outra linha"
+295,link_textual,aviso,link não é URL: 'pasta do cliente'
+303,id_duplicado,critico,id aparece 2x na base
+303,possivel_duplicata,critico,"mesmo cliente, título e datas de outra linha"
+303,link_repetido,critico,link usado em 2 linhas
+988,possivel_duplicata,critico,"mesmo cliente, título e datas de outra linha"
+988,link_repetido,critico,link usado em 2 linhas
+309,sem_link,aviso,entrega sem link de arquivo
+310,sem_link,aviso,entrega sem link de arquivo
+312,data_entrega_texto_ano_inferido,aviso,valor '5/mar'
+328,data_solicitacao_serial_excel,aviso,valor '46082'
+866,id_duplicado,critico,id aparece 2x na base
+866,link_repetido,critico,link usado em 2 linhas
+866,data_solicitacao_serial_excel,aviso,valor '46279'
+341,data_prevista_serial_excel,aviso,valor '46091'
+346,revisoes_vazio,aviso,valor ''
+347,data_prevista_serial_excel,aviso,valor '46093'
+353,revisoes_texto_convertido,aviso,valor 'duas'
+363,data_solicitacao_serial_excel,aviso,valor '46093'
+363,data_entrega_texto_ano_inferido,aviso,valor '16/mar'
+365,data_prevista_texto_ano_inferido,aviso,valor '27/mar'
+366,data_entrega_texto_ano_inferido,aviso,valor '29/mar'
+372,data_entrega_texto_ano_inferido,aviso,valor '22/mar'
+380,possivel_duplicata,critico,"mesmo cliente, título e datas de outra linha"
+380,link_repetido,critico,link usado em 2 linhas
+386,id_duplicado,critico,id aparece 2x na base
+386,possivel_duplicata,critico,"mesmo cliente, título e datas de outra linha"
+386,link_repetido,critico,link usado em 2 linhas
+303,id_duplicado,critico,id aparece 2x na base
+303,possivel_duplicata,critico,"mesmo cliente, título e datas de outra linha"
+303,link_repetido,critico,link usado em 2 linhas
+396,concluida_sem_data_entrega,critico,estado final sem data de entrega
+406,data_entrega_serial_excel,aviso,valor '46122'
+430,id_duplicado,critico,id aparece 2x na base
+430,possivel_duplicata,critico,"mesmo cliente, título e datas de outra linha"
+430,link_repetido,critico,link usado em 2 linhas
+430,id_duplicado,critico,id aparece 2x na base
+430,possivel_duplicata,critico,"mesmo cliente, título e datas de outra linha"
+430,link_repetido,critico,link usado em 2 linhas
+435,sem_link,aviso,entrega sem link de arquivo
+443,link_textual,aviso,link não é URL: 'pasta do cliente'
+452,revisoes_outlier,aviso,valor '99'
+454,link_textual,aviso,link não é URL: 'no e-mail'
+454,tipo_inferido,aviso,tipo '' vazio ou inválido
+462,data_prevista_texto_ano_inferido,aviso,valor '2/mai'
+463,data_solicitacao_texto_ano_inferido,aviso,valor '19/abr'
+464,data_entrega_serial_excel,aviso,valor '46150'
+465,concluida_sem_data_entrega,critico,estado final sem data de entrega
+467,data_prevista_texto_ano_inferido,aviso,valor '5/mai'
+478,data_entrega_serial_excel,aviso,valor '46148'
+522,id_duplicado,critico,id aparece 2x na base
+522,possivel_duplicata,critico,"mesmo cliente, título e datas de outra linha"
+522,link_repetido,critico,link usado em 2 linhas
+496,data_prevista_serial_excel,aviso,valor '46152'
+990,link_repetido,critico,link usado em 2 linhas
+990,data_entrega_texto_ano_inferido,aviso,valor '7/jun'
+507,data_prevista_serial_excel,aviso,valor '46152'
+516,data_solicitacao_texto_ano_inferido,aviso,valor '3/mai'
+522,id_duplicado,critico,id aparece 2x na base
+522,possivel_duplicata,critico,"mesmo cliente, título e datas de outra linha"
+522,link_repetido,critico,link usado em 2 linhas
+525,id_duplicado,critico,id aparece 2x na base
+525,possivel_duplicata,critico,"mesmo cliente, título e datas de outra linha"
+525,link_repetido,critico,link usado em 2 linhas
+525,revisoes_negativo,aviso,valor '-1'
+529,possivel_duplicata,critico,"mesmo cliente, título e datas de outra linha"
+529,link_repetido,critico,link usado em 2 linhas
+536,concluida_sem_data_entrega,critico,estado final sem data de entrega
+537,id_duplicado,critico,id aparece 2x na base
+537,possivel_duplicata,critico,"mesmo cliente, título e datas de outra linha"
+537,link_repetido,critico,link usado em 2 linhas
+538,data_solicitacao_serial_excel,aviso,valor '46158'
+546,data_prevista_texto_ano_inferido,aviso,valor '24/mai'
+551,link_textual,aviso,link não é URL: 'pasta do cliente'
+555,data_entrega_serial_excel,aviso,valor '46194'
+556,data_entrega_texto_ano_inferido,aviso,valor '6/jun'
+558,link_repetido,critico,link usado em 2 linhas
+573,data_prevista_serial_excel,aviso,valor '46183'
+576,data_prevista_texto_ano_inferido,aviso,valor '10/jun'
+585,concluida_sem_data_entrega,critico,estado final sem data de entrega
+597,data_prevista_texto_ano_inferido,aviso,valor '11/jun'
+599,data_prevista_serial_excel,aviso,valor '46189'
+606,data_prevista_texto_ano_inferido,aviso,valor '15/jun'
+615,id_duplicado,critico,id aparece 2x na base
+615,possivel_duplicata,critico,"mesmo cliente, título e datas de outra linha"
+615,link_repetido,critico,link usado em 2 linhas
+615,id_duplicado,critico,id aparece 2x na base
+615,possivel_duplicata,critico,"mesmo cliente, título e datas de outra linha"
+615,link_repetido,critico,link usado em 2 linhas
+616,data_entrega_serial_excel,aviso,valor '46191'
+621,link_textual,aviso,link não é URL: 'no e-mail'
+622,sem_link,aviso,entrega sem link de arquivo
+627,data_entrega_serial_excel,aviso,valor '46194'
+628,sem_link,aviso,entrega sem link de arquivo
+750,id_duplicado,critico,id aparece 2x na base
+750,possivel_duplicata,critico,"mesmo cliente, título e datas de outra linha"
+750,link_repetido,critico,link usado em 2 linhas
+750,entrega_antes_solicitacao,critico,2026-07-08 < 2026-08-01
+638,data_prevista_texto_ano_inferido,aviso,valor '4/jul'
+525,id_duplicado,critico,id aparece 2x na base
+525,possivel_duplicata,critico,"mesmo cliente, título e datas de outra linha"
+525,link_repetido,critico,link usado em 2 linhas
+525,revisoes_negativo,aviso,valor '-1'
+644,concluida_sem_data_entrega,critico,estado final sem data de entrega
+648,data_prevista_texto_ano_inferido,aviso,valor '6/jul'
+81,id_duplicado,critico,id aparece 2x na base
+81,possivel_duplicata,critico,"mesmo cliente, título e datas de outra linha"
+81,link_repetido,critico,link usado em 2 linhas
+672,data_entrega_serial_excel,aviso,valor '46210'
+675,data_solicitacao_serial_excel,aviso,valor '46204'
+679,sem_link,aviso,entrega sem link de arquivo
+680,concluida_sem_data_entrega,critico,estado final sem data de entrega
+682,sem_link,aviso,entrega sem link de arquivo
+688,link_textual,aviso,link não é URL: 'ver drive'
+691,link_textual,aviso,link não é URL: 'ver drive'
+696,concluida_sem_data_entrega,critico,estado final sem data de entrega
+706,possivel_duplicata,critico,"mesmo cliente, título e datas de outra linha"
+706,link_repetido,critico,link usado em 2 linhas
+786,id_duplicado,critico,id aparece 2x na base
+786,possivel_duplicata,critico,"mesmo cliente, título e datas de outra linha"
+786,link_repetido,critico,link usado em 2 linhas
+712,concluida_sem_data_entrega,critico,estado final sem data de entrega
+722,link_textual,aviso,link não é URL: 'no e-mail'
+722,data_entrega_texto_ano_inferido,aviso,valor '6/ago'
+723,sem_link,aviso,entrega sem link de arquivo
+728,sem_link,aviso,entrega sem link de arquivo
+730,sem_link,aviso,entrega sem link de arquivo
+733,concluida_sem_data_entrega,critico,estado final sem data de entrega
+735,sem_link,aviso,entrega sem link de arquivo
+736,data_entrega_texto_ano_inferido,aviso,valor '7/ago'
+994,possivel_duplicata,critico,"mesmo cliente, título e datas de outra linha"
+750,id_duplicado,critico,id aparece 2x na base
+750,possivel_duplicata,critico,"mesmo cliente, título e datas de outra linha"
+750,link_repetido,critico,link usado em 2 linhas
+750,entrega_antes_solicitacao,critico,2026-07-08 < 2026-08-01
+751,data_prevista_texto_ano_inferido,aviso,valor '10/ago'
+756,data_entrega_texto_ano_inferido,aviso,valor '9/ago'
+763,data_prevista_serial_excel,aviso,valor '46244'
+766,tipo_inferido,aviso,tipo '' vazio ou inválido
+775,sem_link,aviso,entrega sem link de arquivo
+775,data_prevista_serial_excel,aviso,valor '46245'
+786,id_duplicado,critico,id aparece 2x na base
+786,possivel_duplicata,critico,"mesmo cliente, título e datas de outra linha"
+786,link_repetido,critico,link usado em 2 linhas
+789,data_solicitacao_texto_ano_inferido,aviso,valor '10/ago'
+792,data_prevista_serial_excel,aviso,valor '46259'
+793,possivel_duplicata,critico,"mesmo cliente, título e datas de outra linha"
+793,link_repetido,critico,link usado em 2 linhas
+795,revisoes_texto_convertido,aviso,valor '2x'
+796,link_textual,aviso,link não é URL: 'pasta do cliente'
+796,data_prevista_texto_ano_inferido,aviso,valor '27/ago'
+797,data_entrega_serial_excel,aviso,valor '46267'
+798,sem_link,aviso,entrega sem link de arquivo
+800,revisoes_vazio,aviso,valor ''
+806,link_textual,aviso,link não é URL: 'ver drive'
+811,id_duplicado,critico,id aparece 2x na base
+811,possivel_duplicata,critico,"mesmo cliente, título e datas de outra linha"
+811,link_repetido,critico,link usado em 2 linhas
+812,concluida_sem_data_entrega,critico,estado final sem data de entrega
+813,sem_link,aviso,entrega sem link de arquivo
+815,sem_link,aviso,entrega sem link de arquivo
+816,sem_link,aviso,entrega sem link de arquivo
+816,data_prevista_serial_excel,aviso,valor '46278'
+820,sem_link,aviso,entrega sem link de arquivo
+826,sem_link,aviso,entrega sem link de arquivo
+828,data_solicitacao_serial_excel,aviso,valor '46266'
+386,id_duplicado,critico,id aparece 2x na base
+386,possivel_duplicata,critico,"mesmo cliente, título e datas de outra linha"
+386,link_repetido,critico,link usado em 2 linhas
+987,possivel_duplicata,critico,"mesmo cliente, título e datas de outra linha"
+987,link_repetido,critico,link usado em 2 linhas
+842,sem_link,aviso,entrega sem link de arquivo
+846,sem_link,aviso,entrega sem link de arquivo
+851,link_textual,aviso,link não é URL: 'pasta do cliente'
+851,data_solicitacao_serial_excel,aviso,valor '46271'
+854,link_textual,aviso,link não é URL: 'pasta do cliente'
+993,possivel_duplicata,critico,"mesmo cliente, título e datas de outra linha"
+993,link_repetido,critico,link usado em 2 linhas
+993,revisoes_outlier,aviso,valor '99'
+866,id_duplicado,critico,id aparece 2x na base
+866,link_repetido,critico,link usado em 2 linhas
+876,data_entrega_texto_ano_inferido,aviso,valor '30/set'
+883,sem_link,aviso,entrega sem link de arquivo
+889,data_entrega_texto_ano_inferido,aviso,valor '7/out'
+989,link_repetido,critico,link usado em 2 linhas
+894,sem_link,aviso,entrega sem link de arquivo
+901,sem_link,aviso,entrega sem link de arquivo
+910,sem_link,aviso,entrega sem link de arquivo
+913,sem_link,aviso,entrega sem link de arquivo
+916,sem_link,aviso,entrega sem link de arquivo
+917,link_textual,aviso,link não é URL: 'no e-mail'
+927,sem_link,aviso,entrega sem link de arquivo
+928,sem_link,aviso,entrega sem link de arquivo
+933,sem_link,aviso,entrega sem link de arquivo
+936,aprovacao_contraditoria,aviso,status 'aguardando aprovação' com aprovação de entrega 'Sim'
+937,sem_link,aviso,entrega sem link de arquivo
+938,sem_link,aviso,entrega sem link de arquivo
+939,data_solicitacao_serial_excel,aviso,valor '46302'
+940,data_entrega_texto_ano_inferido,aviso,valor '19/out'
+942,sem_link,aviso,entrega sem link de arquivo
+943,concluida_sem_data_entrega,critico,estado final sem data de entrega
+945,sem_link,aviso,entrega sem link de arquivo
+946,sem_link,aviso,entrega sem link de arquivo
+948,sem_link,aviso,entrega sem link de arquivo
+951,sem_link,aviso,entrega sem link de arquivo
+957,aprovacao_contraditoria,aviso,status 'Entrega em aprovação' com aprovação de entrega 'aprovado c/ ressalvas'
+960,sem_link,aviso,entrega sem link de arquivo
+962,sem_link,aviso,entrega sem link de arquivo
+963,sem_link,aviso,entrega sem link de arquivo
+965,sem_link,aviso,entrega sem link de arquivo
+967,sem_link,aviso,entrega sem link de arquivo
+969,sem_link,aviso,entrega sem link de arquivo
+971,sem_link,aviso,entrega sem link de arquivo
+972,sem_link,aviso,entrega sem link de arquivo
+973,aprovacao_contraditoria,aviso,status 'com o cliente' com aprovação de entrega 'Sim'
+974,sem_link,aviso,entrega sem link de arquivo
+975,sem_link,aviso,entrega sem link de arquivo
+976,sem_link,aviso,entrega sem link de arquivo
+977,sem_link,aviso,entrega sem link de arquivo
+978,data_entrega_serial_excel,aviso,valor '46322'
+979,sem_link,aviso,entrega sem link de arquivo
+980,aprovacao_contraditoria,aviso,status 'Entrega em aprovação' com aprovação de entrega 'S'
+981,sem_link,aviso,entrega sem link de arquivo
+983,sem_link,aviso,entrega sem link de arquivo
+984,sem_link,aviso,entrega sem link de arquivo
+985,sem_link,aviso,entrega sem link de arquivo
