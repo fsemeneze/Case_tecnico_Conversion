@@ -13,7 +13,7 @@ concluídas. Modelagem e app em andamento.
 | :--- | :--- | :--- |
 | 0 | Estrutura do projeto, stack, decisões e ambiente | Concluída |
 | 1 | Diagnóstico dos dados e base normalizada | Concluída |
-| 2 | Modelagem Postgres/Supabase, RLS e importação | Migrations escritas, aguardando revisão |
+| 2 | Modelagem Postgres/Supabase, RLS e importação | Concluída |
 | 3 | Fatia funcional do app | A fazer |
 | 4 | README de produto (1 página) | A fazer |
 
@@ -66,6 +66,21 @@ npm run dev
 O app abre em `http://localhost:3000`. Nesta fase ele apresenta o diagnóstico e o
 estado do projeto; as telas de entregas entram na Fase 3.
 
+### Banco de dados (Supabase)
+
+As migrations versionadas em `supabase/migrations/` foram aplicadas no projeto
+do case. Para reproduzir a base em outro projeto:
+
+```bash
+# aplica as migrations e importa a base normalizada
+# (requer a senha do banco: DB_PASSWORD ou DATABASE_URL)
+node scripts/importar-para-supabase.mjs
+```
+
+A conexão usa o pooler do Supabase (`*.pooler.supabase.com`, IPv4): o host
+direto `db.<ref>.supabase.co` resolve apenas IPv6 e não conecta em redes
+IPv4.
+
 ### Variáveis de ambiente
 
 Copie `.env.example` para `.env.local` e preencha com um projeto Supabase **criado
@@ -80,11 +95,13 @@ analysis/
   diagnostico.py        script de diagnóstico e normalização
   test_diagnostico.py   testes do normalizador
   out/                  saídas geradas: base normalizada, erros, métricas
+supabase/
+  migrations/           schema: tabelas, RLS, histórico e aprovação por token
 docs/
   diagnostico.md        relatório gerado pelo script
   decisoes.md           decisões, premissas e alternativas descartadas
 dados/                  base original do case
-scripts/                cópia dos artefatos para public/ no build
+scripts/                cópia dos artefatos para public/ e importação no Supabase
 ```
 
 ### Saídas do diagnóstico
