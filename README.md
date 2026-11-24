@@ -13,7 +13,7 @@ concluídas. Modelagem e app em andamento.
 | :--- | :--- | :--- |
 | 0 | Estrutura do projeto, stack, decisões e ambiente | Concluída |
 | 1 | Diagnóstico dos dados e base normalizada | Concluída |
-| 2 | Modelagem Postgres/Supabase, RLS e importação | Próxima |
+| 2 | Modelagem Postgres/Supabase, RLS e importação | Migrations escritas, aguardando revisão |
 | 3 | Fatia funcional do app | A fazer |
 | 4 | README de produto (1 página) | A fazer |
 
