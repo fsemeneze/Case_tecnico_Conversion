@@ -51,7 +51,7 @@ export default function Home() {
         <li>
           <span>
             {metricas.ids_duplicados_distintos} IDs repetidos e{" "}
-            {metricas.contadores_qualidade?.possivel_duplicata ?? 0} linhas com assinatura
+            {metricas.flags?.possivel_duplicata ?? 0} linhas com assinatura
             idêntica, incluindo 10 registros fantasmas (IDs 986 a 995)
           </span>
           <span className="n">duplicidade</span>
@@ -65,9 +65,9 @@ export default function Home() {
         </li>
         <li>
           <span>
-            {metricas.contadores_qualidade?.link_repetido ?? 0} linhas com link repetido e{" "}
-            {(metricas.contadores_qualidade?.sem_link ?? 0) +
-              (metricas.contadores_qualidade?.link_textual ?? 0)}{" "}
+            {metricas.flags?.link_repetido ?? 0} linhas com link repetido e{" "}
+            {(metricas.flags?.sem_link ?? 0) +
+              (metricas.flags?.link_textual ?? 0)}{" "}
             sem link de arquivo válido
           </span>
           <span className="n">rastreabilidade</span>
@@ -104,10 +104,6 @@ export default function Home() {
       <div className="links">
         <a href="/entregas">App de entregas (Fase 3)</a>
         <a href="/login">Entrar no app</a>
-        <a href="/diagnostico.md">Diagnóstico completo</a>
-        <a href="/decisoes.md">Decisões e premissas</a>
-        <a href="/entregas_normalizadas.csv">Base normalizada (CSV)</a>
-        <a href="/erros_qualidade.csv">Fila de revisão (CSV)</a>
       </div>
 
       <footer>
