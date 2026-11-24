@@ -13,6 +13,8 @@
     "test:diagnostico": "python -m unittest discover -s analysis -v"
   },
   "dependencies": {
+    "@supabase/ssr": "^0.12.7",
+    "@supabase/supabase-js": "^2.119.2",
     "csv-parse": "^7.0.3",
     "next": "^16.4.6",
     "pg": "^8.23.1",

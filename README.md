@@ -14,7 +14,7 @@ concluídas. Modelagem e app em andamento.
 | 0 | Estrutura do projeto, stack, decisões e ambiente | Concluída |
 | 1 | Diagnóstico dos dados e base normalizada | Concluída |
 | 2 | Modelagem Postgres/Supabase, RLS e importação | Concluída |
-| 3 | Fatia funcional do app | A fazer |
+| 3 | Fatia funcional do app | Concluída |
 | 4 | README de produto (1 página) | A fazer |
 
 ## Diagnóstico em números
@@ -81,6 +81,23 @@ A conexão usa o pooler do Supabase (`*.pooler.supabase.com`, IPv4): o host
 direto `db.<ref>.supabase.co` resolve apenas IPv6 e não conecta em redes
 IPv4.
 
+### O app (Fase 3)
+
+- `/login` — acesso do time: entre com e-mail e senha ou crie a conta
+  (Supabase Auth). Se o e-mail de confirmação estiver habilitado, confirme
+  no link enviado.
+- `/entregas` — lista com busca por título, filtros de cliente, fase e tipo,
+  e o filtro “Apenas em atraso” (definição única: concluída após o prazo ou
+  em aberto com prazo vencido).
+- `/entregas/nova` — cadastro de entrega (cliente existente ou novo).
+- `/entregas/[id]` — detalhe com histórico de mudanças, aprovações
+  registradas e a geração dos links de aprovação.
+- `/aprovacao/<token>` — página pública do cliente, sem login: aprovar ou
+  solicitar ajuste, com nome e observação. Uso único por etapa.
+
+As rotas internas exigem login (proxy); a página de aprovação resolve o
+token por uma função `SECURITY DEFINER` que expõe apenas aquela entrega.
+
 ### Variáveis de ambiente
 
 Copie `.env.example` para `.env.local` e preencha com um projeto Supabase **criado
@@ -90,7 +107,9 @@ Nenhum arquivo `.env*` é versionado.
 ## Estrutura
 
 ```
-app/                    App Next.js (App Router)
+app/                    App Next.js (App Router): lista, cadastro, detalhe e aprovação
+lib/                    Clientes Supabase (servidor, navegador, admin) e regras de fase
+proxy.ts                Guarda de login do app interno
 analysis/
   diagnostico.py        script de diagnóstico e normalização
   test_diagnostico.py   testes do normalizador

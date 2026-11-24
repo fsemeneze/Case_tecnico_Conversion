@@ -102,6 +102,8 @@ export default function Home() {
       </ol>
 
       <div className="links">
+        <a href="/entregas">App de entregas (Fase 3)</a>
+        <a href="/login">Entrar no app</a>
         <a href="/diagnostico.md">Diagnóstico completo</a>
         <a href="/decisoes.md">Decisões e premissas</a>
         <a href="/entregas_normalizadas.csv">Base normalizada (CSV)</a>
