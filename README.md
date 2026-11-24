@@ -111,6 +111,7 @@ Ferramentas usadas até aqui, e para quê:
 | Ferramenta | Uso |
 | :--- | :--- |
 | OpenCode (agente de código) | Estrutura do projeto, revisão do script de diagnóstico, geração de relatório e docs |
+| Plugin `opencode-supabase` | Integração com Supabase (login, Management API) para a modelagem da Fase 2 |
 | Scripts próprios (Python) | Normalização, métricas e testes; nenhuma decisão de negócio delegada |
 
 O que foi revisado ou corrigido manualmente: a regra de inferência de ano das datas
