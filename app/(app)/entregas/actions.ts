@@ -227,14 +227,27 @@ export async function aprovarViaToken(
   if (!autorNome.trim()) {
     return { ok: false, mensagem: "Informe o seu nome." };
   }
+  if (!autorEmail?.trim() || !autorEmail.includes("@")) {
+    return { ok: false, mensagem: "Informe o seu e-mail." };
+  }
+
+  // Origem da aprovação: registrada junto da decisão para rastreabilidade.
+  const cabecalhos = await headers();
+  const ip =
+    cabecalhos.get("x-forwarded-for")?.split(",")[0]?.trim() ||
+    cabecalhos.get("x-real-ip") ||
+    null;
+  const userAgent = cabecalhos.get("user-agent")?.slice(0, 500) ?? null;
 
   const admin = criarClienteSupabaseAdmin();
   const { data, error } = await admin.rpc("registrar_aprovacao", {
     p_token: token,
     p_decisao: decisao,
     p_autor_nome: autorNome.trim(),
-    p_autor_email: autorEmail?.trim() || null,
+    p_autor_email: autorEmail.trim(),
     p_observacao: observacao?.trim() || null,
+    p_autor_ip: ip,
+    p_autor_user_agent: userAgent,
   });
 
   if (error) {

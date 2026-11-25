@@ -60,7 +60,7 @@ export function FormularioAprovacao({ dados }: { dados: DadosEntrega }) {
 
   async function confirmar(e: React.FormEvent) {
     e.preventDefault();
-    if (!decisao || !nome.trim()) return;
+    if (!decisao || !nome.trim() || !email.trim()) return;
     setAguardando(true);
     const res = await aprovarViaToken(
       new URLSearchParams(window.location.search).get("token") ??
@@ -68,7 +68,7 @@ export function FormularioAprovacao({ dados }: { dados: DadosEntrega }) {
         "",
       decisao,
       nome,
-      email || null,
+      email.trim(),
       observacao || null,
     );
     setAguardando(false);
@@ -129,8 +129,14 @@ export function FormularioAprovacao({ dados }: { dados: DadosEntrega }) {
             <input required value={nome} onChange={(e) => setNome(e.target.value)} />
           </label>
           <label>
-            E-mail (opcional)
-            <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+            E-mail *
+            <input
+              type="email"
+              required
+              autoComplete="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
           </label>
           <label>
             Observação (opcional)

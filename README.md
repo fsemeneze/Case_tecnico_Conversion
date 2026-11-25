@@ -56,6 +56,7 @@ decisões em [`docs/decisoes.md`](docs/decisoes.md).
 | `/revisao` | Fila de revisão da importação, com resolver/reabrir |
 | `/equipe` | Pessoas, papéis e convites (admin) |
 | `/aprovacao/[token]` | Página pública do cliente, sem login |
+| `/cliente/[token]` | Portal read-only do cliente: acompanhamento e aprovações pendentes |
 | `/sobre` | README de produto |
 
 ## Como rodar
@@ -129,6 +130,9 @@ scripts/                Importação, deploy e cópia de artefatos
 - **Nada é apagado em silêncio.** Duplicados e inconsistências vão para a fila
   de revisão, e a linha original fica preservada.
 - **Cliente aprova por link com token**, sem login, expondo apenas aquela entrega.
+  E-mail obrigatório, origem (IP) registrada e link novo invalidando o anterior;
+  o portal lista e abre as aprovações que o time colocou em aprovação. Ver
+  `docs/acesso_cliente.md`.
 - **Atraso tem definição única**, documentada, usada pelo diagnóstico e pelo app.
 - **Modelo em estrela**: fatos (`entregas`, `eventos_entrega`, `aprovacoes`) e
   dimensões (`clientes`, `fases`, `calendario`…), com RLS por papel.

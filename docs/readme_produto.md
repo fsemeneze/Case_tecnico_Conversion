@@ -24,7 +24,7 @@ o cliente, que aprova pelo link sem precisar de conta.
 | :--- | :--- |
 | 22 valores de status misturando produção, espera e aprovação | **Fase** (andamento) separada de **aprovação** (decisão do cliente) |
 | Atraso não era medível | Atraso com definição única: concluída após o prazo ou em aberto com prazo vencido |
-| Aprovação no e-mail, sem autor nem data | Aprovação por link, com nome, e-mail, data e observação |
+| Aprovação no e-mail, sem autor nem data | Aprovação por link, com nome, e-mail, data, observação e origem (IP) |
 | Nada de histórico | Histórico de mudanças por entrega, com autor |
 | Acesso aberto a quem tivesse a planilha | Login por convite, com quatro papéis: admin, gestor, operador e leitor |
 | Dados duplicados e datas em quatro formatos | Importação normalizada, com fila de revisão e nada apagado |
@@ -51,7 +51,9 @@ vencido hoje.
 - **Nada é apagado em silêncio.** Duplicados e inconsistências vão para a fila
   de revisão, e a linha original fica preservada para auditoria.
 - **Cliente aprova por link, sem login.** O token é de uso único por etapa e
-  expõe apenas aquela entrega.
+  expõe apenas aquela entrega. A aprovação exige e-mail e registra origem (IP);
+  um link novo invalida o anterior. O portal lista e abre as aprovações que o
+  time colocou em aprovação, sem criar conta para o cliente.
 - **Modelo em estrela.** Fatos (`entregas`, `eventos_entrega`, `aprovacoes`) e
   dimensões (`clientes`, `fases`, `calendario`…), com a regra de negócio no banco
   e RLS por papel.

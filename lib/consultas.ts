@@ -199,6 +199,7 @@ export async function listarAprovacoes(
     decisao: string;
     autor_nome: string;
     autor_email: string | null;
+    autor_ip: string | null;
     observacao: string | null;
     criado_em: string;
   }[]
@@ -206,7 +207,7 @@ export async function listarAprovacoes(
   const { data } = await supabase
     .from("aprovacoes")
     .select(
-      "id, etapa_id, decisao_id, autor_nome, autor_email, observacao, criado_em, etapas_aprovacao!inner(codigo), decisoes_aprovacao!inner(codigo)",
+      "id, etapa_id, decisao_id, autor_nome, autor_email, autor_ip, observacao, criado_em, etapas_aprovacao!inner(codigo), decisoes_aprovacao!inner(codigo)",
     )
     .eq("entrega_id", entregaId)
     .order("criado_em", { ascending: false });
@@ -220,6 +221,7 @@ export async function listarAprovacoes(
       decisao: decisao.codigo,
       autor_nome: String(linha.autor_nome),
       autor_email: (linha.autor_email as string | null) ?? null,
+      autor_ip: (linha.autor_ip as string | null) ?? null,
       observacao: (linha.observacao as string | null) ?? null,
       criado_em: String(linha.criado_em),
     };

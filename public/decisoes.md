@@ -39,6 +39,10 @@ que expõe somente a entrega do token.
 **Cuidados:** token com expiração, uso único por etapa, registro de autor (nome/e-mail
 informado na hora), e nada além da entrega é retornado.
 
+**Endurecimento (D11):** e-mail obrigatório, IP e user-agent registrados, link
+novo revoga o anterior e o portal abre a aprovação pendente sem depender do
+time.
+
 ## D4. Não apagar duplicados: fila de revisão
 
 **Decisão:** IDs repetidos e registros com assinatura idêntica são importados e marcados
@@ -104,6 +108,26 @@ no `.gitignore`. Nenhuma credencial pessoal.
 
 **Por quê:** exigência explícita do case e boa prática. O histórico do Git será revisado
 antes do envio.
+
+## D11. Endurecer o link em vez de criar conta de cliente
+
+**Decisão:** manter o cliente sem conta (D3) e fechar as lacunas do link:
+e-mail obrigatório na aprovação, origem (IP e user-agent) registrada, link novo
+invalidando o anterior e portal que lista e abre as aprovações que o time já
+colocou em aprovação (link ativo).
+
+**Por quê:** o case pede visibilidade e duas decisões, não uma área logada. Conta
+de cliente adiciona convite, senha, recuperação, suporte e uma credencial externa
+para 25 clientes — custo e superfície de segurança sem ganho para a dor. O link
+já responde "o cliente pergunta por e-mail", e o token tem escopo de uma entrega
+(ou de um cliente, no portal).
+
+**Quando rever:** se o cliente precisar de acesso recorrente com várias pessoas,
+histórico longo, comentários ou exigência contratual de identidade autenticada.
+Nesse caso, a forma certa é passwordless (magic link/OTP), não senha, com RLS por
+`cliente_id`.
+
+**Argumento completo para a apresentação:** `docs/acesso_cliente.md`.
 
 ## Premissas
 

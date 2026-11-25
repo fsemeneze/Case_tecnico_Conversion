@@ -216,9 +216,11 @@ export default async function DetalheEntrega({
               <li key={a.id}>
                 <strong>{a.etapa}</strong>: {ROTULO_APROVACAO[a.decisao]} por{" "}
                 {a.autor_nome}
+                {a.autor_email ? ` (${a.autor_email})` : ""}
                 {a.observacao ? ` — “${a.observacao}”` : ""}{" "}
                 <span className="muted">
                   {new Date(a.criado_em).toLocaleString("pt-BR")}
+                  {a.autor_ip ? ` · IP ${a.autor_ip}` : ""}
                 </span>
               </li>
             ))}

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { criarClienteSupabaseAdmin } from "@/lib/supabase/admin";
-import { situacaoDaEntrega, ROTULO_APROVACAO } from "@/lib/fases";
+import { situacaoDaEntrega } from "@/lib/fases";
+import { abrirAprovacaoPeloPortal } from "./actions";
 
 // Página PÚBLICA (sem login) de acompanhamento do cliente (C).
 // Read-only: mostra todas as entregas daquele cliente resolvidas pelo token.
@@ -22,15 +23,26 @@ type EntregaCliente = {
   aprovacao_entrega: string;
 };
 
+type PendenciaAprovacao = {
+  entrega_id: number;
+  titulo: string;
+  etapa: "planejamento" | "entrega";
+  data_prevista: string | null;
+};
+
 export default async function PortalCliente({
   params,
+  searchParams,
 }: {
   params: Promise<{ token: string }>;
+  searchParams: Promise<{ erro?: string }>;
 }) {
   const { token } = await params;
+  const { erro: erroLink } = await searchParams;
 
   let cliente: string | null = null;
   let entregas: EntregaCliente[] = [];
+  let pendencias: PendenciaAprovacao[] = [];
   let erro: string | null = null;
 
   try {
@@ -43,6 +55,9 @@ export default async function PortalCliente({
     } else {
       cliente = (data as { cliente: string }).cliente;
       entregas = (data as { entregas: EntregaCliente[] }).entregas ?? [];
+      pendencias =
+        (data as { pendencias_aprovacao: PendenciaAprovacao[] })
+          .pendencias_aprovacao ?? [];
     }
   } catch (e) {
     erro = e instanceof Error ? e.message : "Erro inesperado.";
@@ -74,6 +89,8 @@ export default async function PortalCliente({
         </div>
       )}
 
+      {erroLink && <p className="erro">{erroLink}</p>}
+
       {cliente && (
         <>
           <header className="topo">
@@ -101,6 +118,41 @@ export default async function PortalCliente({
               <span className="label">Aprovadas</span>
             </div>
           </div>
+
+          {pendencias.length > 0 && (
+            <div className="cartao-form">
+              <h2>Aprovações aguardando você</h2>
+              <p className="muted">
+                Estas entregas estão na fase de decisão. Abra para ver o
+                conteúdo e aprovar ou pedir ajuste.
+              </p>
+              <ul className="lista-chave">
+                {pendencias.map((p) => (
+                  <li key={`${p.entrega_id}-${p.etapa}`}>
+                    <div>
+                      <strong>{p.titulo}</strong>
+                      <div className="muted">
+                        {p.etapa === "planejamento"
+                          ? "Planejamento"
+                          : "Entrega final"}
+                        {p.data_prevista ? ` · prazo ${p.data_prevista}` : ""}
+                      </div>
+                    </div>
+                    <form action={abrirAprovacaoPeloPortal}>
+                      <input type="hidden" name="portal_token" value={token} />
+                      <input
+                        type="hidden"
+                        name="entrega_id"
+                        value={p.entrega_id}
+                      />
+                      <input type="hidden" name="etapa" value={p.etapa} />
+                      <button type="submit">Abrir aprovação</button>
+                    </form>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
 
           <div className="tabela-wrap">
             <table className="tabela">
@@ -163,8 +215,9 @@ export default async function PortalCliente({
           </div>
 
           <p className="muted">
-            Aprovações pendentes aparecem com a fase “{ROTULO_APROVACAO.pendente}”.
-            O time envia o link de aprovação quando chega a hora de decidir.
+            Quando uma entrega chega à sua vez de decidir, ela aparece em
+            “Aprovações aguardando você”. Você pode abrir e decidir por aqui; o
+            time também pode enviar o link por e-mail.
           </p>
         </>
       )}
