@@ -635,6 +635,13 @@ body:has(.login) {
   background: #000931;
 }
 
+/* Sem a largura máxima do `main`: o gradiente precisa ir de ponta a ponta. */
+main.login {
+  max-width: none;
+  margin: 0;
+  width: 100%;
+}
+
 .login {
   min-height: 100vh;
   min-height: 100dvh;
