@@ -41,6 +41,7 @@ const arquivos = [
   "app/(app)/conta/seguranca.tsx",
   "app/(app)/inicio/page.tsx",
   "app/(app)/dashboard/page.tsx",
+  "app/(app)/dashboard/actions.ts",
   "app/(app)/clientes/page.tsx",
   "app/(app)/clientes/actions.ts",
   "app/(app)/clientes/formulario.tsx",
@@ -64,6 +65,7 @@ const arquivos = [
   "lib/supabase/servidor.ts",
   "lib/supabase/navegador.ts",
   "lib/supabase/admin.ts",
+  "lib/email.ts",
   "lib/fases.ts",
   "lib/validacao.ts",
   "lib/consultas.ts",
@@ -109,6 +111,24 @@ if (serviceKey) {
   }
 } else {
   console.log("aviso: SUPABASE_SERVICE_ROLE_KEY não fornecida — as páginas de aprovação não vão funcionar.");
+}
+
+// Variáveis de e-mail (D). RESEND_API_KEY é secreta; as outras são públicas.
+const emailFrom = process.env.EMAIL_FROM || "PlanOps <onboarding@resend.dev>";
+const emailEquipe = process.env.EMAIL_EQUIPE || "ops@planops.case";
+for (const [key, value] of [
+  ["RESEND_API_KEY", process.env.RESEND_API_KEY],
+  ["EMAIL_FROM", emailFrom],
+  ["EMAIL_EQUIPE", emailEquipe],
+]) {
+  if (!value) continue;
+  const r = await chamada(`/v10/projects/${PROJETO}/env?upsert=true`, {
+    key,
+    value,
+    type: key === "RESEND_API_KEY" ? "encrypted" : "plain",
+    target: ["production", "preview"],
+  });
+  console.log(`env ${key}: HTTP ${r.status}`);
 }
 
 // 2. Deployment de produção com os arquivos embutidos

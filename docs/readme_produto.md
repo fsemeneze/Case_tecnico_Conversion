@@ -36,10 +36,9 @@ vencido hoje.
 
 ## O que ficou de fora
 
-- **Notificação proativa (e-mail/WhatsApp)** — avisar o time e o cliente quando a
-  fase muda (planejamento aprovado, entrega pronta, ajuste solicitado) ou quando o
-  prazo se aproxima. É a próxima entrega: ataca as dores de atraso e de
-  visibilidade com baixo custo, por cima do portal do cliente.
+- **Notificação por WhatsApp** — o envio por **e-mail já está implementado** (link
+  de aprovação ao cliente, aviso da decisão ao time e aviso de prazo vencido);
+  falta apenas o canal WhatsApp.
 - Exportação CSV e gráficos além dos indicadores de atraso.
 - E-mail de comprovante ao cliente após a aprovação.
 - Integração com o calendário.

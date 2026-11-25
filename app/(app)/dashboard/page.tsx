@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { criarClienteSupabaseServidor } from "@/lib/supabase/servidor";
 import { contarIndicadores } from "@/lib/consultas";
+import { notificarVencidas } from "./actions";
 
 // Dashboard: visão executiva do projeto. Tudo server-rendered, sem JS no cliente.
 // Os agregados vêm da função dashboard_resumo() (calcula no banco, sem o teto
@@ -26,7 +27,12 @@ type LinhaMes = {
 const numero = (v: number) => v.toLocaleString("pt-BR");
 const pct = (parte: number, total: number) => (total > 0 ? Math.round((parte / total) * 100) : 0);
 
-export default async function Dashboard() {
+export default async function Dashboard({
+  searchParams,
+}: {
+  searchParams: Promise<{ notificacoes?: string; erro?: string }>;
+}) {
+  const { notificacoes, erro } = await searchParams;
   const supabase = await criarClienteSupabaseServidor();
 
   const [{ data: resumo, error: erroResumo }, indicadores, { data: meses }] = await Promise.all([
@@ -80,7 +86,21 @@ export default async function Dashboard() {
           <h1>Dashboard</h1>
           <p className="muted">Visão do projeto · atualizado em {new Date().toLocaleDateString("pt-BR")}</p>
         </div>
+        <div className="topo-acoes">
+          <form action={notificarVencidas}>
+            <button type="submit" className="botao secundario">
+              Notificar clientes com prazo vencido
+            </button>
+          </form>
+        </div>
       </header>
+
+      {erro && <p className="erro">{erro}</p>}
+      {notificacoes !== undefined && (
+        <p className="aviso">
+          {Number(notificacoes)} e-mail(s) de prazo vencido enviado(s).
+        </p>
+      )}
 
       {erroResumo && <p className="erro">Não foi possível carregar os dados: {erroResumo.message}</p>}
 

@@ -6,6 +6,7 @@ import { headers } from "next/headers";
 import { criarClienteSupabaseServidor } from "@/lib/supabase/servidor";
 import { criarClienteSupabaseAdmin } from "@/lib/supabase/admin";
 import { schemaEntrega, primeiroErro } from "@/lib/validacao";
+import { enviarEmail, emailLinkAprovacao, emailDecisaoCliente } from "@/lib/email";
 
 const TIPOS = ["Relatório", "Análise", "Conteúdo"] as const;
 
@@ -177,6 +178,33 @@ export async function gerarLinkAprovacao(formulario: FormData) {
   }
 
   revalidatePath(`/entregas/${entregaId}`);
+
+  // E-mail automático ao cliente com o link (D). Se não houver e-mail cadastrado
+  // ou a chave do provedor, apenas registra no log — o link continua sendo gerado.
+  const { data: ent } = await admin
+    .from("entregas_detalhadas")
+    .select("titulo, cliente, data_prevista")
+    .eq("id", entregaId)
+    .maybeSingle();
+  if (ent) {
+    const { data: cli } = await admin
+      .from("clientes")
+      .select("email")
+      .eq("nome", ent.cliente)
+      .maybeSingle();
+    if (cli?.email) {
+      const tpl = emailLinkAprovacao({
+        cliente: ent.cliente,
+        titulo: ent.titulo,
+        etapa,
+        prazo: ent.data_prevista,
+        url: `${await urlBase()}/aprovacao/${data}`,
+        validadeDias: 7,
+      });
+      await enviarEmail({ para: cli.email, ...tpl, tipo: "link_aprovacao", entidadeId: entregaId });
+    }
+  }
+
   redirect(`/entregas/${entregaId}?token_criado=${data}`);
 }
 
@@ -216,6 +244,26 @@ export async function aprovarViaToken(
   revalidatePath("/inicio");
   revalidatePath("/entregas");
   revalidatePath(`/entregas/${data.entrega_id}`);
+
+  // Avisa o time por e-mail sobre a decisão do cliente (D).
+  const equipe = process.env.EMAIL_EQUIPE;
+  if (equipe) {
+    const { data: ent } = await admin
+      .from("entregas_detalhadas")
+      .select("cliente")
+      .eq("id", data.entrega_id)
+      .maybeSingle();
+    const tpl = emailDecisaoCliente({
+      titulo: data.titulo,
+      cliente: ent?.cliente ?? "Cliente",
+      etapa: data.etapa,
+      decisao,
+      autor: autorNome,
+      observacao: observacao ?? null,
+    });
+    await enviarEmail({ para: equipe, ...tpl, tipo: "decisao_cliente", entidadeId: data.entrega_id });
+  }
+
   return {
     ok: true,
     mensagem:
