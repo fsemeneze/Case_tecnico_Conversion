@@ -122,7 +122,7 @@ export function FormularioAprovacao({ dados }: { dados: DadosEntrega }) {
               : "Confirmar solicitação de ajuste"}
           </h2>
           <p className="muted">
-            Registramos quem aprovou o quê — é o que faltava na planilha.
+            Registramos quem aprovou o quê, com data e observação.
           </p>
           <label>
             Seu nome *

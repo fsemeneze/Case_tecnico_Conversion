@@ -20,7 +20,7 @@ export default function LayoutLogin({
           <h1>
             Planejamento e entregas,
             <br />
-            sem planilha.
+            em um só lugar.
           </h1>
 
           <p className="auth-sub">
@@ -35,7 +35,7 @@ export default function LayoutLogin({
             </li>
             <li>
               <span className="auth-check" aria-hidden="true" />
-              Atraso com definição única, do diagnóstico ao app
+              Atraso com definição única, visível na hora
             </li>
             <li>
               <span className="auth-check" aria-hidden="true" />

@@ -5,7 +5,7 @@ import { BotaoResolver } from "./botao-resolver";
 type Busca = { codigo?: string; severidade?: string; status?: string };
 
 const CODIGOS: Record<string, string> = {
-  id_duplicado: "ID repetido na planilha",
+  id_duplicado: "ID repetido no arquivo original",
   possivel_duplicata: "Possível duplicata",
   link_repetido: "Link repetido",
   sem_link: "Sem link de arquivo",
@@ -79,7 +79,7 @@ export default async function Revisao({ searchParams }: { searchParams: Promise<
       </header>
 
       <p className="muted">
-        Problemas encontrados na importação da planilha. Nada foi apagado: cada
+        Problemas encontrados na importação dos dados. Nada foi apagado: cada
         linha original está preservada na entrega. Marque como resolvido quando
         conferir.
       </p>
@@ -160,7 +160,7 @@ export default async function Revisao({ searchParams }: { searchParams: Promise<
                       #{e.entrega_id}
                     </Link>
                   ) : e.legacy_id ? (
-                    <span className="muted">planilha nº {e.legacy_id}</span>
+                    <span className="muted">registro nº {e.legacy_id}</span>
                   ) : (
                     "—"
                   )}

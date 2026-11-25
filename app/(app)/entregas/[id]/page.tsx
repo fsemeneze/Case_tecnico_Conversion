@@ -55,7 +55,7 @@ export default async function DetalheEntrega({
           <p className="muted">
             {[
               `#${entrega.id}`,
-              entrega.legacy_id ? `planilha nº ${entrega.legacy_id}` : "",
+              entrega.legacy_id ? `registro nº ${entrega.legacy_id}` : "",
               entrega.cliente,
               entrega.tipo,
               entrega.subtipo,
@@ -130,7 +130,7 @@ export default async function DetalheEntrega({
           {entrega.observacoes && <p className="muted">{entrega.observacoes}</p>}
           {(entrega.flags ?? []).length > 0 && (
             <p className="muted">
-              Sinalizações da importação: {(entrega.flags ?? []).join(", ")}
+              Sinalizações de qualidade: {(entrega.flags ?? []).join(", ")}
             </p>
           )}
         </div>
@@ -184,7 +184,7 @@ export default async function DetalheEntrega({
         <div className="cartao">
           <h2>Histórico de mudanças</h2>
           {historico.length === 0 && (
-            <p className="muted">Nenhuma mudança desde a importação.</p>
+            <p className="muted">Nenhuma mudança registrada.</p>
           )}
           <ul className="linha-tempo">
             {historico.map((h) => (

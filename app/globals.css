@@ -884,6 +884,26 @@ footer {
   font-weight: 500;
 }
 
+/* Campos do formulário. Valem também nas páginas públicas de aprovação e
+   portal do cliente, que ficam fora do .app e não herdam o padrão dele. */
+.cartao-form input,
+.cartao-form select,
+.cartao-form textarea {
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  padding: 9px 12px;
+  background: var(--bg);
+  color: var(--fg);
+  font: inherit;
+  width: 100%;
+  transition: border-color 0.14s ease, box-shadow 0.14s ease;
+}
+
+.cartao-form textarea {
+  resize: vertical;
+  min-height: 84px;
+}
+
 .cartao-form label.coluna {
   grid-column: 1 / -1;
 }
