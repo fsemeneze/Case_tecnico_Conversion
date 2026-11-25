@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { criarClienteSupabaseServidor } from "@/lib/supabase/servidor";
 import { criarClienteSupabaseAdmin } from "@/lib/supabase/admin";
 import { ROTULO_APROVACAO, situacaoDaEntrega } from "@/lib/fases";
+import { rotuloEvento, rotuloCampo, rotuloCodigo } from "@/lib/eventos";
 import { buscarEntrega, listarEventos, listarAprovacoes } from "@/lib/consultas";
 import { Icone } from "@/app/icones";
 import { gerarLinkAprovacao } from "../actions";
@@ -130,7 +131,9 @@ export default async function DetalheEntrega({
           {entrega.observacoes && <p className="muted">{entrega.observacoes}</p>}
           {(entrega.flags ?? []).length > 0 && (
             <p className="muted">
-              Sinalizações de qualidade: {(entrega.flags ?? []).join(", ")}
+              Sinalizações de qualidade: {(entrega.flags ?? [])
+                .map((f) => rotuloCodigo(f))
+                .join(", ")}
             </p>
           )}
         </div>
@@ -189,8 +192,8 @@ export default async function DetalheEntrega({
           <ul className="linha-tempo">
             {historico.map((h) => (
               <li key={h.id}>
-                <strong>{h.tipo_evento}</strong>
-                {h.campo ? ` · ${h.campo}` : ""}: {h.valor_antigo ?? "(vazio)"} →{" "}
+                <strong>{rotuloEvento(h.tipo_evento)}</strong>
+                {rotuloCampo(h.campo) ? ` · ${rotuloCampo(h.campo)}` : ""}: {h.valor_antigo ?? "(vazio)"} →{" "}
                 {h.valor_novo ?? "(vazio)"}{" "}
                 <span className="muted">
                   {new Date(h.criado_em).toLocaleString("pt-BR")} · {h.autor ?? "—"}

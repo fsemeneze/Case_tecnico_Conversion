@@ -1,5 +1,6 @@
 import { criarClienteSupabaseAdmin } from "@/lib/supabase/admin";
 import { ROTULO_APROVACAO } from "@/lib/fases";
+import { rotuloEvento, rotuloCampo } from "@/lib/eventos";
 import { FormularioAprovacao, type DadosEntrega } from "./formulario-aprovacao";
 
 // Página PÚBLICA (sem login) de aprovação via token (D3).
@@ -130,8 +131,8 @@ export default async function PaginaAprovacao({
               <ul className="linha-tempo">
                 {dados.historico.map((h, i) => (
                   <li key={i}>
-                    <strong>{h.tipo_evento}</strong>
-                    {h.campo ? ` · ${h.campo}` : ""}: {h.valor_antigo ?? "(vazio)"} →{" "}
+                    <strong>{rotuloEvento(h.tipo_evento)}</strong>
+                    {rotuloCampo(h.campo) ? ` · ${rotuloCampo(h.campo)}` : ""}: {h.valor_antigo ?? "(vazio)"} →{" "}
                     {h.valor_novo ?? "(vazio)"}{" "}
                     <span className="muted">
                       {new Date(h.criado_em).toLocaleString("pt-BR")} · {h.autor ?? "—"}

@@ -1,32 +1,9 @@
 import Link from "next/link";
 import { criarClienteSupabaseServidor } from "@/lib/supabase/servidor";
+import { rotuloCodigo } from "@/lib/eventos";
 import { BotaoResolver } from "./botao-resolver";
 
 type Busca = { codigo?: string; severidade?: string; status?: string };
-
-const CODIGOS: Record<string, string> = {
-  id_duplicado: "ID repetido no arquivo original",
-  possivel_duplicata: "Possível duplicata",
-  link_repetido: "Link repetido",
-  sem_link: "Sem link de arquivo",
-  link_textual: "Link textual (não é URL)",
-  data_prevista_texto_ano_inferido: "Ano inferido na data prevista",
-  data_entrega_texto_ano_inferido: "Ano inferido na data de entrega",
-  data_solicitacao_texto_ano_inferido: "Ano inferido na solicitação",
-  data_prevista_serial_excel: "Data em serial do Excel",
-  data_entrega_serial_excel: "Data em serial do Excel",
-  data_solicitacao_serial_excel: "Data em serial do Excel",
-  concluida_sem_data_entrega: "Concluída sem data de entrega",
-  aprovacao_sem_status_final: "Aprovação sem status final",
-  cliente_grafia_variante: "Grafia variante do cliente",
-  revisoes_outlier: "Número de revisões implausível",
-  revisoes_negativo: "Revisões negativas",
-  revisoes_texto_nao_numerico: "Revisões em texto",
-  revisoes_vazio: "Revisões em branco",
-  revisoes_texto_convertido: "Revisões convertidas de texto",
-  tipo_inferido: "Tipo inferido pelo título",
-  entrega_antes_solicitacao: "Entrega antes da solicitação",
-};
 
 export default async function Revisao({ searchParams }: { searchParams: Promise<Busca> }) {
   const params = await searchParams;
@@ -107,7 +84,7 @@ export default async function Revisao({ searchParams }: { searchParams: Promise<
             .sort((a, b) => b[1] - a[1])
             .map(([c, n]) => (
               <option key={c} value={c}>
-                {CODIGOS[c] ?? c} ({n})
+                {rotuloCodigo(c)} ({n})
               </option>
             ))}
         </select>
@@ -153,7 +130,7 @@ export default async function Revisao({ searchParams }: { searchParams: Promise<
                     {e.severidade === "critico" ? "Crítico" : "Aviso"}
                   </span>
                 </td>
-                <td>{CODIGOS[e.codigo] ?? e.codigo}</td>
+                <td>{rotuloCodigo(e.codigo)}</td>
                 <td>
                   {e.entrega_id ? (
                     <Link href={`/entregas/${e.entrega_id}`} className="titulo-link">
