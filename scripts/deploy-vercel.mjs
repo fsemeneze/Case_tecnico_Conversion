@@ -132,3 +132,16 @@ if (deploy.status >= 400) {
 const resultado = JSON.parse(deploy.corpo);
 console.log(`url: https://${resultado.url}`);
 console.log(`id: ${resultado.id}`);
+
+// 3. Aponta o alias de produção para o novo deployment.
+//    Com domínio customizado, o alias NÃO segue o deploy sozinho: sem este
+//    passo, planops-co.vercel.app continua servindo a versão anterior.
+const ALIAS = "planops-co.vercel.app";
+const alias = await chamada(`/v1/deployments/${resultado.id}/aliases`, {
+  alias: ALIAS,
+});
+console.log(`alias ${ALIAS}: HTTP ${alias.status}`);
+if (alias.status >= 400) {
+  console.error(alias.corpo);
+  process.exit(1);
+}
