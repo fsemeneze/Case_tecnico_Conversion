@@ -6,19 +6,38 @@ import { ROTULO_APROVACAO, situacaoDaEntrega } from "@/lib/fases";
 import { rotuloEvento, rotuloCampo, rotuloCodigo } from "@/lib/eventos";
 import { buscarEntrega, listarEventos, listarAprovacoes } from "@/lib/consultas";
 import { Icone } from "@/app/icones";
+import { BotaoCopiar } from "@/app/botao-copiar";
 import { gerarLinkAprovacao } from "../actions";
 
 type Params = { id: string };
+
+type Busca = {
+  erro?: string;
+  token_criado?: string;
+  email?: string;
+  email_destino?: string;
+  email_erro?: string;
+  email_teste?: string;
+  email_liberado?: string;
+};
 
 export default async function DetalheEntrega({
   params,
   searchParams,
 }: {
   params: Promise<Params>;
-  searchParams: Promise<{ erro?: string; token_criado?: string }>;
+  searchParams: Promise<Busca>;
 }) {
   const { id } = await params;
-  const { erro, token_criado } = await searchParams;
+  const {
+    erro,
+    token_criado,
+    email,
+    email_destino,
+    email_erro,
+    email_teste,
+    email_liberado,
+  } = await searchParams;
   const entregaId = Number(id);
   if (!Number.isInteger(entregaId)) notFound();
 
@@ -34,10 +53,23 @@ export default async function DetalheEntrega({
   if (!entrega) notFound();
 
   const admin = criarClienteSupabaseAdmin();
-  const { data: linksAtivos } = await admin.rpc("links_aprovacao_ativos", {
-    p_entrega_id: entregaId,
-  });
+  const [{ data: linksAtivos }, { data: emails }] = await Promise.all([
+    admin.rpc("links_aprovacao_ativos", { p_entrega_id: entregaId }),
+    admin
+      .from("notificacoes")
+      .select("id, tipo, destino, status, erro")
+      .eq("entidade_id", entregaId)
+      .order("criado_em", { ascending: false })
+      .limit(5),
+  ]);
   const tokensAtivos = Number((linksAtivos as { ativos: number } | null)?.ativos ?? 0);
+  const emailsEntrega = emails ?? [];
+  const erroEmail = emailsEntrega.find((n) => n.status === "erro")?.erro as
+    | string
+    | undefined;
+  const linkAprovacao = token_criado
+    ? `${await urlBase()}/aprovacao/${token_criado}`
+    : null;
 
   const situ = situacaoDaEntrega(
     {
@@ -74,13 +106,56 @@ export default async function DetalheEntrega({
       </header>
 
       {erro && <p className="erro">{erro}</p>}
-      {token_criado && (
+      {linkAprovacao && (
         <div className="aviso-box">
           <p>
             <strong>Link de aprovação gerado (válido por 7 dias):</strong>
           </p>
-          <code>{`${await urlBase()}/aprovacao/${token_criado}`}</code>
-          <p className="muted">Envie ao cliente pelo canal de contato.</p>
+          <code>{linkAprovacao}</code>
+          <div className="aviso-acoes">
+            <BotaoCopiar texto={linkAprovacao} />
+            <a
+              className="botao secundario"
+              href={linkAprovacao}
+              target="_blank"
+              rel="noreferrer"
+            >
+              <Icone nome="externo" width={16} height={16} />
+              Abrir
+            </a>
+          </div>
+          {email === "enviado" && (
+            <p className="aviso">E-mail com o link enviado para {email_destino}.</p>
+          )}
+          {email === "sem_email" && (
+            <p className="muted">
+              Este cliente não tem e-mail cadastrado. Copie o link e envie pelo canal
+              de contato.
+            </p>
+          )}
+          {email === "falhou" && email_teste === "1" && (
+            <>
+              <p className="erro">
+                O e-mail para {email_destino} não saiu: o provedor está em modo de
+                teste{email_liberado ? ` e só entrega para ${email_liberado}` : ""}.
+                Verificar um domínio no Resend libera o envio a qualquer destinatário.
+              </p>
+              <p className="muted">
+                O link acima está válido — copie e envie ao cliente pelo canal de
+                contato.
+              </p>
+            </>
+          )}
+          {email === "falhou" && email_teste !== "1" && (
+            <>
+              <p className="erro">
+                O e-mail para {email_destino} não saiu: {email_erro ?? "erro no provedor"}.
+              </p>
+              <p className="muted">
+                O link acima continua válido — copie e envie manualmente.
+              </p>
+            </>
+          )}
         </div>
       )}
 
@@ -180,6 +255,31 @@ export default async function DetalheEntrega({
           {tokensAtivos > 0 && (
             <p className="muted">{tokensAtivos} link(s) ativo(s) para esta entrega.</p>
           )}
+
+          {emailsEntrega.length > 0 && (
+            <div className="emails-entrega">
+              <p className="muted">
+                <strong>E-mails desta entrega</strong>
+              </p>
+              <ul className="lista-chave">
+                {emailsEntrega.map((n) => (
+                  <li key={n.id}>
+                    <span>
+                      {rotuloEmail(n.tipo)} → {n.destino}
+                    </span>
+                    <strong
+                      className={`badge tom-${n.status === "enviado" ? "ok" : "erro"}`}
+                    >
+                      {n.status === "enviado" ? "enviado" : "falhou"}
+                    </strong>
+                  </li>
+                ))}
+              </ul>
+              {erroEmail && (
+                <p className="muted">Último erro: {erroEmail.slice(0, 200)}</p>
+              )}
+            </div>
+          )}
         </div>
       </section>
 
@@ -229,6 +329,17 @@ export default async function DetalheEntrega({
       </section>
     </>
   );
+}
+
+const ROTULO_EMAIL: Record<string, string> = {
+  link_aprovacao: "Link de aprovação",
+  decisao_cliente: "Decisão do cliente",
+  prazo_vencido: "Prazo vencido",
+  teste: "Teste",
+};
+
+function rotuloEmail(tipo: string): string {
+  return ROTULO_EMAIL[tipo] ?? tipo;
 }
 
 function tomAprovacao(decisao: string): string {

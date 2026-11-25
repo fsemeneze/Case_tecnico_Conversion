@@ -1311,6 +1311,33 @@ main.auth {
   color: var(--accent-strong);
 }
 
+.aviso-acoes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 4px 0 12px;
+}
+
+.aviso-box .aviso,
+.aviso-box .erro {
+  margin: 10px 0 0;
+  font-size: 0.86rem;
+}
+
+.aviso-box p:last-child {
+  margin-bottom: 0;
+}
+
+.emails-entrega {
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+}
+
+.emails-entrega p {
+  margin: 0 0 6px;
+}
+
 .grade-detalhe {
   display: grid;
   grid-template-columns: 1fr 1fr;

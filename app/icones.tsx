@@ -16,6 +16,7 @@ export type NomeIcone =
   | "mais"
   | "busca"
   | "externo"
+  | "copiar"
   | "check"
   | "info"
   | "sol"
@@ -100,6 +101,12 @@ const CAMINHOS: Record<NomeIcone, React.ReactNode> = {
     </>
   ),
   check: <path d="M5 12.5 10 17.5 19 7" />,
+  copiar: (
+    <>
+      <rect x="9" y="9" width="11" height="11" rx="2" />
+      <path d="M15 5.5A1.5 1.5 0 0 0 13.5 4H5.5A1.5 1.5 0 0 0 4 5.5v8A1.5 1.5 0 0 0 5.5 15" />
+    </>
+  ),
   info: (
     <>
       <circle cx="12" cy="12" r="8.5" />

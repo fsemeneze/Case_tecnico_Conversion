@@ -30,9 +30,17 @@ const pct = (parte: number, total: number) => (total > 0 ? Math.round((parte / t
 export default async function Dashboard({
   searchParams,
 }: {
-  searchParams: Promise<{ notificacoes?: string; erro?: string }>;
+  searchParams: Promise<{
+    notificacoes?: string;
+    falhas?: string;
+    sem_email?: string;
+    erro_email?: string;
+    email_liberado?: string;
+    erro?: string;
+  }>;
 }) {
-  const { notificacoes, erro } = await searchParams;
+  const { notificacoes, falhas, sem_email, erro_email, email_liberado, erro } =
+    await searchParams;
   const supabase = await criarClienteSupabaseServidor();
 
   const [{ data: resumo, error: erroResumo }, indicadores, { data: meses }] = await Promise.all([
@@ -97,8 +105,22 @@ export default async function Dashboard({
 
       {erro && <p className="erro">{erro}</p>}
       {notificacoes !== undefined && (
-        <p className="aviso">
+        <p className={Number(notificacoes) > 0 ? "aviso" : "muted"}>
           {Number(notificacoes)} e-mail(s) de prazo vencido enviado(s).
+          {sem_email ? ` ${Number(sem_email)} cliente(s) sem e-mail cadastrado.` : ""}
+        </p>
+      )}
+      {falhas !== undefined && (
+        <p className="erro">
+          {Number(falhas)} envio(s) não saíram
+          {email_liberado
+            ? `: o provedor está em modo de teste e só entrega para ${email_liberado}.`
+            : erro_email
+              ? `: ${erro_email}`
+              : "."}
+          {email_liberado
+            ? " Verificar um domínio no Resend libera o envio a qualquer destinatário."
+            : ""}
         </p>
       )}
 

@@ -179,8 +179,18 @@ export async function gerarLinkAprovacao(formulario: FormData) {
 
   revalidatePath(`/entregas/${entregaId}`);
 
-  // E-mail automático ao cliente com o link (D). Se não houver e-mail cadastrado
-  // ou a chave do provedor, apenas registra no log — o link continua sendo gerado.
+  // E-mail automático ao cliente com o link (D). O link existe de qualquer
+  // forma: se o cliente não tiver e-mail cadastrado, ou o provedor recusar o
+  // envio, a tela mostra o motivo e o link continua disponível para copiar.
+  const url = `${await urlBase()}/aprovacao/${data}`;
+  const envio: {
+    status: "enviado" | "sem_email" | "falhou";
+    destino?: string;
+    erro?: string;
+    modoTeste?: boolean;
+    enderecoPermitido?: string;
+  } = { status: "sem_email" };
+
   const { data: ent } = await admin
     .from("entregas_detalhadas")
     .select("titulo, cliente, data_prevista")
@@ -198,14 +208,32 @@ export async function gerarLinkAprovacao(formulario: FormData) {
         titulo: ent.titulo,
         etapa,
         prazo: ent.data_prevista,
-        url: `${await urlBase()}/aprovacao/${data}`,
+        url,
         validadeDias: 7,
       });
-      await enviarEmail({ para: cli.email, ...tpl, tipo: "link_aprovacao", entidadeId: entregaId });
+      const r = await enviarEmail({
+        para: cli.email,
+        ...tpl,
+        tipo: "link_aprovacao",
+        entidadeId: entregaId,
+      });
+      envio.status = r.ok ? "enviado" : "falhou";
+      envio.destino = cli.email;
+      if (!r.ok) {
+        envio.erro = r.erro;
+        envio.modoTeste = r.modoTeste;
+        envio.enderecoPermitido = r.enderecoPermitido;
+      }
     }
   }
 
-  redirect(`/entregas/${entregaId}?token_criado=${data}`);
+  const retorno = new URLSearchParams({ token_criado: data, email: envio.status });
+  if (envio.destino) retorno.set("email_destino", envio.destino);
+  if (envio.erro) retorno.set("email_erro", envio.erro.slice(0, 240));
+  if (envio.modoTeste) retorno.set("email_teste", "1");
+  if (envio.enderecoPermitido) retorno.set("email_liberado", envio.enderecoPermitido);
+
+  redirect(`/entregas/${entregaId}?${retorno.toString()}`);
 }
 
 // ---------------------------------------------------------------------------
@@ -282,7 +310,7 @@ export async function aprovarViaToken(
     mensagem:
       decisao === "recusada"
         ? "Ajuste solicitado. O time da Conversion vai reavaliar e devolver o prazo."
-        : "Obrigado! A aprovação foi registrada e o time recebeu a atualização.",
+        : "Obrigado! A aprovação foi registrada no histórico da entrega e o time vê a decisão no app.",
     fase: data.fase,
   };
 }

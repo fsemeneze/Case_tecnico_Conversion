@@ -41,18 +41,39 @@ export async function notificarVencidas() {
   }
 
   let enviados = 0;
+  let falhas = 0;
+  let semEmail = 0;
+  let primeiroErro: string | null = null;
+  let liberado: string | null = null;
   for (const [cliente, entregas] of porCliente) {
     const { data: cli } = await supabase
       .from("clientes")
       .select("email")
       .eq("nome", cliente)
       .maybeSingle();
-    if (!cli?.email) continue;
+    if (!cli?.email) {
+      semEmail++;
+      continue;
+    }
     const tpl = emailPrazoVencido({ cliente, entregas });
     const r = await enviarEmail({ para: cli.email, ...tpl, tipo: "prazo_vencido" });
-    if (r.ok) enviados++;
+    if (r.ok) {
+      enviados++;
+    } else {
+      falhas++;
+      primeiroErro ??= r.erro ?? null;
+      if (r.modoTeste) liberado ??= r.enderecoPermitido ?? "o e-mail da conta";
+    }
   }
 
+  // O resultado vai para a tela com os números reais: quantos saíram, quantos
+  // falharam e por quê. Antes, uma falha total aparecia como "0 enviados".
+  const retorno = new URLSearchParams({ notificacoes: String(enviados) });
+  if (falhas) retorno.set("falhas", String(falhas));
+  if (semEmail) retorno.set("sem_email", String(semEmail));
+  if (primeiroErro) retorno.set("erro_email", primeiroErro.slice(0, 200));
+  if (liberado) retorno.set("email_liberado", liberado);
+
   revalidatePath("/dashboard");
-  redirect(`/dashboard?notificacoes=${enviados}`);
+  redirect(`/dashboard?${retorno.toString()}`);
 }

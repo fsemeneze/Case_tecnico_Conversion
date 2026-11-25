@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { criarClienteSupabaseServidor } from "@/lib/supabase/servidor";
+import { BotaoCopiar } from "@/app/botao-copiar";
 import { gerarAcessoCliente } from "./actions";
 
 type Busca = { q?: string; link_cliente?: string; erro?: string };
@@ -51,6 +52,9 @@ export default async function Clientes({ searchParams }: { searchParams: Promise
             <strong>Link de acompanhamento gerado (válido por 90 dias):</strong>
           </p>
           <code>{`${await urlBase()}/cliente/${link_cliente}`}</code>
+          <div className="aviso-acoes">
+            <BotaoCopiar texto={`${await urlBase()}/cliente/${link_cliente}`} />
+          </div>
           <p className="muted">Envie ao cliente. É somente leitura: mostra todas as entregas dele.</p>
         </div>
       )}

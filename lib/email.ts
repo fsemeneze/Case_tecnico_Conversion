@@ -6,7 +6,29 @@ import { criarClienteSupabaseAdmin } from "./supabase/admin";
 //   EMAIL_FROM      — remetente (ex.: "PlanHub <onboarding@resend.dev>")
 //   EMAIL_EQUIPE    — destinatário interno para avisos (ex.: ops@planops.case)
 
-export type ResultadoEmail = { ok: boolean; erro?: string; id?: string };
+export type ResultadoEmail = {
+  ok: boolean;
+  erro?: string;
+  id?: string;
+  // Quando o provedor está sem domínio verificado (modo de teste), ele só
+  // entrega ao e-mail da própria conta e recusa os demais. Guardamos isso para
+  // explicar a limitação na tela, em vez de deixar o usuário achar que enviou.
+  modoTeste?: boolean;
+  enderecoPermitido?: string;
+};
+
+const MODO_TESTE = /only send testing emails|testing emails/i;
+
+export function limitacaoDoProvedor(erro?: string): {
+  modoTeste: boolean;
+  enderecoPermitido?: string;
+} {
+  if (!erro || !MODO_TESTE.test(erro)) return { modoTeste: false };
+  // A mensagem do Resend traz o endereço liberado entre parênteses:
+  // "You can only send testing emails to your own email address (voce@exemplo.com)."
+  const achado = erro.match(/\(([^)\s]+@[^)\s]+)\)/);
+  return { modoTeste: true, enderecoPermitido: achado?.[1] };
+}
 
 type OpcoesEmail = {
   para: string;
@@ -69,7 +91,7 @@ export async function enviarEmail(opcoes: OpcoesEmail): Promise<ResultadoEmail> 
     if (!resp.ok) {
       const erro = data?.message ?? `HTTP ${resp.status}`;
       await registrar(opcoes.tipo, opcoes.para, opcoes.assunto, "erro", erro, opcoes.entidadeId);
-      return { ok: false, erro };
+      return { ok: false, erro, ...limitacaoDoProvedor(erro) };
     }
     await registrar(opcoes.tipo, opcoes.para, opcoes.assunto, "enviado", null, opcoes.entidadeId);
     return { ok: true, id: data?.id };
