@@ -13,4 +13,4 @@ Contas de teste (uma por papel) e o resultado de login + permissões (RLS).
 
 > As contas de teste (um por papel) existem no banco do case, mas as **senhas não
 > ficam versionadas** neste repositório público. Elas são enviadas à parte, no
-> pacote de avaliação.
+> pacote de avaliação — ver [`docs/acesso_avaliador.md`](../acesso_avaliador.md).

@@ -14,6 +14,9 @@ next-env.d.ts
 .env.*.local
 !.env.example
 
+# Credenciais de teste e do pacote de avaliação (vão no e-mail, não no repo)
+.credenciais-*.md
+
 # Diagnóstico: manter saídas versionadas (são entregável),
 # mas ignorar arquivos temporários do Python.
 __pycache__/
