@@ -1,8 +1,7 @@
 # Teste de acesso — gestor
 
 **Usuário:** Gestor de Teste
-**E-mail:** REDACTED
-**Senha:** REDACTED
+**Credenciais:** enviadas à parte (não versionadas neste repositório público).
 **Papel:** gestor
 
 ## Resultado

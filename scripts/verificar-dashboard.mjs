@@ -22,7 +22,7 @@ const BASE = "https://planops-co.vercel.app";
 const login = await fetch(`${SUPA_URL}/auth/v1/token?grant_type=password`, {
   method: "POST",
   headers: { apikey: PUB, "Content-Type": "application/json" },
-  body: JSON.stringify({ email: "REDACTED", password: "REDACTED" }),
+  body: JSON.stringify({ email: process.env.TEST_ADMIN_EMAIL, password: process.env.TEST_ADMIN_SENHA }),
 });
 const sessao = await login.json();
 if (!sessao.access_token) {

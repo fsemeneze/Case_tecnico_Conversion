@@ -1,8 +1,7 @@
 # Teste de acesso — leitor
 
 **Usuário:** Leitor de Teste
-**E-mail:** REDACTED
-**Senha:** REDACTED
+**Credenciais:** enviadas à parte (não versionadas neste repositório público).
 **Papel:** leitor
 
 ## Resultado

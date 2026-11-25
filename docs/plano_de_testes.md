@@ -3,7 +3,7 @@
 Como validar o app antes de mostrar. Cada caso tem um resultado esperado
 concreto, para dar para marcar "passou" ou "falhou" sem interpretação.
 
-**Conta de teste:** `REDACTED` / `REDACTED` (papel admin).
+**Conta de teste:** credenciais enviadas à parte (não versionadas neste repositório público).
 **Base:** 1.007 entregas, 25 clientes, 273 atrasadas, 71 abertas com prazo
 vencido na data de referência.
 

@@ -40,12 +40,18 @@ const admin = createClient(URL, SERVICE, {
   auth: { autoRefreshToken: false, persistSession: false },
 });
 
+// Credenciais de teste vêm do ambiente (não versionadas). Defina as variáveis
+// antes de rodar: TEST_ADMIN_EMAIL/SENHA, TEST_GESTOR_EMAIL/SENHA, etc.
 const USUARIOS = [
-  { papel: "admin", nome: "Admin de Teste", email: "REDACTED", senha: "REDACTED" },
-  { papel: "gestor", nome: "Gestor de Teste", email: "REDACTED", senha: "REDACTED" },
-  { papel: "operador", nome: "Operador de Teste", email: "REDACTED", senha: "REDACTED" },
-  { papel: "leitor", nome: "Leitor de Teste", email: "REDACTED", senha: "REDACTED" },
+  { papel: "admin", nome: "Admin de Teste", email: process.env.TEST_ADMIN_EMAIL, senha: process.env.TEST_ADMIN_SENHA },
+  { papel: "gestor", nome: "Gestor de Teste", email: process.env.TEST_GESTOR_EMAIL, senha: process.env.TEST_GESTOR_SENHA },
+  { papel: "operador", nome: "Operador de Teste", email: process.env.TEST_OPERADOR_EMAIL, senha: process.env.TEST_OPERADOR_SENHA },
+  { papel: "leitor", nome: "Leitor de Teste", email: process.env.TEST_LEITOR_EMAIL, senha: process.env.TEST_LEITOR_SENHA },
 ];
+if (USUARIOS.some((u) => !u.email || !u.senha)) {
+  console.error("Defina as variáveis TEST_<PAPEL>_EMAIL e TEST_<PAPEL>_SENHA.");
+  process.exit(1);
+}
 
 // Dimensões para montar uma entrega de teste (mesma base do case).
 const { data: fase } = await admin.from("fases").select("id").eq("codigo", "solicitada").maybeSingle();
