@@ -18,21 +18,6 @@ export default function LayoutLogin({
           </Link>
 
           <h1>Planejamento e entregas</h1>
-
-          <ul className="auth-itens">
-            <li>
-              <span className="auth-check" aria-hidden="true" />
-              Aprovação do cliente em duas etapas, por link
-            </li>
-            <li>
-              <span className="auth-check" aria-hidden="true" />
-              Atraso com definição única, visível na hora
-            </li>
-            <li>
-              <span className="auth-check" aria-hidden="true" />
-              Histórico e fila de revisão, sem perder nada
-            </li>
-          </ul>
         </section>
 
         <section className="auth-painel">
