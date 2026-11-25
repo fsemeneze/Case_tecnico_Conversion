@@ -117,6 +117,7 @@ supabase/
 docs/
   diagnostico.md        Relatório gerado pelo script
   decisoes.md           Decisões, premissas e alternativas descartadas
+  acesso_cliente.md     Por que link e não conta de cliente (apoio à apresentação)
   readme_produto.md     README de produto (1 página)
   plano_melhoria_planops.md
 dados/                  Base original do case
