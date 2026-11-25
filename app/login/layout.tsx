@@ -17,11 +17,7 @@ export default function LayoutLogin({
             PlanHub
           </Link>
 
-          <h1>
-            Planejamento e entregas,
-            <br />
-            em um só lugar.
-          </h1>
+          <h1>Planejamento e entregas</h1>
 
           <p className="auth-sub">
             Da solicitação à aprovação do cliente, com histórico de quem decidiu
