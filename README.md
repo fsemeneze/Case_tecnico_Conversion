@@ -160,3 +160,6 @@ antes de gerar a base final.
 - "ok" em status sem aprovação registrada é tratado como entregue, com flag.
 - Em relatório, aprovação de planejamento vazia é "não se aplica".
 - A data de referência de "atraso hoje" é a data de execução.
+- O provedor de e-mail está em modo de teste (domínio não verificado): só entrega
+  ao e-mail da conta Resend. A falha aparece na tela com o motivo, e o link de
+  aprovação continua visível para copiar e enviar pelo canal de contato.

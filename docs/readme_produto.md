@@ -36,12 +36,30 @@ vencido hoje.
 
 ## O que ficou de fora
 
-- **Notificação por WhatsApp** — o envio por **e-mail já está implementado** (link
-  de aprovação ao cliente, aviso da decisão ao time e aviso de prazo vencido);
-  falta apenas o canal WhatsApp.
+- **WhatsApp.** O e-mail existe no app (link de aprovação ao cliente, aviso da
+  decisão ao time e aviso de prazo vencido), mas o provedor está em modo de
+  teste, sem domínio verificado: ele só entrega ao e-mail da própria conta.
+  Quando o envio não sai, a tela diz o motivo e mantém o link visível para
+  copiar e mandar pelo canal de contato. Verificar um domínio no Resend resolve.
 - Exportação CSV e gráficos além dos indicadores de atraso.
 - E-mail de comprovante ao cliente após a aprovação.
 - Integração com o calendário.
+
+## Próxima entrega e por quê
+
+**Escalonamento de aprovações paradas.** Hoje o app mostra o que está aguardando
+o cliente, mas não age: a entrega fica parada até alguém lembrar de cobrar. A
+próxima entrega transforma a espera em fila com prazo: a cada X dias sem
+decisão, o cliente recebe um lembrete com o link reaberto e o gestor do squad
+recebe um alerta com o tempo médio de decisão daquele cliente.
+
+Por quê: o atraso nasce menos na execução e mais na espera. Das entregas
+comparáveis, 30,7% passaram do prazo, com mediana de 6 dias; o trecho entre
+"pronto para aprovação" e a decisão do cliente é justamente o que o time não
+controla e hoje não consegue medir. O que a entrega precisa já existe — fase,
+aprovação, link com validade e histórico com data e autor —, então o trabalho é
+de regra e de tela, não de modelo novo. E o resultado é mensurável: dias até a
+decisão por cliente e quantas entregas destravaram depois do lembrete.
 
 ## Decisões que valem registro
 

@@ -38,8 +38,8 @@ export default function Sobre() {
       <h2>Para o cliente</h2>
       <ul>
         <li>
-          Aprovação por link, sem conta: o link chega por e-mail e o cliente
-          decide com nome e observação.
+          Aprovação por link, sem conta: o time gera o link, envia por e-mail ou
+          pelo canal de contato, e o cliente decide com nome e observação.
         </li>
         <li>
           Portal de acompanhamento, somente leitura, com todas as entregas do
@@ -49,14 +49,28 @@ export default function Sobre() {
 
       <h2>Notificações por e-mail</h2>
       <p className="muted">
-        O cliente recebe o link de aprovação por e-mail e o time é avisado
-        quando o cliente decide. O dashboard tem um acionador para avisar
-        clientes com prazo vencido.
+        O cliente recebe o link de aprovação e o time é avisado quando ele decide.
+        O dashboard tem um acionador para avisar clientes com prazo vencido. O
+        provedor está em modo de teste, sem domínio verificado: quando o envio não
+        sai, a tela mostra o motivo e o link continua visível para copiar.
       </p>
 
-      <h2>O que vem depois</h2>
+      <h2>Próxima entrega e por quê</h2>
+      <p>
+        <strong>Escalonamento de aprovações paradas:</strong> a cada X dias sem
+        decisão, o cliente recebe um lembrete com o link reaberto e o gestor do
+        squad recebe um alerta com o tempo médio de decisão daquele cliente.
+      </p>
+      <p className="muted">
+        O atraso nasce menos na execução e mais na espera: 30,7% das entregas
+        comparáveis passaram do prazo, com mediana de 6 dias. Fase, aprovação, link
+        e histórico já existem — falta a regra que cobra a decisão e mede quantos
+        dias ela levou.
+      </p>
+
+      <h2>Depois disso</h2>
       <ul>
-        <li>Notificação por WhatsApp, além do e-mail.</li>
+        <li>WhatsApp, além do e-mail.</li>
         <li>Exportação CSV e gráficos além dos indicadores de atraso.</li>
         <li>Integração com o calendário.</li>
       </ul>
