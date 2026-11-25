@@ -11,6 +11,7 @@ export type DadosEntrega = {
   etapa: string;
   data_prevista: string | null;
   num_revisoes: number | null;
+  link: string | null;
 };
 
 type Estado = { ok: boolean; mensagem: string; fase?: string } | null;

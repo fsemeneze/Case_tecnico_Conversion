@@ -68,6 +68,16 @@ export default async function PaginaAprovacao({
                 </li>
               )}
             </ul>
+            {dados.link && (
+              <a
+                href={dados.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="botao primario"
+              >
+                Ver conteúdo da entrega
+              </a>
+            )}
           </div>
 
           <FormularioAprovacao dados={dados} />
