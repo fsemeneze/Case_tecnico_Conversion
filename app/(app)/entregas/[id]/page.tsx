@@ -4,6 +4,7 @@ import { criarClienteSupabaseServidor } from "@/lib/supabase/servidor";
 import { criarClienteSupabaseAdmin } from "@/lib/supabase/admin";
 import { ROTULO_APROVACAO, situacaoDaEntrega } from "@/lib/fases";
 import { buscarEntrega, listarEventos, listarAprovacoes } from "@/lib/consultas";
+import { Icone } from "@/app/icones";
 import { gerarLinkAprovacao } from "../actions";
 
 type Params = { id: string };
@@ -50,19 +51,24 @@ export default async function DetalheEntrega({
     <>
       <header className="topo">
         <div>
-          <p className="eyebrow">
-            Entrega #{entrega.id}
-            {entrega.legacy_id ? ` · planilha nº ${entrega.legacy_id}` : ""}
-          </p>
           <h1>{entrega.titulo}</h1>
           <p className="muted">
-            {[entrega.cliente, entrega.tipo, entrega.subtipo, entrega.squad, entrega.responsavel]
+            {[
+              `#${entrega.id}`,
+              entrega.legacy_id ? `planilha nº ${entrega.legacy_id}` : "",
+              entrega.cliente,
+              entrega.tipo,
+              entrega.subtipo,
+              entrega.squad,
+              entrega.responsavel,
+            ]
               .filter(Boolean)
               .join(" · ")}
           </p>
         </div>
         <Link href="/entregas" className="botao secundario">
-          ← Voltar
+          <Icone nome="voltar" width={17} height={17} />
+          Voltar
         </Link>
       </header>
 
@@ -117,7 +123,7 @@ export default async function DetalheEntrega({
           {entrega.link && (
             <p>
               <a href={entrega.link} target="_blank" rel="noreferrer">
-                Abrir arquivo ↗
+                Abrir arquivo <Icone nome="externo" width={15} height={15} />
               </a>
             </p>
           )}

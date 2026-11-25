@@ -12,10 +12,107 @@
   --card: #ffffff;
   --border: #e6e9ef;
   --accent: #1649ff;
+  --accent-strong: #1100d2;
   --accent-soft: #eef2ff;
   --warn: #b45309;
   --ok: #0f7b52;
   --radius: 14px;
+
+  /* Superfícies e apoios derivados do padrão Conversion. */
+  --surface-subtle: #fbfbfd;
+  --surface-hover: #f1f4fb;
+  --surface-row: #fcfcff;
+  --text-soft: #404555;
+  --ring: rgba(22, 73, 255, 0.16);
+  --shadow-card: 0 1px 2px rgba(16, 24, 40, 0.04),
+    0 8px 24px rgba(16, 24, 40, 0.05);
+  --shadow-pop: 0 12px 32px rgba(16, 24, 40, 0.1);
+  color-scheme: light;
+}
+
+/* ============================ Modo escuro ============================ */
+[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #0f1117;
+  --fg: #e7e9ef;
+  --muted: #9aa3b2;
+  --card: #161922;
+  --border: #272c38;
+  --accent: #5b7bff;
+  --accent-strong: #7a93ff;
+  --accent-soft: rgba(91, 123, 255, 0.16);
+  --warn: #f0a24a;
+  --ok: #46c48d;
+  --surface-subtle: #12151c;
+  --surface-hover: #1d222c;
+  --surface-row: #1a1f28;
+  --text-soft: #c5cbd8;
+  --ring: rgba(91, 123, 255, 0.45);
+  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.3),
+    0 8px 24px rgba(0, 0, 0, 0.35);
+  --shadow-pop: 0 12px 32px rgba(0, 0, 0, 0.5);
+}
+
+/* O card de auth é claro nos dois temas: mantém o texto escuro localmente. */
+[data-theme="dark"] .auth-cartao {
+  --fg: #0e0e10;
+  --muted: #6b7280;
+  --border: #e6e9ef;
+  --text-soft: #404555;
+  --accent: #1649ff;
+  --accent-soft: #eef2ff;
+  background: #ffffff;
+  color: #0e0e10;
+}
+
+[data-theme="dark"] *::-webkit-scrollbar-thumb {
+  background: #2c3240;
+}
+
+[data-theme="dark"] *::-webkit-scrollbar-thumb:hover {
+  background: #3a4152;
+}
+
+/* Setas e painel do select no escuro. */
+[data-theme="dark"] .app select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%239aa3b2' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+}
+
+[data-theme="dark"] .app select option,
+[data-theme="dark"] .app select optgroup {
+  background-color: #161922;
+  color: #e7e9ef;
+  color-scheme: dark;
+}
+
+/* Botões preenchidos usam o azul da marca no escuro também: o accent claro
+   do tema não sustenta texto branco com contraste. */
+[data-theme="dark"] .cartao-form button,
+[data-theme="dark"] .auth-form button,
+[data-theme="dark"] .botao.primario {
+  background: #1649ff;
+  border-color: #1649ff;
+  color: #ffffff;
+}
+
+[data-theme="dark"] .cartao-form button:hover:not(:disabled),
+[data-theme="dark"] .auth-form button:hover:not(:disabled),
+[data-theme="dark"] .botao.primario:hover {
+  background: #2e5bff;
+  border-color: #2e5bff;
+  color: #ffffff;
+}
+
+/* Vermelho de erro mais claro para ler sobre fundo escuro. */
+[data-theme="dark"] .erro,
+[data-theme="dark"] .erro-campo,
+[data-theme="dark"] .badge.tom-erro {
+  color: #ff9b9b;
+}
+
+[data-theme="dark"] .badge.tom-erro {
+  border-color: rgba(255, 155, 155, 0.4);
+  background: rgba(255, 155, 155, 0.08);
 }
 
 * {
@@ -37,6 +134,39 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+/* Seleção, caret e barra de rolagem fazem parte do sistema, não do browser. */
+::selection {
+  background: rgba(22, 73, 255, 0.16);
+  color: var(--fg);
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #c7ccd8 transparent;
+}
+
+*::-webkit-scrollbar {
+  width: 11px;
+  height: 11px;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: #c7ccd8;
+  border-radius: 999px;
+  border: 3px solid var(--bg);
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: #aab1c2;
+}
+
+/* Foco de teclado visível e consistente em tudo que é interativo. */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
 main {
   max-width: 900px;
   margin: 0 auto;
@@ -48,15 +178,6 @@ h2,
 h3 {
   font-family: var(--font-jakarta), var(--font-inter), ui-sans-serif,
     system-ui, sans-serif;
-}
-
-.eyebrow {
-  color: var(--accent);
-  font-size: 0.78rem;
-  font-weight: 600;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  margin: 0 0 12px;
 }
 
 h1 {
@@ -111,26 +232,33 @@ p {
 }
 
 .stat {
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 6px;
   background: var(--card);
   border: 1px solid var(--border);
   border-radius: var(--radius);
   padding: 20px 22px;
   text-decoration: none;
   color: inherit;
-  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  box-shadow: var(--shadow-card);
+  transition: border-color 0.16s ease, box-shadow 0.16s ease,
+    transform 0.16s ease;
 }
 
 .stat:hover {
   border-color: var(--accent);
-  box-shadow: 0 6px 20px rgba(22, 73, 255, 0.08);
+  box-shadow: var(--shadow-pop);
+  transform: translateY(-2px);
 }
 
 .stat .value {
   display: block;
   font-family: var(--font-jakarta), sans-serif;
-  font-size: 2rem;
+  font-size: 2.1rem;
   font-weight: 700;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.035em;
+  line-height: 1;
   font-variant-numeric: tabular-nums;
 }
 
@@ -138,11 +266,15 @@ p {
   display: block;
   color: var(--muted);
   font-size: 0.85rem;
-  margin-top: 4px;
+  font-weight: 500;
 }
 
 .stat.alert .value {
   color: var(--warn);
+}
+
+.stat.alert {
+  background: linear-gradient(180deg, rgba(180, 83, 9, 0.05), var(--card) 60%);
 }
 
 ul.findings {
@@ -222,25 +354,28 @@ footer {
 
 .app {
   display: grid;
-  grid-template-columns: 244px 1fr;
+  grid-template-columns: 252px 1fr;
   min-height: 100vh;
 }
 
 .menu-lateral {
   border-right: 1px solid var(--border);
-  background: #fbfbfd;
-  padding: 22px 14px;
+  background: var(--surface-subtle);
+  padding: 20px 14px;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 18px;
   position: sticky;
   top: 0;
   height: 100vh;
 }
 
 .menu-lateral .marca {
+  display: flex;
+  align-items: center;
+  gap: 10px;
   font-family: var(--font-jakarta), sans-serif;
-  font-size: 1.2rem;
+  font-size: 1.18rem;
   font-weight: 700;
   letter-spacing: -0.03em;
   padding: 0 8px;
@@ -248,58 +383,111 @@ footer {
   color: var(--fg);
 }
 
+.menu-lateral .marca .marca-mark {
+  width: 30px;
+  height: 30px;
+  flex: 0 0 auto;
+  border-radius: 9px;
+  background: linear-gradient(135deg, var(--accent) 0%, #6e8bff 100%);
+  box-shadow: 0 4px 12px rgba(22, 73, 255, 0.35);
+}
+
 .menu-lateral .marca small {
   display: block;
   font-family: var(--font-inter), sans-serif;
-  font-size: 0.72rem;
-  font-weight: 400;
+  font-size: 0.7rem;
+  font-weight: 500;
   color: var(--muted);
   letter-spacing: 0.01em;
+  margin-top: 1px;
 }
 
 .menu-lateral nav {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 3px;
 }
 
 .menu-lateral nav a {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 11px;
   padding: 9px 12px;
-  border-radius: 9px;
-  color: #404555;
+  border-radius: 10px;
+  color: var(--text-soft);
   text-decoration: none;
   font-size: 0.92rem;
-  transition: background 0.12s ease, color 0.12s ease;
+  font-weight: 450;
+  transition: background 0.14s ease, color 0.14s ease;
+}
+
+.menu-lateral nav a svg {
+  flex: 0 0 auto;
+  color: var(--muted);
+  transition: color 0.14s ease;
 }
 
 .menu-lateral nav a:hover {
-  background: #f1f4fb;
+  background: var(--surface-hover);
   color: var(--fg);
+}
+
+.menu-lateral nav a:hover svg {
+  color: var(--text-soft);
 }
 
 .menu-lateral nav a.ativo {
   background: var(--accent-soft);
   color: var(--accent);
-  font-weight: 550;
+  font-weight: 560;
+}
+
+.menu-lateral nav a.ativo svg {
+  color: var(--accent);
 }
 
 .menu-lateral nav .secao {
   color: var(--muted);
-  font-size: 0.72rem;
-  letter-spacing: 0.1em;
+  font-size: 0.68rem;
+  letter-spacing: 0.11em;
   text-transform: uppercase;
-  padding: 18px 12px 6px;
+  font-weight: 600;
+  padding: 20px 12px 6px;
 }
 
 .menu-usuario {
   margin-top: auto;
   border-top: 1px solid var(--border);
-  padding: 14px 8px 0;
-  font-size: 0.85rem;
-  color: var(--muted);
+  padding: 16px 8px 0;
+  display: grid;
+  gap: 12px;
+}
+
+.menu-usuario .usuario-topo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.menu-usuario .avatar {
+  flex: 0 0 auto;
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  background: var(--accent-soft);
+  color: var(--accent);
+  display: grid;
+  place-items: center;
+  font-family: var(--font-jakarta), sans-serif;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.menu-usuario .usuario-info {
+  min-width: 0;
+  line-height: 1.25;
 }
 
 .menu-usuario strong {
@@ -307,38 +495,50 @@ footer {
   color: var(--fg);
   font-size: 0.88rem;
   font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-.menu-usuario button {
-  margin-top: 10px;
+.menu-usuario .papel {
+  display: block;
+  font-size: 0.76rem;
+  color: var(--muted);
+}
+
+.menu-usuario .usuario-acoes {
+  display: grid;
+  gap: 4px;
+}
+
+.menu-usuario .usuario-acoes a,
+.menu-usuario .usuario-acoes button {
+  display: flex;
+  align-items: center;
+  gap: 9px;
   width: 100%;
-  border: 1px solid var(--border);
+  border: none;
   background: transparent;
-  color: var(--fg);
+  color: var(--text-soft);
   border-radius: 9px;
-  padding: 8px;
+  padding: 8px 10px;
   font: inherit;
   font-size: 0.85rem;
-  cursor: pointer;
-}
-
-.menu-usuario button:hover {
-  border-color: var(--accent);
-  color: var(--accent);
-}
-
-.link-sobre {
-  display: block;
-  margin-top: 10px;
-  color: var(--muted);
-  font-size: 0.82rem;
+  text-align: left;
   text-decoration: none;
-  border-bottom: 1px solid transparent;
+  cursor: pointer;
+  transition: background 0.14s ease, color 0.14s ease;
 }
 
-.link-sobre:hover {
-  color: var(--accent);
-  border-color: var(--accent);
+.menu-usuario .usuario-acoes a svg,
+.menu-usuario .usuario-acoes button svg {
+  color: var(--muted);
+}
+
+.menu-usuario .usuario-acoes a:hover,
+.menu-usuario .usuario-acoes button:hover {
+  background: var(--surface-hover);
+  color: var(--fg);
 }
 
 .conteudo {
@@ -358,6 +558,9 @@ footer {
     gap: 10px;
     overflow-x: auto;
     padding: 12px 14px;
+  }
+  .menu-lateral .marca small {
+    display: none;
   }
   .menu-lateral nav {
     flex-direction: row;
@@ -409,16 +612,65 @@ footer {
   font-weight: 500;
   text-decoration: none;
   cursor: pointer;
-  transition: border-color 0.14s ease, color 0.14s ease, background 0.14s ease;
+  transition: border-color 0.14s ease, color 0.14s ease,
+    background 0.14s ease, box-shadow 0.14s ease;
 }
 
 .botao:hover {
   border-color: var(--accent);
   color: var(--accent);
+  background: var(--surface-row);
 }
 
 .botao.secundario {
   background: transparent;
+}
+
+.botao.primario {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #ffffff;
+  font-weight: 560;
+  box-shadow: 0 1px 2px rgba(22, 73, 255, 0.3);
+}
+
+.botao.primario:hover {
+  background: var(--accent-strong);
+  border-color: var(--accent-strong);
+  color: #ffffff;
+}
+
+/* Botões "nus" (sem classe .botao) em filtros e cartões recebem o mesmo
+   acabamento de botão superfície, em vez do estilo nativo do browser. */
+.filtros button[type="submit"],
+.cartao > button,
+.lista-chave button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--fg);
+  border-radius: 10px;
+  padding: 9px 14px;
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: border-color 0.14s ease, color 0.14s ease, background 0.14s ease;
+}
+
+.filtros button[type="submit"]:hover,
+.cartao > button:hover,
+.lista-chave button:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.lista-chave button {
+  padding: 6px 12px;
+  font-size: 0.85rem;
 }
 
 .badge {
@@ -465,7 +717,7 @@ footer {
   gap: 10px;
   align-items: center;
   padding: 14px 16px;
-  background: #fbfbfd;
+  background: var(--surface-subtle);
   border: 1px solid var(--border);
   border-radius: var(--radius);
   margin-bottom: 12px;
@@ -494,6 +746,42 @@ footer {
   transition: border-color 0.14s ease, box-shadow 0.14s ease;
 }
 
+/* Checkbox e radio com o azul da marca, fora do estilo nativo. */
+.app input[type="checkbox"],
+.app input[type="radio"] {
+  accent-color: var(--accent);
+  width: 15px;
+  height: 15px;
+  padding: 0;
+  border: none;
+  border-radius: 4px;
+}
+
+/* Select com aparência própria: seta autoral em vez da nativa, e opções
+   que seguem o tema (o painel aberto é desenhado pelo browser; em
+   Chromium/Windows ele aceita background das option). */
+.app select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  padding-right: 30px;
+}
+
+.app select option,
+.app select optgroup {
+  background-color: var(--card);
+  color: var(--fg);
+}
+
+.app input::placeholder,
+.app textarea::placeholder,
+.cartao-form input::placeholder,
+.cartao-form textarea::placeholder,
+.auth-form input::placeholder {
+  color: #98a2b3;
+}
+
 .app input:focus,
 .app select:focus,
 .app textarea:focus,
@@ -514,6 +802,7 @@ footer {
   border-radius: var(--radius);
   overflow-x: auto;
   background: var(--card);
+  box-shadow: var(--shadow-card);
 }
 
 .tabela {
@@ -525,25 +814,38 @@ footer {
 .tabela th,
 .tabela td {
   text-align: left;
-  padding: 11px 14px;
+  padding: 12px 15px;
   border-bottom: 1px solid var(--border);
   white-space: nowrap;
 }
 
+.tabela td {
+  font-variant-numeric: tabular-nums;
+}
+
 .tabela th {
   color: var(--muted);
-  font-weight: 550;
-  font-size: 0.78rem;
-  letter-spacing: 0.02em;
-  background: #fbfbfd;
+  font-weight: 600;
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  background: var(--surface-subtle);
 }
 
 .tabela tbody tr:last-child td {
   border-bottom: none;
 }
 
+.tabela tbody tr {
+  transition: background 0.12s ease;
+}
+
 .tabela tbody tr:hover td {
-  background: #fcfcff;
+  background: var(--surface-row);
+}
+
+.tabela tbody td:first-child {
+  color: var(--fg);
 }
 
 .titulo-link {
@@ -571,13 +873,14 @@ footer {
   border-radius: var(--radius);
   padding: 26px;
   max-width: 560px;
+  box-shadow: var(--shadow-card);
 }
 
 .cartao-form label {
   display: grid;
   gap: 5px;
   font-size: 0.88rem;
-  color: #404555;
+  color: var(--text-soft);
   font-weight: 500;
 }
 
@@ -610,7 +913,7 @@ footer {
 }
 
 .cartao-form button:hover:not(:disabled) {
-  background: #1100d2;
+  background: var(--accent-strong);
 }
 
 .cartao-form button.secundario {
@@ -786,6 +1089,31 @@ main.auth {
   gap: 14px;
 }
 
+.auth-tema {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.tema-toggle.compacto {
+  width: 38px;
+  height: 38px;
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.08);
+  color: #e7e9f5;
+  display: inline-grid;
+  place-items: center;
+  cursor: pointer;
+  transition: background 0.14s ease, border-color 0.14s ease, color 0.14s ease;
+}
+
+.tema-toggle.compacto:hover {
+  background: rgba(255, 255, 255, 0.16);
+  border-color: rgba(255, 255, 255, 0.4);
+  color: #ffffff;
+}
+
 .auth-cartao {
   background: #ffffff;
   border-radius: 18px;
@@ -821,7 +1149,7 @@ main.auth {
   gap: 6px;
   font-size: 0.86rem;
   font-weight: 550;
-  color: #404555;
+  color: var(--text-soft);
 }
 
 .auth-form input {
@@ -864,7 +1192,7 @@ main.auth {
 }
 
 .auth-form button:hover:not(:disabled) {
-  background: #1100d2;
+  background: var(--accent-strong);
 }
 
 .auth-form button:disabled {
@@ -945,7 +1273,7 @@ main.auth {
   border-radius: 8px;
   padding: 8px 10px;
   margin: 8px 0;
-  color: #1100d2;
+  color: var(--accent-strong);
 }
 
 .grade-detalhe {
@@ -966,10 +1294,32 @@ main.auth {
   border: 1px solid var(--border);
   border-radius: var(--radius);
   padding: 22px;
+  box-shadow: var(--shadow-card);
 }
 
 .cartao h2 {
   margin-top: 0;
+}
+
+/* Links dentro de texto usam o azul da marca, com sublinhado ao passar. */
+.cartao a:not(.botao),
+.sobre p a,
+.aprovacao p a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.cartao a:not(.botao):hover,
+.sobre p a:hover,
+.aprovacao p a:hover {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+/* Ícones inline acompanham a linha de texto. */
+.cartao p a svg,
+.aprovacao p a svg {
+  vertical-align: -0.18em;
 }
 
 .lista-chave {
@@ -1032,6 +1382,28 @@ main.auth {
   padding: 48px 24px 80px;
   display: grid;
   gap: 16px;
+}
+
+.marca-topo {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  width: fit-content;
+  font-family: var(--font-jakarta), sans-serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: var(--fg);
+  text-decoration: none;
+  margin-bottom: 8px;
+}
+
+.marca-topo .marca-mark {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, var(--accent) 0%, #6e8bff 100%);
+  box-shadow: 0 4px 12px rgba(22, 73, 255, 0.35);
 }
 
 .confirmacao {
@@ -1122,7 +1494,7 @@ main.auth {
   padding: 16px;
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  background: #fbfbfd;
+  background: var(--surface-subtle);
 }
 
 .mfa-novo img {
@@ -1139,7 +1511,7 @@ main.auth {
 }
 
 .seguranca code {
-  background: #fbfbfd;
+  background: var(--surface-subtle);
   border: 1px solid var(--border);
   border-radius: 6px;
   padding: 1px 5px;
@@ -1171,7 +1543,7 @@ main.auth {
 }
 
 .sobre code {
-  background: #fbfbfd;
+  background: var(--surface-subtle);
   border: 1px solid var(--border);
   border-radius: 6px;
   padding: 1px 5px;

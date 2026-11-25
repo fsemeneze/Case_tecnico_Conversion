@@ -34,7 +34,6 @@ export default async function Equipe() {
     <>
       <header className="topo">
         <div>
-          <p className="eyebrow">PlanOps</p>
           <h1>Equipe</h1>
         </div>
       </header>

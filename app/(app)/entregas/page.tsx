@@ -2,6 +2,7 @@ import Link from "next/link";
 import { criarClienteSupabaseServidor } from "@/lib/supabase/servidor";
 import { ROTULO_FASE, situacaoDaEntrega } from "@/lib/fases";
 import { listarEntregas, listarClientes } from "@/lib/consultas";
+import { Icone } from "@/app/icones";
 
 type Busca = {
   q?: string;
@@ -62,12 +63,12 @@ export default async function ListaEntregas({
     <>
       <header className="topo">
         <div>
-          <p className="eyebrow">PlanOps</p>
           <h1>Entregas</h1>
         </div>
         <div className="topo-acoes">
-          <Link href="/entregas/nova" className="botao">
-            + Nova entrega
+          <Link href="/entregas/nova" className="botao primario">
+            <Icone nome="mais" width={17} height={17} />
+            Nova entrega
           </Link>
         </div>
       </header>
@@ -108,7 +109,7 @@ export default async function ListaEntregas({
             type="checkbox"
             name="situacao"
             value="atrasadas"
-            checked={situacao === "atrasadas"}
+            defaultChecked={situacao === "atrasadas"}
           />
           Apenas em atraso
         </label>
@@ -117,7 +118,7 @@ export default async function ListaEntregas({
             type="checkbox"
             name="situacao"
             value="vencidas"
-            checked={situacao === "vencidas"}
+            defaultChecked={situacao === "vencidas"}
           />
           Vencidas (em aberto)
         </label>

@@ -31,7 +31,6 @@ export default async function Clientes({ searchParams }: { searchParams: Promise
     <>
       <header className="topo">
         <div>
-          <p className="eyebrow">PlanOps</p>
           <h1>Clientes</h1>
         </div>
       </header>

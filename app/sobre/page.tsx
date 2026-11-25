@@ -5,7 +5,6 @@ import Link from "next/link";
 export default function Sobre() {
   return (
     <main className="sobre">
-      <p className="eyebrow">PlanOps</p>
       <h1>Planejamento e entregas</h1>
       <p className="lead">
         O controle de entregas da Conversion saiu da planilha e virou um app:

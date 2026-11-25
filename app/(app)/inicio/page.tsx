@@ -26,7 +26,6 @@ export default async function Inicio() {
     <>
       <header className="topo">
         <div>
-          <p className="eyebrow">PlanOps</p>
           <h1>Início</h1>
         </div>
       </header>

@@ -30,7 +30,10 @@ export default async function PaginaAprovacao({
 
   return (
     <main className="aprovacao">
-      <p className="eyebrow">Conversion · Aprovação do cliente</p>
+      <a href="/" className="marca-topo">
+        <span className="marca-mark" aria-hidden="true" />
+        PlanOps
+      </a>
 
       {erroToken && (
         <div className="cartao-form">

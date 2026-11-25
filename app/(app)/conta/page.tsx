@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Icone } from "@/app/icones";
 import Seguranca from "./seguranca";
 
 export default function PaginaSeguranca() {
@@ -6,11 +7,11 @@ export default function PaginaSeguranca() {
     <>
       <header className="topo">
         <div>
-          <p className="eyebrow">PlanOps</p>
           <h1>Segurança da conta</h1>
         </div>
         <Link href="/inicio" className="botao secundario">
-          ← Voltar
+          <Icone nome="voltar" width={17} height={17} />
+          Voltar
         </Link>
       </header>
 

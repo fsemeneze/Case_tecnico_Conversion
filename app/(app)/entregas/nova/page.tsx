@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { criarClienteSupabaseServidor } from "@/lib/supabase/servidor";
 import { listarClientes } from "@/lib/consultas";
+import { Icone } from "@/app/icones";
 import { FormularioNovaEntrega } from "./formulario";
 
 const TIPOS = ["Relatório", "Análise", "Conteúdo"];
@@ -13,11 +14,11 @@ export default async function NovaEntrega() {
     <>
       <header className="topo">
         <div>
-          <p className="eyebrow">PlanOps</p>
           <h1>Nova entrega</h1>
         </div>
         <Link href="/entregas" className="botao secundario">
-          ← Voltar
+          <Icone nome="voltar" width={17} height={17} />
+          Voltar
         </Link>
       </header>
 

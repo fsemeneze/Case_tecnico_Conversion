@@ -74,7 +74,6 @@ export default async function Revisao({ searchParams }: { searchParams: Promise<
     <>
       <header className="topo">
         <div>
-          <p className="eyebrow">PlanOps</p>
           <h1>Revisão de dados</h1>
         </div>
       </header>

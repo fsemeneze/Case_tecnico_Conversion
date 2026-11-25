@@ -118,7 +118,5 @@ antes do envio.
 
 ## Pendências conhecidas
 
-- Fase 2: schema, RLS e importação no Supabase.
-- Fase 3: app (lista, cadastro, aprovação, histórico).
-- Fase 4: README de produto (1 página).
+- Gravar o vídeo de demonstração (Fase 5).
 - Definir identidade visual mínima; não é critério do case.

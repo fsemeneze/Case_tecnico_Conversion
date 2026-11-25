@@ -14,6 +14,10 @@ const jakarta = Plus_Jakarta_Sans({
   display: "swap",
 });
 
+// Aplica o tema antes da pintura para evitar flash: preferência salva ou,
+// na primeira visita, o tema do sistema.
+const TEMA_INICIAL = `(function(){try{var t=localStorage.getItem('tema');if(t!=='light'&&t!=='dark'){t=window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';}document.documentElement.dataset.theme=t;}catch(e){}})();`;
+
 export const metadata: Metadata = {
   title: "PlanOps — Planejamento e entregas",
   description:
@@ -24,8 +28,11 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="pt-BR">
-      <body className={`${inter.variable} ${jakarta.variable}`}>{children}</body>
+    <html lang="pt-BR" suppressHydrationWarning>
+      <body className={`${inter.variable} ${jakarta.variable}`}>
+        <script dangerouslySetInnerHTML={{ __html: TEMA_INICIAL }} />
+        {children}
+      </body>
     </html>
   );
 }

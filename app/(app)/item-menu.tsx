@@ -2,13 +2,16 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { Icone, type NomeIcone } from "@/app/icones";
 
-// Item do menu lateral com destaque na rota atual.
+// Item do menu lateral com ícone e destaque na rota atual.
 export function ItemMenu({
   href,
+  icone,
   children,
 }: {
   href: string;
+  icone: NomeIcone;
   children: React.ReactNode;
 }) {
   const caminho = usePathname();
@@ -16,7 +19,8 @@ export function ItemMenu({
 
   return (
     <Link href={href} className={ativo ? "ativo" : undefined}>
-      {children}
+      <Icone nome={icone} />
+      <span>{children}</span>
     </Link>
   );
 }

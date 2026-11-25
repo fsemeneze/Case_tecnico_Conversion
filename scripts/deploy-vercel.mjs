@@ -25,6 +25,8 @@ const arquivos = [
   "app/layout.tsx",
   "app/page.tsx",
   "app/globals.css",
+  "app/icones.tsx",
+  "app/tema-toggle.tsx",
   "app/login/page.tsx",
   "app/login/layout.tsx",
   "app/login/esqueci-senha/page.tsx",

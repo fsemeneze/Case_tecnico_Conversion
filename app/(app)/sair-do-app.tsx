@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { criarClienteSupabaseNavegador } from "@/lib/supabase/navegador";
+import { Icone } from "@/app/icones";
 
 export default function SairDoApp() {
   const router = useRouter();
@@ -15,6 +16,7 @@ export default function SairDoApp() {
 
   return (
     <button type="button" onClick={sair}>
+      <Icone nome="sair" width={17} height={17} />
       Sair
     </button>
   );

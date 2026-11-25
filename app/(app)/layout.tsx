@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { criarClienteSupabaseServidor } from "@/lib/supabase/servidor";
+import { Icone } from "@/app/icones";
+import { TemaToggle } from "@/app/tema-toggle";
 import SairDoApp from "./sair-do-app";
 import { ItemMenu } from "./item-menu";
 
@@ -23,32 +25,66 @@ export default async function LayoutDoApp({
     .eq("id", user.id)
     .maybeSingle();
 
-  const nome = perfil?.nome ?? user.email;
+  const nome = String(perfil?.nome ?? user.email ?? "Você");
   const papel = perfil?.papel ?? "leitor";
+  const iniciais = nome
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((parte) => parte[0]?.toUpperCase())
+    .join("");
 
   return (
     <div className="app">
       <aside className="menu-lateral">
         <Link href="/inicio" className="marca">
-          PlanOps
-          <small>Planejamento e entregas</small>
+          <span className="marca-mark" aria-hidden="true" />
+          <span>
+            PlanOps
+            <small>Planejamento e entregas</small>
+          </span>
         </Link>
         <nav>
-          <ItemMenu href="/inicio">Início</ItemMenu>
-          <ItemMenu href="/entregas">Entregas</ItemMenu>
-          <ItemMenu href="/clientes">Clientes</ItemMenu>
-          <ItemMenu href="/revisao">Revisão de dados</ItemMenu>
+          <ItemMenu href="/inicio" icone="inicio">
+            Início
+          </ItemMenu>
+          <ItemMenu href="/entregas" icone="entregas">
+            Entregas
+          </ItemMenu>
+          <ItemMenu href="/clientes" icone="clientes">
+            Clientes
+          </ItemMenu>
+          <ItemMenu href="/revisao" icone="revisao">
+            Revisão de dados
+          </ItemMenu>
           <span className="secao">Administração</span>
-          <ItemMenu href="/equipe">Equipe</ItemMenu>
-          <ItemMenu href="/conta">Segurança da conta</ItemMenu>
+          <ItemMenu href="/equipe" icone="equipe">
+            Equipe
+          </ItemMenu>
+          <ItemMenu href="/conta" icone="conta">
+            Segurança da conta
+          </ItemMenu>
         </nav>
         <div className="menu-usuario">
-          <strong>{nome}</strong>
-          {papel === "admin" ? "Administrador" : papel}
-          <Link href="/sobre" className="link-sobre">
-            Sobre o produto
-          </Link>
-          <SairDoApp />
+          <div className="usuario-topo">
+            <span className="avatar" aria-hidden="true">
+              {iniciais}
+            </span>
+            <span className="usuario-info">
+              <strong>{nome}</strong>
+              <span className="papel">
+                {papel === "admin" ? "Administrador" : papel}
+              </span>
+            </span>
+          </div>
+          <div className="usuario-acoes">
+            <TemaToggle />
+            <Link href="/sobre">
+              <Icone nome="info" width={17} height={17} />
+              Sobre o produto
+            </Link>
+            <SairDoApp />
+          </div>
         </div>
       </aside>
       <div className="conteudo">{children}</div>
