@@ -3,6 +3,34 @@
 import { useState } from "react";
 import { aprovarViaToken } from "@/app/(app)/entregas/actions";
 
+export type EventoEntrega = {
+  tipo_evento: string;
+  campo: string | null;
+  valor_antigo: string | null;
+  valor_novo: string | null;
+  autor: string | null;
+  criado_em: string;
+  fase_origem: string | null;
+  fase_destino: string | null;
+};
+
+export type AprovacaoRegistrada = {
+  etapa: string;
+  decisao: string;
+  autor_nome: string;
+  autor_email: string | null;
+  observacao: string | null;
+  criado_em: string;
+};
+
+export type PendenciaCliente = {
+  id: number;
+  titulo: string;
+  fase: string;
+  fase_rotulo: string;
+  data_prevista: string | null;
+};
+
 export type DadosEntrega = {
   entrega_id: number;
   titulo: string;
@@ -12,6 +40,9 @@ export type DadosEntrega = {
   data_prevista: string | null;
   num_revisoes: number | null;
   link: string | null;
+  historico: EventoEntrega[];
+  aprovacoes: AprovacaoRegistrada[];
+  outras_pendencias: PendenciaCliente[];
 };
 
 type Estado = { ok: boolean; mensagem: string; fase?: string } | null;

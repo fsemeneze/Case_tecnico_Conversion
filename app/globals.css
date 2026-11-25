@@ -1384,6 +1384,19 @@ main.auth {
   gap: 16px;
 }
 
+/* Portal do cliente (read-only): mais largo que a aprovação, com tabela. */
+.portal {
+  max-width: 920px;
+  margin: 0 auto;
+  padding: 48px 24px 80px;
+  display: grid;
+  gap: 16px;
+}
+
+.portal .topo {
+  margin-bottom: 4px;
+}
+
 .marca-topo {
   display: inline-flex;
   align-items: center;

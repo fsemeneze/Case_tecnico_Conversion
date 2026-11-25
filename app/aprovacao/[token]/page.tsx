@@ -1,4 +1,5 @@
 import { criarClienteSupabaseAdmin } from "@/lib/supabase/admin";
+import { ROTULO_APROVACAO } from "@/lib/fases";
 import { FormularioAprovacao, type DadosEntrega } from "./formulario-aprovacao";
 
 // Página PÚBLICA (sem login) de aprovação via token (D3).
@@ -81,6 +82,65 @@ export default async function PaginaAprovacao({
           </div>
 
           <FormularioAprovacao dados={dados} />
+
+          <div className="cartao-form">
+            <h2>O que acontece depois</h2>
+            <p className="muted">
+              {dados.etapa === "planejamento"
+                ? "Depois da aprovação do planejamento, o squad segue para produção. Quando ficar pronto, você recebe um novo link para aprovar a entrega final."
+                : "Depois da aprovação da entrega, o trabalho é encerrado. Se você pedir ajuste, o time reavalia e devolve um novo prazo."}
+            </p>
+          </div>
+
+          {dados.outras_pendencias.length > 0 && (
+            <div className="cartao-form">
+              <h2>Outras entregas aguardando você</h2>
+              <ul className="lista-chave">
+                {dados.outras_pendencias.map((p) => (
+                  <li key={p.id}>
+                    <span>{p.titulo}</span>
+                    <strong>{p.data_prevista ?? "—"}</strong>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          {dados.aprovacoes.length > 0 && (
+            <div className="cartao-form">
+              <h2>Aprovações registradas</h2>
+              <ul className="linha-tempo">
+                {dados.aprovacoes.map((a, i) => (
+                  <li key={i}>
+                    <strong>{a.etapa}</strong>: {ROTULO_APROVACAO[a.decisao] ?? a.decisao}{" "}
+                    por {a.autor_nome}
+                    {a.observacao ? ` — “${a.observacao}”` : ""}{" "}
+                    <span className="muted">
+                      {new Date(a.criado_em).toLocaleString("pt-BR")}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          {dados.historico.length > 0 && (
+            <div className="cartao-form">
+              <h2>Histórico da entrega</h2>
+              <ul className="linha-tempo">
+                {dados.historico.map((h, i) => (
+                  <li key={i}>
+                    <strong>{h.tipo_evento}</strong>
+                    {h.campo ? ` · ${h.campo}` : ""}: {h.valor_antigo ?? "(vazio)"} →{" "}
+                    {h.valor_novo ?? "(vazio)"}{" "}
+                    <span className="muted">
+                      {new Date(h.criado_em).toLocaleString("pt-BR")} · {h.autor ?? "—"}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
         </>
       )}
 

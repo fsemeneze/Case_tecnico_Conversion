@@ -1,10 +1,11 @@
 import Link from "next/link";
 import { criarClienteSupabaseServidor } from "@/lib/supabase/servidor";
+import { gerarAcessoCliente } from "./actions";
 
-type Busca = { q?: string };
+type Busca = { q?: string; link_cliente?: string; erro?: string };
 
 export default async function Clientes({ searchParams }: { searchParams: Promise<Busca> }) {
-  const { q } = await searchParams;
+  const { q, link_cliente, erro } = await searchParams;
   const busca = q?.trim() ?? "";
   const supabase = await criarClienteSupabaseServidor();
 
@@ -35,6 +36,19 @@ export default async function Clientes({ searchParams }: { searchParams: Promise
         </div>
       </header>
 
+      {erro && <p className="erro">{erro}</p>}
+      {link_cliente && (
+        <div className="aviso-box">
+          <p>
+            <strong>Link de acompanhamento gerado (válido por 90 dias):</strong>
+          </p>
+          <code>{`${await urlBase()}/cliente/${link_cliente}`}</code>
+          <p className="muted">
+            Envie ao cliente. É somente leitura: mostra todas as entregas dele.
+          </p>
+        </div>
+      )}
+
       <form className="filtros" method="get">
         <input type="search" name="q" placeholder="Buscar cliente…" defaultValue={busca} />
         <button type="submit">Filtrar</button>
@@ -58,6 +72,7 @@ export default async function Clientes({ searchParams }: { searchParams: Promise
               <th>Cliente</th>
               <th>Grafias da planilha</th>
               <th>Entregas</th>
+              <th>Acompanhamento</th>
             </tr>
           </thead>
           <tbody>
@@ -74,12 +89,20 @@ export default async function Clientes({ searchParams }: { searchParams: Promise
                     {aliases.length > 0 ? aliases.join(", ") : "—"}
                   </td>
                   <td>{porCliente.get(c.id) ?? 0}</td>
+                  <td>
+                    <form action={gerarAcessoCliente}>
+                      <input type="hidden" name="cliente_id" value={c.id} />
+                      <button type="submit" className="secundario">
+                        Gerar link
+                      </button>
+                    </form>
+                  </td>
                 </tr>
               );
             })}
             {(clientes ?? []).length === 0 && (
               <tr>
-                <td colSpan={3} className="muted">
+                <td colSpan={4} className="muted">
                   Nenhum cliente encontrado.
                 </td>
               </tr>
@@ -89,4 +112,13 @@ export default async function Clientes({ searchParams }: { searchParams: Promise
       </div>
     </>
   );
+}
+
+async function urlBase() {
+  const { headers } = await import("next/headers");
+  const cabecalhos = await headers();
+  const host =
+    cabecalhos.get("x-forwarded-host") ?? cabecalhos.get("host") ?? "localhost:3000";
+  const protocolo = cabecalhos.get("x-forwarded-proto") ?? "http";
+  return `${protocolo}://${host}`;
 }

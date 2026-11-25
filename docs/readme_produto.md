@@ -36,11 +36,13 @@ vencido hoje.
 
 ## O que ficou de fora
 
-- **Alerta proativo de prazo** — avisar o responsável antes do vencimento. É a
-  próxima entrega: ataca as dores de atraso e de visibilidade com baixo custo.
+- **Notificação proativa (e-mail/WhatsApp)** — avisar o time e o cliente quando a
+  fase muda (planejamento aprovado, entrega pronta, ajuste solicitado) ou quando o
+  prazo se aproxima. É a próxima entrega: ataca as dores de atraso e de
+  visibilidade com baixo custo, por cima do portal do cliente.
 - Exportação CSV e gráficos além dos indicadores de atraso.
 - E-mail de comprovante ao cliente após a aprovação.
-- Notificações e integração com o calendário.
+- Integração com o calendário.
 
 ## Decisões que valem registro
 
