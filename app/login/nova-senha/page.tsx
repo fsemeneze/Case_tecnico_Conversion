@@ -45,50 +45,51 @@ export default function NovaSenha() {
   }
 
   return (
-    <main className="login">
-      <div className="login-caixa">
-        <p className="marca">PlanOps</p>
-        <h1>Nova senha</h1>
-        <p className="muted">
-          Escolha uma senha com pelo menos 8 caracteres. Ela vale para todas as
-          suas sessões.
-        </p>
+    <div className="auth-cartao">
+      <h2>Nova senha</h2>
+      <p className="auth-ajuda">
+        Escolha uma senha com pelo menos 8 caracteres. Ela vale para todas as
+        suas sessões.
+      </p>
 
-        <form onSubmit={salvar} className="cartao-form">
-          <label>
-            Nova senha
-            <input
-              type="password"
-              required
-              minLength={8}
-              autoComplete="new-password"
-              value={senha}
-              onChange={(e) => setSenha(e.target.value)}
-            />
-          </label>
-          <label>
-            Repita a senha
-            <input
-              type="password"
-              required
-              minLength={8}
-              autoComplete="new-password"
-              value={confirmacao}
-              onChange={(e) => setConfirmacao(e.target.value)}
-            />
-          </label>
+      <form onSubmit={salvar} className="auth-form">
+        <label>
+          Nova senha
+          <input
+            type="password"
+            required
+            minLength={8}
+            autoComplete="new-password"
+            value={senha}
+            onChange={(e) => setSenha(e.target.value)}
+          />
+        </label>
+        <label>
+          Repita a senha
+          <input
+            type="password"
+            required
+            minLength={8}
+            autoComplete="new-password"
+            value={confirmacao}
+            onChange={(e) => setConfirmacao(e.target.value)}
+          />
+        </label>
 
-          {erro && <p className="erro">{erro}</p>}
+        {erro && (
+          <p className="erro" role="alert">
+            {erro}
+          </p>
+        )}
 
-          <button type="submit" disabled={aguardando}>
-            {aguardando ? "Salvando…" : "Salvar senha"}
-          </button>
-        </form>
+        <button type="submit" disabled={aguardando}>
+          {aguardando ? "Salvando…" : "Salvar senha"}
+        </button>
+      </form>
 
-        <p className="muted login-rodape">
-          <Link href="/login">← Voltar ao login</Link>
-        </p>
-      </div>
-    </main>
+      <p className="auth-rodape-link">
+        <Link href="/login">← Voltar ao login</Link>
+      </p>
+    </div>
   );
 }

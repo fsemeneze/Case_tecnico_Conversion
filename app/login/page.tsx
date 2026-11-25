@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { criarClienteSupabaseNavegador } from "@/lib/supabase/navegador";
 
 type Estado = { erro?: string };
@@ -41,7 +41,6 @@ export default function PaginaLogin() {
       return;
     }
 
-    // Conta com fator de segunda etapa: pede o código.
     const fatores = data.user?.factors ?? [];
     if (fatores.length > 0) {
       setFatorId(fatores[0].id);
@@ -86,16 +85,15 @@ export default function PaginaLogin() {
   }
 
   return (
-    <main className="login">
-      <div className="login-caixa">
-        <p className="marca">PlanOps</p>
-        <h1>Planejamento e entregas</h1>
-        <p className="muted">
-          Acesso do time. O cliente aprova pelo link que o time envia — aqui não.
-        </p>
+    <div className="auth-cartao">
+      {fatorId === null ? (
+        <>
+          <h2>Entrar</h2>
+          <p className="auth-ajuda">
+            Use o e-mail e a senha enviados pelo administrador.
+          </p>
 
-        {fatorId === null ? (
-          <form onSubmit={entrar} className="cartao-form">
+          <form onSubmit={entrar} className="auth-form">
             <label>
               E-mail
               <input
@@ -120,23 +118,30 @@ export default function PaginaLogin() {
               />
             </label>
 
-            {estado.erro && <p className="erro">{estado.erro}</p>}
+            {estado.erro && (
+              <p className="erro" role="alert">
+                {estado.erro}
+              </p>
+            )}
 
             <button type="submit" disabled={aguardando}>
               {aguardando ? "Entrando…" : "Entrar"}
             </button>
-
-            <p className="muted login-rodape">
-              <Link href="/login/esqueci-senha">Esqueci minha senha</Link>
-            </p>
           </form>
-        ) : (
-          <form onSubmit={confirmarCodigo} className="cartao-form">
-            <h2>Código do autenticador</h2>
-            <p className="muted">
-              Sua conta tem verificação em duas etapas. Digite o código de 6
-              dígitos do aplicativo.
-            </p>
+
+          <p className="auth-rodape-link">
+            <Link href="/login/esqueci-senha">Esqueci minha senha</Link>
+          </p>
+        </>
+      ) : (
+        <>
+          <h2>Código do autenticador</h2>
+          <p className="auth-ajuda">
+            Sua conta tem verificação em duas etapas. Digite o código de 6
+            dígitos do aplicativo.
+          </p>
+
+          <form onSubmit={confirmarCodigo} className="auth-form">
             <label>
               Código
               <input
@@ -148,12 +153,17 @@ export default function PaginaLogin() {
                 value={codigo}
                 onChange={(e) => setCodigo(e.target.value.replace(/\D/g, ""))}
                 placeholder="000000"
+                className="auth-codigo"
               />
             </label>
 
-            {estado.erro && <p className="erro">{estado.erro}</p>}
+            {estado.erro && (
+              <p className="erro" role="alert">
+                {estado.erro}
+              </p>
+            )}
 
-            <div className="botoes">
+            <div className="auth-acoes">
               <button type="submit" disabled={aguardando || codigo.length !== 6}>
                 {aguardando ? "Validando…" : "Confirmar"}
               </button>
@@ -171,12 +181,8 @@ export default function PaginaLogin() {
               </button>
             </div>
           </form>
-        )}
-
-        <p className="muted login-rodape">
-          Acesso por convite. Não tem conta? Peça ao administrador.
-        </p>
-      </div>
-    </main>
+        </>
+      )}
+    </div>
   );
 }

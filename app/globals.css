@@ -630,26 +630,24 @@ footer {
   margin-top: 2px;
 }
 
-/* A cor do login cobre a tela inteira, inclusive as bordas do viewport. */
-body:has(.login) {
+/* ============================ Autenticação ============================ */
+
+/* A cor cobre a tela inteira, inclusive as bordas do viewport. */
+body:has(.auth) {
   background: #000931;
 }
 
-/* Sem a largura máxima do `main`: o gradiente precisa ir de ponta a ponta. */
-main.login {
+main.auth {
   max-width: none;
   margin: 0;
   width: 100%;
-}
-
-.login {
   min-height: 100vh;
   min-height: 100dvh;
   display: grid;
   place-items: center;
-  padding: 24px;
+  padding: 40px 24px;
   /* Fundo do hero do site de referência: azul-marinho com gradiente
-     perolado no canto inferior direito (mesma composição, em rgba). */
+     perolado no canto inferior direito. */
   background: radial-gradient(
       at bottom right,
       rgba(191, 205, 255, 0.47) 30%,
@@ -658,59 +656,259 @@ main.login {
     #000931;
 }
 
-.login-caixa {
+.auth-grade {
   width: 100%;
-  max-width: 410px;
+  max-width: 1080px;
   display: grid;
+  grid-template-columns: 1.05fr 0.95fr;
+  gap: 56px;
+  align-items: center;
+}
+
+@media (max-width: 900px) {
+  .auth-grade {
+    grid-template-columns: 1fr;
+    gap: 28px;
+    max-width: 460px;
+  }
+}
+
+/* No celular, só a marca e o card: o formulário vem primeiro. */
+@media (max-width: 640px) {
+  main.auth {
+    padding: 28px 18px;
+    align-items: start;
+  }
+  .auth-grade {
+    gap: 22px;
+  }
+  .auth-marca {
+    gap: 0;
+  }
+  .auth-marca h1,
+  .auth-marca .auth-sub,
+  .auth-itens {
+    display: none;
+  }
+  .auth-cartao {
+    padding: 24px 20px;
+    border-radius: 16px;
+  }
+}
+
+/* Coluna da marca */
+.auth-marca {
+  color: #ffffff;
+  display: grid;
+  gap: 18px;
+  align-content: center;
+}
+
+.auth-logo {
+  display: inline-flex;
+  align-items: center;
   gap: 10px;
   color: #ffffff;
-}
-
-.login-caixa .marca {
+  text-decoration: none;
   font-family: var(--font-jakarta), sans-serif;
-  font-size: 1.55rem;
+  font-size: 1.1rem;
   font-weight: 700;
+  letter-spacing: -0.03em;
+  width: fit-content;
+}
+
+.auth-logo-mark {
+  width: 26px;
+  height: 26px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #1649ff 0%, #6e8bff 100%);
+  box-shadow: 0 4px 14px rgba(22, 73, 255, 0.45);
+}
+
+.auth-marca h1 {
+  font-family: var(--font-jakarta), sans-serif;
+  font-size: clamp(2rem, 3.4vw, 2.9rem);
+  line-height: 1.1;
   letter-spacing: -0.035em;
+  font-weight: 700;
   margin: 0;
   color: #ffffff;
 }
 
-.login-caixa h1 {
-  font-size: 1.55rem;
-  margin: 0;
-  color: #ffffff;
-}
-
-.login-caixa > .muted {
+.auth-sub {
   color: #c9cde4;
+  font-size: 1.02rem;
+  margin: 0;
+  max-width: 46ch;
 }
 
-.login-caixa .cartao-form {
-  margin-top: 12px;
+.auth-itens {
+  list-style: none;
+  margin: 6px 0 0;
+  padding: 0;
+  display: grid;
+  gap: 10px;
+}
+
+.auth-itens li {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  color: #e7e9f5;
+  font-size: 0.94rem;
+}
+
+.auth-check {
+  flex: 0 0 auto;
+  width: 18px;
+  height: 18px;
+  margin-top: 2px;
+  border-radius: 50%;
+  background: rgba(110, 139, 255, 0.25);
+  position: relative;
+}
+
+.auth-check::after {
+  content: "";
+  position: absolute;
+  left: 6px;
+  top: 3.5px;
+  width: 5px;
+  height: 9px;
+  border: solid #ffffff;
+  border-width: 0 1.6px 1.6px 0;
+  transform: rotate(45deg);
+}
+
+/* Coluna do card */
+.auth-painel {
+  display: grid;
+  gap: 14px;
+}
+
+.auth-cartao {
   background: #ffffff;
+  border-radius: 18px;
+  padding: 32px;
+  box-shadow: 0 24px 60px rgba(0, 9, 49, 0.4);
+  display: grid;
+  gap: 14px;
   color: var(--fg);
-  box-shadow: 0 18px 50px rgba(0, 9, 49, 0.35);
 }
 
-.login-caixa .cartao-form label {
+.auth-cartao h2 {
+  font-family: var(--font-jakarta), sans-serif;
+  font-size: 1.35rem;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  margin: 0;
+}
+
+.auth-ajuda {
+  color: #5b6070;
+  font-size: 0.92rem;
+  margin: 0;
+}
+
+.auth-form {
+  display: grid;
+  gap: 14px;
+  margin-top: 4px;
+}
+
+.auth-form label {
+  display: grid;
+  gap: 6px;
+  font-size: 0.86rem;
+  font-weight: 550;
   color: #404555;
 }
 
-.login-rodape {
-  color: #c9cde4;
-  font-size: 0.85rem;
+.auth-form input {
+  border: 1px solid #e2e5eb;
+  border-radius: 10px;
+  padding: 11px 13px;
+  font: inherit;
+  background: #ffffff;
+  color: var(--fg);
+  transition: border-color 0.14s ease, box-shadow 0.14s ease;
+}
+
+.auth-form input::placeholder {
+  color: #98a2b3;
+}
+
+.auth-form input:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(22, 73, 255, 0.14);
+}
+
+.auth-codigo {
+  letter-spacing: 0.35em;
   text-align: center;
+  font-variant-numeric: tabular-nums;
+  font-size: 1.1rem !important;
 }
 
-.login-rodape a {
+.auth-form button {
+  border: none;
+  border-radius: 10px;
+  padding: 12px 16px;
+  background: var(--accent);
   color: #ffffff;
-  text-decoration: none;
-  font-weight: 500;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.4);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.14s ease;
 }
 
-.login-rodape a:hover {
-  border-color: #ffffff;
+.auth-form button:hover:not(:disabled) {
+  background: #1100d2;
+}
+
+.auth-form button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.auth-form button.secundario {
+  background: transparent;
+  border: 1px solid #e2e5eb;
+  color: var(--fg);
+}
+
+.auth-acoes {
+  display: flex;
+  gap: 8px;
+}
+
+.auth-acoes button {
+  flex: 1;
+}
+
+.auth-rodape-link {
+  margin: 2px 0 0;
+  text-align: center;
+  font-size: 0.88rem;
+}
+
+.auth-rodape-link a {
+  color: var(--accent);
+  font-weight: 550;
+  text-decoration: none;
+}
+
+.auth-rodape-link a:hover {
+  text-decoration: underline;
+}
+
+.auth-painel .auth-rodape {
+  color: #b9bdd6;
+  font-size: 0.82rem;
+  text-align: center;
+  margin: 0;
+  padding: 0 8px;
 }
 
 .erro {

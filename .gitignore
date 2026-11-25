@@ -28,6 +28,9 @@ Thumbs.db
 .vscode/*
 !.vscode/extensions.json
 
+# Capturas de tela do painel (não fazem parte da entrega)
+.openchamber/
+
 # Documentos do processo seletivo (não fazem parte da entrega)
 dados/Descrição da vaga - Analista de BI Pleno (AI Builder).md
 dados/Case técnico — Analista de BI (AI Builder).md

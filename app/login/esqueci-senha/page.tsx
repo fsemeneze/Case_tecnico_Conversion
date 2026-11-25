@@ -30,53 +30,58 @@ export default function EsqueciSenha() {
   }
 
   return (
-    <main className="login">
-      <div className="login-caixa">
-        <p className="marca">PlanOps</p>
-        <h1>Esqueci minha senha</h1>
+    <div className="auth-cartao">
+      {enviado ? (
+        <>
+          <h2>Confira seu e-mail</h2>
+          <p className="auth-ajuda">
+            Se este e-mail estiver cadastrado, o link de recuperação foi enviado.
+            Ele vale por 1 hora.
+          </p>
+          <p className="auth-ajuda">
+            Não chegou? Confira o spam ou peça um novo link ao administrador.
+          </p>
+          <p className="auth-rodape-link">
+            <Link href="/login">← Voltar ao login</Link>
+          </p>
+        </>
+      ) : (
+        <>
+          <h2>Esqueci minha senha</h2>
+          <p className="auth-ajuda">
+            Informe o e-mail cadastrado. Você recebe um link para definir uma
+            senha nova.
+          </p>
 
-        {enviado ? (
-          <>
-            <p className="muted">
-              Se este e-mail estiver cadastrado, o link de recuperação foi
-              enviado. Ele vale por 1 hora.
-            </p>
-            <p className="muted">
-              Não chegou? Confira o spam ou peça um novo link ao administrador.
-            </p>
-            <Link href="/login" className="botao secundario">
-              ← Voltar ao login
-            </Link>
-          </>
-        ) : (
-          <>
-            <p className="muted">
-              Informe o e-mail cadastrado. Você recebe um link para definir uma
-              senha nova.
-            </p>
-            <form onSubmit={enviar} className="cartao-form">
-              <label>
-                E-mail
-                <input
-                  type="email"
-                  required
-                  autoComplete="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="voce@conversion.com.br"
-                />
-              </label>
-              {erro && <p className="erro">{erro}</p>}
-              <button type="submit" disabled={aguardando}>
-                {aguardando ? "Enviando…" : "Enviar link"}
-              </button>
-            </form>
-            <p className="muted login-rodape">
-              <Link href="/login">← Voltar ao login</Link>
-            </p>
-          </>
-        )}
-      </div>
-    </main>
+          <form onSubmit={enviar} className="auth-form">
+            <label>
+              E-mail
+              <input
+                type="email"
+                required
+                autoComplete="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="voce@conversion.com.br"
+              />
+            </label>
+
+            {erro && (
+              <p className="erro" role="alert">
+                {erro}
+              </p>
+            )}
+
+            <button type="submit" disabled={aguardando}>
+              {aguardando ? "Enviando…" : "Enviar link"}
+            </button>
+          </form>
+
+          <p className="auth-rodape-link">
+            <Link href="/login">← Voltar ao login</Link>
+          </p>
+        </>
+      )}
+    </div>
   );
 }
