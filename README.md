@@ -1,4 +1,4 @@
-# PlanOps — Planejamento e entregas
+# PlanHub — Planejamento e entregas
 
 Case técnico para a vaga de **Analista de BI Pleno (AI Builder)** na Conversion.
 O objetivo é tirar o controle de entregas de uma planilha e transformá-lo em um

@@ -14,7 +14,7 @@ export default function LayoutLogin({
         <section className="auth-marca">
           <Link href="/login" className="auth-logo">
             <span className="auth-logo-mark" aria-hidden="true" />
-            PlanOps
+            PlanHub
           </Link>
 
           <h1>

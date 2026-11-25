@@ -115,7 +115,7 @@ if (serviceKey) {
 }
 
 // Variáveis de e-mail (D). RESEND_API_KEY é secreta; as outras são públicas.
-const emailFrom = process.env.EMAIL_FROM || "PlanOps <onboarding@resend.dev>";
+const emailFrom = process.env.EMAIL_FROM || "PlanHub <onboarding@resend.dev>";
 const emailEquipe = process.env.EMAIL_EQUIPE || "ops@planops.case";
 for (const [key, value] of [
   ["RESEND_API_KEY", process.env.RESEND_API_KEY],

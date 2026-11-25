@@ -34,7 +34,7 @@ export default async function PaginaAprovacao({
     <main className="aprovacao">
       <a href="/" className="marca-topo">
         <span className="marca-mark" aria-hidden="true" />
-        PlanOps
+        PlanHub
       </a>
 
       {erroToken && (

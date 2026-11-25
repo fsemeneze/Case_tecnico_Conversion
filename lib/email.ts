@@ -3,7 +3,7 @@ import { criarClienteSupabaseAdmin } from "./supabase/admin";
 // Envio de e-mail via Resend (API REST). Só roda no servidor.
 // Configuração por variáveis de ambiente:
 //   RESEND_API_KEY  — chave do Resend (obrigatória)
-//   EMAIL_FROM      — remetente (ex.: "PlanOps <onboarding@resend.dev>")
+//   EMAIL_FROM      — remetente (ex.: "PlanHub <onboarding@resend.dev>")
 //   EMAIL_EQUIPE    — destinatário interno para avisos (ex.: ops@planops.case)
 
 export type ResultadoEmail = { ok: boolean; erro?: string; id?: string };
@@ -42,7 +42,7 @@ async function registrar(
 
 export async function enviarEmail(opcoes: OpcoesEmail): Promise<ResultadoEmail> {
   const chave = process.env.RESEND_API_KEY;
-  const from = process.env.EMAIL_FROM || "PlanOps <onboarding@resend.dev>";
+  const from = process.env.EMAIL_FROM || "PlanHub <onboarding@resend.dev>";
 
   if (!chave) {
     const erro = "RESEND_API_KEY não configurada.";
@@ -86,11 +86,11 @@ export async function enviarEmail(opcoes: OpcoesEmail): Promise<ResultadoEmail> 
 
 const envelope = (titulo: string, corpo: string) => `
 <div style="font-family:Inter,Arial,sans-serif;max-width:560px;margin:0 auto;color:#0f172a">
-  <div style="background:#1649ff;color:#fff;padding:14px 18px;border-radius:12px 12px 0 0;font-weight:700">PlanOps</div>
+  <div style="background:#1649ff;color:#fff;padding:14px 18px;border-radius:12px 12px 0 0;font-weight:700">PlanHub</div>
   <div style="border:1px solid #e2e8f0;border-top:none;padding:22px;border-radius:0 0 12px 12px">
     <h2 style="margin:0 0 12px;font-size:18px">${titulo}</h2>
     ${corpo}
-    <p style="color:#64748b;font-size:12px;margin-top:18px">Enviado automaticamente pelo PlanOps.</p>
+    <p style="color:#64748b;font-size:12px;margin-top:18px">Enviado automaticamente pelo PlanHub.</p>
   </div>
 </div>`;
 

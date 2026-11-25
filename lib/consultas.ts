@@ -1,6 +1,6 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 
-// Camada de leitura do PlanOps. O app nunca consulta tabelas base:
+// Camada de leitura do PlanHub. O app nunca consulta tabelas base:
 // lê das visões (entregas_detalhadas, indicadores_mensais, eventos_detalhados)
 // e escreve nas tabelas do modelo, respeitando o RLS.
 // Assim a regra de negócio fica no banco, e o app só apresenta.

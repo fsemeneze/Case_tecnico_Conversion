@@ -19,7 +19,7 @@ const jakarta = Plus_Jakarta_Sans({
 const TEMA_INICIAL = `(function(){try{var t=localStorage.getItem('tema');if(t!=='light'&&t!=='dark'){t=window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';}document.documentElement.dataset.theme=t;}catch(e){}})();`;
 
 export const metadata: Metadata = {
-  title: "PlanOps — Planejamento e entregas",
+  title: "PlanHub — Planejamento e entregas",
   description:
     "Planejamento e controle de entregas, com aprovação do cliente em duas etapas.",
 };

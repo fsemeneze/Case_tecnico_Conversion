@@ -1,6 +1,6 @@
 import type { SVGProps } from "react";
 
-// Conjunto de ícones do PlanOps: SVG autoral, traço único (1.75), cantos
+// Conjunto de ícones do PlanHub: SVG autoral, traço único (1.75), cantos
 // arredondados, cor herdada (currentColor). Nada de emoji ou glifo Unicode
 // fazendo vez de ícone.
 export type NomeIcone =

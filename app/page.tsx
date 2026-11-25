@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import { criarClienteSupabaseServidor } from "@/lib/supabase/servidor";
 
-// Porta de entrada do PlanOps: quem tem sessão vai para Início,
+// Porta de entrada do PlanHub: quem tem sessão vai para Início,
 // quem não tem vai para o login.
 export default async function PaginaRaiz() {
   const supabase = await criarClienteSupabaseServidor();

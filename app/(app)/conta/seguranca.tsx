@@ -36,7 +36,7 @@ export default function Seguranca() {
     const supabase = criarClienteSupabaseNavegador();
     const { data, error } = await supabase.auth.mfa.enroll({
       factorType: "totp",
-      friendlyName: "PlanOps",
+      friendlyName: "PlanHub",
     });
     if (error || !data) {
       setEstado({ erro: "Não foi possível iniciar a configuração." });

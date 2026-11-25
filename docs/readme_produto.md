@@ -1,4 +1,4 @@
-# PlanOps — Planejamento e entregas
+# PlanHub — Planejamento e entregas
 
 **O que é.** O controle de entregas da Conversion saiu da planilha e virou um
 app: lista com filtros e busca, cadastro de entregas e aprovação do cliente em

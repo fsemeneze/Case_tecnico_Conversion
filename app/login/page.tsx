@@ -7,7 +7,7 @@ import { criarClienteSupabaseNavegador } from "@/lib/supabase/navegador";
 
 type Estado = { erro?: string };
 
-// Porta de entrada do PlanOps: login por convite, sem cadastro público.
+// Porta de entrada do PlanHub: login por convite, sem cadastro público.
 // Se a conta tiver MFA, pede o código do autenticador antes de entrar.
 export default function PaginaLogin() {
   const router = useRouter();

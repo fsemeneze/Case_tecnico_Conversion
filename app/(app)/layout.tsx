@@ -44,7 +44,7 @@ export default async function LayoutDoApp({
         <Link href="/inicio" className="marca">
           <span className="marca-mark" aria-hidden="true" />
           <span>
-            PlanOps
+            PlanHub
             <small>Planejamento e entregas</small>
           </span>
         </Link>

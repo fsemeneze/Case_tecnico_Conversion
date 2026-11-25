@@ -63,7 +63,7 @@ export default async function PortalCliente({
     <main className="portal">
       <Link href="/" className="marca-topo">
         <span className="marca-mark" aria-hidden="true" />
-        PlanOps
+        PlanHub
       </Link>
 
       {erro && (
