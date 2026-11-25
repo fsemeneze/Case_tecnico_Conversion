@@ -2,6 +2,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { criarClienteSupabaseServidor } from "@/lib/supabase/servidor";
 import SairDoApp from "./sair-do-app";
+import { ItemMenu } from "./item-menu";
 
 // Layout do app interno: menu lateral, perfil e rota protegida.
 // O proxy.ts já checa login + usuário ativo; aqui carregamos o perfil.
@@ -33,21 +34,19 @@ export default async function LayoutDoApp({
           <small>Planejamento e entregas</small>
         </Link>
         <nav>
-          <Link href="/inicio">Início</Link>
-          <Link href="/entregas">Entregas</Link>
-          <Link href="/clientes">Clientes</Link>
-          <Link href="/revisao">Revisão de dados</Link>
+          <ItemMenu href="/inicio">Início</ItemMenu>
+          <ItemMenu href="/entregas">Entregas</ItemMenu>
+          <ItemMenu href="/clientes">Clientes</ItemMenu>
+          <ItemMenu href="/revisao">Revisão de dados</ItemMenu>
           <span className="secao">Administração</span>
-          <Link href="/equipe">Equipe</Link>
+          <ItemMenu href="/equipe">Equipe</ItemMenu>
+          <ItemMenu href="/conta">Segurança da conta</ItemMenu>
         </nav>
         <div className="menu-usuario">
           <strong>{nome}</strong>
           {papel === "admin" ? "Administrador" : papel}
           <Link href="/sobre" className="link-sobre">
             Sobre o produto
-          </Link>
-          <Link href="/conta" className="link-sobre">
-            Segurança da conta
           </Link>
           <SairDoApp />
         </div>
