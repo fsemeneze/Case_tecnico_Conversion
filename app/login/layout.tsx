@@ -18,6 +18,29 @@ export default function LayoutLogin({
           </Link>
 
           <h1>Planejamento e entregas</h1>
+          <p className="auth-sub">
+            O app de entregas da Conversion. Planeje, acompanhe e tenha as
+            aprovações do cliente registradas em um só lugar.
+          </p>
+
+          <ul className="auth-itens">
+            <li>
+              <span className="auth-check" aria-hidden="true" />
+              Planejamento e fase de cada entrega
+            </li>
+            <li>
+              <span className="auth-check" aria-hidden="true" />
+              Aprovação do cliente por link, com nome e data
+            </li>
+            <li>
+              <span className="auth-check" aria-hidden="true" />
+              Acesso por convite, com quatro papéis de usuário
+            </li>
+            <li>
+              <span className="auth-check" aria-hidden="true" />
+              Histórico de quem decidiu o quê e quando
+            </li>
+          </ul>
         </section>
 
         <section className="auth-painel">

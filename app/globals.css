@@ -1152,6 +1152,21 @@ main.auth {
   margin: 0;
 }
 
+/* Área de boas-vindas dentro do card de login. */
+.auth-boas-vindas {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 2px;
+}
+
+.auth-boas-vindas-icone {
+  width: 20px;
+  height: 20px;
+  color: var(--accent);
+  flex-shrink: 0;
+}
+
 .auth-ajuda {
   color: #5b6070;
   font-size: 0.92rem;

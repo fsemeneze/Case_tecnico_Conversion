@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { criarClienteSupabaseNavegador } from "@/lib/supabase/navegador";
+import { Icone } from "@/app/icones";
 
 type Estado = { erro?: string };
 
@@ -88,9 +89,13 @@ export default function PaginaLogin() {
     <div className="auth-cartao">
       {fatorId === null ? (
         <>
-          <h2>Entrar</h2>
+          <div className="auth-boas-vindas">
+            <Icone nome="inicio" className="auth-boas-vindas-icone" />
+            <h2>Entrar</h2>
+          </div>
           <p className="auth-ajuda">
-            Use o e-mail e a senha enviados pelo administrador.
+            Bem-vindo de volta. Use o e-mail e a senha enviados pelo
+            administrador.
           </p>
 
           <form onSubmit={entrar} className="auth-form">
