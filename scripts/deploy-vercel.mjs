@@ -67,6 +67,7 @@ const arquivos = [
   "lib/supabase/admin.ts",
   "lib/email.ts",
   "lib/fases.ts",
+  "lib/eventos.ts",
   "lib/validacao.ts",
   "lib/consultas.ts",
   "analysis/out/metricas.json",
