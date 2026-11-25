@@ -71,7 +71,7 @@ export default async function ListaEntregas({
     <main className="app">
       <header className="topo">
         <div>
-          <p className="eyebrow">Controle de entregas · {user?.email}</p>
+          <p className="eyebrow">PlanOps · {user?.email}</p>
           <h1>Entregas</h1>
         </div>
         <div className="topo-acoes">

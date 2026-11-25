@@ -61,8 +61,8 @@ export default function PaginaLogin() {
   return (
     <main className="login">
       <form onSubmit={entrar} className="cartao-form">
-        <p className="eyebrow">Case técnico · Conversion</p>
-        <h1>Controle de entregas</h1>
+        <p className="eyebrow">PlanOps</p>
+        <h1>Planejamento e entregas</h1>
         <p className="muted">
           Acesso do time. O cliente aprova pelo link que o time envia — aqui não.
         </p>

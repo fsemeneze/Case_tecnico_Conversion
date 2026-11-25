@@ -20,7 +20,7 @@ export default async function NovaEntrega({
     <main className="app">
       <header className="topo">
         <div>
-          <p className="eyebrow">Controle de entregas</p>
+          <p className="eyebrow">PlanOps</p>
           <h1>Nova entrega</h1>
         </div>
         <Link href="/entregas" className="botao secundario">

@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Entregas — Conversion | Case técnico",
+  title: "PlanOps — Planejamento e entregas",
   description:
-    "Controle de entregas da Conversion: da planilha ao app. Diagnóstico dos dados e evolução do produto.",
+    "PlanOps: planejamento e controle de entregas, com aprovação do cliente em duas etapas.",
 };
 
 export default function RootLayout({
