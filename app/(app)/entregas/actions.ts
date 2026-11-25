@@ -17,7 +17,9 @@ export type ResultadoCadastro =
   | { ok: false; erro: string; campos?: Record<string, string> }
   | { ok: true; id: number };
 
-export async function cadastrarEntrega(entrada: Record<string, unknown>): Promise<ResultadoCadastro> {
+export async function cadastrarEntrega(
+  entrada: Record<string, unknown>,
+): Promise<ResultadoCadastro> {
   const supabase = await criarClienteSupabaseServidor();
   const {
     data: { user },
@@ -30,53 +32,73 @@ export async function cadastrarEntrega(entrada: Record<string, unknown>): Promis
     .eq("id", user.id)
     .maybeSingle();
 
-  // Só admin, gestor e operador criam entregas.
   if (!perfil || !["admin", "gestor", "operador"].includes(perfil.papel)) {
     return { ok: false, erro: "Seu perfil só pode consultar. Peça acesso ao administrador." };
   }
 
   const dados = schemaEntrega.safeParse(entrada);
   if (!dados.success) {
-    return { ok: false, erro: primeiroErro(dados) ?? "Dados inválidos.", campos: { titulo: primeiroErro(dados) ?? "" } };
+    return { ok: false, erro: primeiroErro(dados) ?? "Dados inválidos." };
   }
   if (!TIPOS.includes(dados.data.tipo as (typeof TIPOS)[number])) {
     return { ok: false, erro: "Tipo inválido." };
   }
   const v = dados.data;
 
-  let idCliente: number;
+  // Cliente: existente ou novo (cria na dimensão).
+  let clienteId: number;
   if (v.novo_cliente) {
     const { data: cliente, error } = await supabase
-      .from("clientes")
+      .from("dim_cliente")
       .insert({ nome: v.novo_cliente })
       .select("id")
       .single();
     if (error || !cliente) {
       return { ok: false, erro: `Não foi possível criar o cliente: ${error?.message ?? "erro"}` };
     }
-    idCliente = cliente.id;
+    clienteId = cliente.id;
   } else {
     const id = Number(v.cliente_id);
     if (!Number.isInteger(id) || id <= 0) {
       return { ok: false, erro: "Selecione um cliente ou informe o nome de um novo." };
     }
-    idCliente = id;
+    clienteId = id;
+  }
+
+  // Dimensões derivadas do formulário.
+  const [tipo, fase, status, origem] = await Promise.all([
+    supabase
+      .from("dim_tipo_entrega")
+      .select("id")
+      .eq("tipo", v.tipo)
+      .is("subtipo", v.subtipo || null)
+      .maybeSingle(),
+    supabase.from("dim_fase").select("id").eq("codigo", "solicitada").single(),
+    supabase.from("dim_status_aprovacao").select("id").eq("codigo", "pendente").single(),
+    supabase.from("dim_origem").select("id").eq("codigo", "app").single(),
+  ]);
+
+  if (!tipo.data || !fase.data || !status.data || !origem.data) {
+    return { ok: false, erro: "Não foi possível resolver as dimensões da entrega." };
   }
 
   const { data, error } = await supabase
-    .from("entregas")
+    .from("fato_entrega")
     .insert({
-      cliente_id: idCliente,
+      cliente_id: clienteId,
+      tipo_entrega_id: tipo.data.id,
+      fase_id: fase.data.id,
+      origem_id: origem.data.id,
+      aprovacao_planejamento_id: status.data.id,
+      aprovacao_entrega_id: status.data.id,
       titulo: v.titulo,
-      tipo: v.tipo,
-      subtipo: v.subtipo || null,
-      squad: v.squad || null,
-      responsavel: v.responsavel || null,
-      data_solicitacao: v.data_solicitacao || null,
-      data_prevista: v.data_prevista || null,
+      subtipo: undefined,
+      squad_id: null,
+      pessoa_id: null,
+      data_solicitacao_id: v.data_solicitacao || null,
+      data_prevista_id: v.data_prevista || null,
       link: v.link || null,
       observacoes: v.observacoes || null,
-      fase: "solicitada",
     })
     .select("id")
     .single();
@@ -85,14 +107,28 @@ export async function cadastrarEntrega(entrada: Record<string, unknown>): Promis
     return { ok: false, erro: `Não foi possível salvar: ${error?.message ?? "erro"}` };
   }
 
+  // Squad e responsável são dimensões: resolve ou cria.
+  const squadId = v.squad
+    ? (await supabase.from("dim_squad").select("id").eq("nome", v.squad).maybeSingle()).data?.id ?? null
+    : null;
+  const pessoaId = v.responsavel
+    ? (await supabase.from("dim_pessoa").select("id").eq("nome", v.responsavel).maybeSingle()).data?.id ?? null
+    : null;
+
+  if (squadId || pessoaId) {
+    await supabase
+      .from("fato_entrega")
+      .update({ squad_id: squadId, pessoa_id: pessoaId })
+      .eq("id", data.id);
+  }
+
   revalidatePath("/inicio");
   revalidatePath("/entregas");
   return { ok: true, id: data.id };
 }
 
 // ---------------------------------------------------------------------------
-// Link de aprovação (time → cliente): token via função SECURITY DEFINER,
-// chamada com service_role em rota de servidor
+// Link de aprovação (time → cliente)
 // ---------------------------------------------------------------------------
 
 function urlBase() {
@@ -146,7 +182,7 @@ export async function gerarLinkAprovacao(formulario: FormData) {
 }
 
 // ---------------------------------------------------------------------------
-// Aprovação via link (página pública, sem login) — DECISÃO (D3)
+// Aprovação via link (página pública, sem login)
 // ---------------------------------------------------------------------------
 
 export type ResultadoAprovacao = { ok: boolean; mensagem: string; fase?: string };

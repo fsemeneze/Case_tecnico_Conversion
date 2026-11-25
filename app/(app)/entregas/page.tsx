@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { criarClienteSupabaseServidor } from "@/lib/supabase/servidor";
-import { ROTULO_FASE, FASES_ABERTAS, situacaoDaEntrega } from "@/lib/fases";
+import { ROTULO_FASE, situacaoDaEntrega } from "@/lib/fases";
+import { listarEntregas, listarClientes } from "@/lib/consultas";
 
 type Busca = {
   q?: string;
@@ -30,44 +31,32 @@ export default async function ListaEntregas({
 
   const supabase = await criarClienteSupabaseServidor();
 
-  let consulta = supabase
-    .from("entregas")
-    .select(
-      "id, legacy_id, titulo, tipo, subtipo, fase, data_prevista, data_entrega, dias_atraso, cliente_id, clientes ( nome )",
-      { count: "exact" },
-    );
+  const [{ itens, total }, clientes] = await Promise.all([
+    listarEntregas(supabase, {
+      busca,
+      clienteId: cliente ? Number(cliente) : undefined,
+      fase,
+      tipo,
+      situacao: situacao === "atrasadas" || situacao === "vencidas" ? situacao : "",
+      pagina,
+      porPagina: POR_PAGINA,
+    }),
+    listarClientes(supabase),
+  ]);
 
-  if (busca) consulta = consulta.ilike("titulo", `%${busca}%`);
-  if (cliente) consulta = consulta.eq("cliente_id", Number(cliente));
-  if (fase) consulta = consulta.eq("fase", fase);
-  if (tipo) consulta = consulta.eq("tipo", tipo);
-  if (situacao === "atrasadas") {
-    // D8: concluída depois do prazo OU em aberto com prazo vencido.
-    consulta = consulta.or(
-      `dias_atraso.gt.0,and(data_prevista.lt.${hoje},fase.in.(${FASES_ABERTAS.join(",")}))`,
-    );
-  }
-  if (situacao === "vencidas") {
-    consulta = consulta
-      .lt("data_prevista", hoje)
-      .in("fase", FASES_ABERTAS as unknown as string[]);
-  }
-
-  const offset = (pagina - 1) * POR_PAGINA;
-  consulta = consulta
-    .order("data_prevista", { ascending: true, nullsFirst: false })
-    .order("id", { ascending: true })
-    .range(offset, offset + POR_PAGINA - 1);
-
-  const { data: entregas, count } = await consulta;
-  const { data: clientes } = await supabase
-    .from("clientes")
-    .select("id, nome")
-    .order("nome");
-
-  const total = count ?? 0;
   const paginas = Math.max(1, Math.ceil(total / POR_PAGINA));
   const temFiltro = Boolean(busca || cliente || fase || tipo || situacao);
+
+  const parametrosPagina = (p: number) => {
+    const parametros = new URLSearchParams();
+    if (busca) parametros.set("q", busca);
+    if (cliente) parametros.set("cliente", cliente);
+    if (fase) parametros.set("fase", fase);
+    if (tipo) parametros.set("tipo", tipo);
+    if (situacao) parametros.set("situacao", situacao);
+    parametros.set("pagina", String(p));
+    return parametros.toString();
+  };
 
   return (
     <>
@@ -92,7 +81,7 @@ export default async function ListaEntregas({
         />
         <select name="cliente" defaultValue={cliente}>
           <option value="">Todos os clientes</option>
-          {(clientes ?? []).map((c) => (
+          {clientes.map((c) => (
             <option key={c.id} value={c.id}>
               {c.nome}
             </option>
@@ -159,7 +148,7 @@ export default async function ListaEntregas({
             </tr>
           </thead>
           <tbody>
-            {(entregas ?? []).map((e) => {
+            {itens.map((e) => {
               const situ = situacaoDaEntrega(
                 {
                   fase: e.fase,
@@ -175,14 +164,14 @@ export default async function ListaEntregas({
                       {e.titulo}
                     </Link>
                   </td>
-                  <td>{nomeCliente(e.clientes)}</td>
+                  <td>{e.cliente}</td>
                   <td>
                     {e.tipo}
                     {e.subtipo ? ` · ${e.subtipo}` : ""}
                   </td>
                   <td>
                     <span className={`badge tom-${situacaoTomFase(e.fase)}`}>
-                      {ROTULO_FASE[e.fase] ?? e.fase}
+                      {e.fase_rotulo}
                     </span>
                   </td>
                   <td>{e.data_prevista ?? "—"}</td>
@@ -192,7 +181,7 @@ export default async function ListaEntregas({
                 </tr>
               );
             })}
-            {(entregas ?? []).length === 0 && (
+            {itens.length === 0 && (
               <tr>
                 <td colSpan={6} className="muted">
                   Nenhuma entrega com esses filtros.
@@ -205,24 +194,15 @@ export default async function ListaEntregas({
 
       {paginas > 1 && (
         <nav className="paginacao">
-          {Array.from({ length: paginas }, (_, i) => i + 1).map((p) => {
-            const parametros = new URLSearchParams();
-            if (busca) parametros.set("q", busca);
-            if (cliente) parametros.set("cliente", cliente);
-            if (fase) parametros.set("fase", fase);
-            if (tipo) parametros.set("tipo", tipo);
-            if (situacao) parametros.set("situacao", situacao);
-            parametros.set("pagina", String(p));
-            return (
-              <Link
-                key={p}
-                href={`/entregas?${parametros.toString()}`}
-                className={`botao ${p === pagina ? "" : "secundario"}`}
-              >
-                {p}
-              </Link>
-            );
-          })}
+          {Array.from({ length: paginas }, (_, i) => i + 1).map((p) => (
+            <Link
+              key={p}
+              href={`/entregas?${parametrosPagina(p)}`}
+              className={`botao ${p === pagina ? "" : "secundario"}`}
+            >
+              {p}
+            </Link>
+          ))}
         </nav>
       )}
     </>
@@ -232,14 +212,9 @@ export default async function ListaEntregas({
 function situacaoTomFase(fase: string): string {
   if (fase === "aprovada") return "ok";
   if (fase === "cancelada") return "neutro";
-  if (["ajuste_solicitado", "aguardando_cliente", "aguardando_aprovacao_entrega"].includes(fase))
+  if (
+    ["ajuste_solicitado", "aguardando_cliente", "aguardando_aprovacao_entrega"].includes(fase)
+  )
     return "alerta";
   return "info";
-}
-
-// PostgREST devolve o cliente como objeto em 1:N→1; supabase-js tipa como array.
-function nomeCliente(embedded: unknown): string | undefined {
-  const valor = embedded as { nome?: string } | { nome?: string }[] | null;
-  if (Array.isArray(valor)) return valor[0]?.nome;
-  return valor?.nome;
 }

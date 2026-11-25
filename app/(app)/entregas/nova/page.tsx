@@ -1,15 +1,13 @@
 import Link from "next/link";
 import { criarClienteSupabaseServidor } from "@/lib/supabase/servidor";
+import { listarClientes } from "@/lib/consultas";
 import { FormularioNovaEntrega } from "./formulario";
 
 const TIPOS = ["Relatório", "Análise", "Conteúdo"];
 
 export default async function NovaEntrega() {
   const supabase = await criarClienteSupabaseServidor();
-  const { data: clientes } = await supabase
-    .from("clientes")
-    .select("id, nome")
-    .order("nome");
+  const clientes = await listarClientes(supabase);
 
   return (
     <>
@@ -23,7 +21,7 @@ export default async function NovaEntrega() {
         </Link>
       </header>
 
-      <FormularioNovaEntrega clientes={clientes ?? []} tipos={TIPOS} />
+      <FormularioNovaEntrega clientes={clientes} tipos={TIPOS} />
     </>
   );
 }

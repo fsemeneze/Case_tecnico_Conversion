@@ -2,7 +2,8 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { criarClienteSupabaseServidor } from "@/lib/supabase/servidor";
 import { criarClienteSupabaseAdmin } from "@/lib/supabase/admin";
-import { ROTULO_FASE, ROTULO_APROVACAO, FASES_ABERTAS, situacaoDaEntrega } from "@/lib/fases";
+import { ROTULO_APROVACAO, situacaoDaEntrega } from "@/lib/fases";
+import { buscarEntrega, listarEventos, listarAprovacoes } from "@/lib/consultas";
 import { gerarLinkAprovacao } from "../actions";
 
 type Params = { id: string };
@@ -22,34 +23,19 @@ export default async function DetalheEntrega({
   const hoje = new Date().toISOString().slice(0, 10);
   const supabase = await criarClienteSupabaseServidor();
 
-  const [{ data: entrega }, { data: aprovacoes }, { data: historico }] =
-    await Promise.all([
-      supabase
-        .from("entregas")
-        .select("*, clientes ( nome )")
-        .eq("id", entregaId)
-        .single(),
-      supabase
-        .from("aprovacoes")
-        .select("*")
-        .eq("entrega_id", entregaId)
-        .order("criado_em", { ascending: false }),
-      supabase
-        .from("entrega_historico")
-        .select("*")
-        .eq("entrega_id", entregaId)
-        .order("criado_em", { ascending: false })
-        .limit(50),
-    ]);
+  const [entrega, aprovacoes, historico] = await Promise.all([
+    buscarEntrega(supabase, entregaId),
+    listarAprovacoes(supabase, entregaId),
+    listarEventos(supabase, entregaId),
+  ]);
 
   if (!entrega) notFound();
 
-  // Tokens são privados (sem política de RLS): a rota de servidor consulta
-  // via função SECURITY DEFINER com service_role.
   const admin = criarClienteSupabaseAdmin();
   const { data: linksAtivos } = await admin.rpc("links_aprovacao_ativos", {
     p_entrega_id: entregaId,
   });
+  const tokensAtivos = Number((linksAtivos as { ativos: number } | null)?.ativos ?? 0);
 
   const situ = situacaoDaEntrega(
     {
@@ -59,8 +45,6 @@ export default async function DetalheEntrega({
     },
     hoje,
   );
-
-  const tokensAtivos = Number((linksAtivos as { ativos: number } | null)?.ativos ?? 0);
 
   return (
     <>
@@ -72,10 +56,9 @@ export default async function DetalheEntrega({
           </p>
           <h1>{entrega.titulo}</h1>
           <p className="muted">
-            {entrega.clientes?.nome} · {entrega.tipo}
-            {entrega.subtipo ? ` · ${entrega.subtipo}` : ""}
-            {entrega.squad ? ` · ${entrega.squad}` : ""}
-            {entrega.responsavel ? ` · ${entrega.responsavel}` : ""}
+            {[entrega.cliente, entrega.tipo, entrega.subtipo, entrega.squad, entrega.responsavel]
+              .filter(Boolean)
+              .join(" · ")}
           </p>
         </div>
         <Link href="/entregas" className="botao secundario">
@@ -99,9 +82,7 @@ export default async function DetalheEntrega({
           <h2>Situação</h2>
           <p>
             <span className={`badge tom-${situ.tom}`}>{situ.rotulo}</span>{" "}
-            <span className="badge tom-info">
-              {ROTULO_FASE[entrega.fase] ?? entrega.fase}
-            </span>
+            <span className="badge tom-info">{entrega.fase_rotulo}</span>
           </p>
           <ul className="lista-chave">
             <li>
@@ -115,14 +96,22 @@ export default async function DetalheEntrega({
             <li>
               <span>Atraso (D8)</span>
               <strong>
-                {entrega.dias_atraso === null
-                  ? "—"
-                  : `${entrega.dias_atraso} dia(s)`}
+                {entrega.dias_atraso === null ? "—" : `${entrega.dias_atraso} dia(s)`}
+              </strong>
+            </li>
+            <li>
+              <span>Ciclo</span>
+              <strong>
+                {entrega.dias_ciclo === null ? "—" : `${entrega.dias_ciclo} dia(s)`}
               </strong>
             </li>
             <li>
               <span>Revisões</span>
               <strong>{entrega.num_revisoes ?? "—"}</strong>
+            </li>
+            <li>
+              <span>Origem</span>
+              <strong>{entrega.origem}</strong>
             </li>
           </ul>
           {entrega.link && (
@@ -132,9 +121,7 @@ export default async function DetalheEntrega({
               </a>
             </p>
           )}
-          {entrega.observacoes && (
-            <p className="muted">{entrega.observacoes}</p>
-          )}
+          {entrega.observacoes && <p className="muted">{entrega.observacoes}</p>}
           {(entrega.flags ?? []).length > 0 && (
             <p className="muted">
               Sinalizações da importação: {(entrega.flags ?? []).join(", ")}
@@ -182,9 +169,7 @@ export default async function DetalheEntrega({
           </div>
 
           {tokensAtivos > 0 && (
-            <p className="muted">
-              {tokensAtivos} link(s) ativo(s) para esta entrega.
-            </p>
+            <p className="muted">{tokensAtivos} link(s) ativo(s) para esta entrega.</p>
           )}
         </div>
       </section>
@@ -192,17 +177,17 @@ export default async function DetalheEntrega({
       <section className="grade-detalhe">
         <div className="cartao">
           <h2>Histórico de mudanças</h2>
-          {(historico ?? []).length === 0 && (
+          {historico.length === 0 && (
             <p className="muted">Nenhuma mudança desde a importação.</p>
           )}
           <ul className="linha-tempo">
-            {(historico ?? []).map((h) => (
+            {historico.map((h) => (
               <li key={h.id}>
-                <strong>{h.campo}</strong>: {h.valor_antigo ?? "(vazio)"} →{" "}
+                <strong>{h.tipo_evento}</strong>
+                {h.campo ? ` · ${h.campo}` : ""}: {h.valor_antigo ?? "(vazio)"} →{" "}
                 {h.valor_novo ?? "(vazio)"}{" "}
                 <span className="muted">
-                  {new Date(h.criado_em).toLocaleString("pt-BR")} ·{" "}
-                  {h.autor ?? "—"}
+                  {new Date(h.criado_em).toLocaleString("pt-BR")} · {h.autor ?? "—"}
                 </span>
               </li>
             ))}
@@ -211,14 +196,14 @@ export default async function DetalheEntrega({
 
         <div className="cartao">
           <h2>Aprovações registradas</h2>
-          {(aprovacoes ?? []).length === 0 && (
+          {aprovacoes.length === 0 && (
             <p className="muted">
               Nenhuma ainda. Envie o link ao cliente quando o trabalho estiver
               pronto para revisão.
             </p>
           )}
           <ul className="linha-tempo">
-            {(aprovacoes ?? []).map((a) => (
+            {aprovacoes.map((a) => (
               <li key={a.id}>
                 <strong>{a.etapa}</strong>: {ROTULO_APROVACAO[a.decisao]} por{" "}
                 {a.autor_nome}
@@ -231,13 +216,6 @@ export default async function DetalheEntrega({
           </ul>
         </div>
       </section>
-
-      {FASES_ABERTAS.includes(entrega.fase as never) && (
-        <p className="muted">
-          Entrega em aberto: aparece na lista de “vencidas” quando o prazo
-          passa sem conclusão.
-        </p>
-      )}
     </>
   );
 }
@@ -252,7 +230,8 @@ function tomAprovacao(decisao: string): string {
 async function urlBase() {
   const { headers } = await import("next/headers");
   const cabecalhos = await headers();
-  const host = cabecalhos.get("x-forwarded-host") ?? cabecalhos.get("host") ?? "localhost:3000";
+  const host =
+    cabecalhos.get("x-forwarded-host") ?? cabecalhos.get("host") ?? "localhost:3000";
   const protocolo = cabecalhos.get("x-forwarded-proto") ?? "http";
   return `${protocolo}://${host}`;
 }
