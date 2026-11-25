@@ -14,9 +14,13 @@ export default async function LayoutDoApp({
   children: React.ReactNode;
 }) {
   const supabase = await criarClienteSupabaseServidor();
+  // O proxy já validou a sessão com getUser() (ida à rede) e barrou quem não
+  // tem perfil ativo. Aqui lemos a sessão do cookie, sem nova validação de
+  // rede — evita uma volta extra ao Auth a cada navegação.
   const {
-    data: { user },
-  } = await supabase.auth.getUser();
+    data: { session },
+  } = await supabase.auth.getSession();
+  const user = session?.user;
   if (!user) redirect("/login");
 
   const { data: perfil } = await supabase

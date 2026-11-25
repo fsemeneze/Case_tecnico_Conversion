@@ -33,6 +33,8 @@ const arquivos = [
   "app/login/nova-senha/page.tsx",
   "app/sobre/page.tsx",
   "app/(app)/layout.tsx",
+  "app/(app)/loading.tsx",
+  "app/(app)/error.tsx",
   "app/(app)/sair-do-app.tsx",
   "app/(app)/item-menu.tsx",
   "app/(app)/conta/page.tsx",

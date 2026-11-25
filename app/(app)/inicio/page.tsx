@@ -6,14 +6,17 @@ const numero = (valor: number) => valor.toLocaleString("pt-BR");
 
 export default async function Inicio() {
   const supabase = await criarClienteSupabaseServidor();
-  const indicadores = await contarIndicadores(supabase);
 
-  const { data: attention } = await supabase
-    .from("entregas_detalhadas")
-    .select("id, titulo, data_prevista, fase, cliente")
-    .in("fase", ["ajuste_solicitado", "aguardando_cliente", "aguardando_aprovacao_entrega"])
-    .order("data_prevista", { ascending: true, nullsFirst: false })
-    .limit(8);
+  // Indicadores e a lista de atenção são independentes: disparam juntos.
+  const [indicadores, { data: attention }] = await Promise.all([
+    contarIndicadores(supabase),
+    supabase
+      .from("entregas_detalhadas")
+      .select("id, titulo, data_prevista, fase, cliente")
+      .in("fase", ["ajuste_solicitado", "aguardando_cliente", "aguardando_aprovacao_entrega"])
+      .order("data_prevista", { ascending: true, nullsFirst: false })
+      .limit(8),
+  ]);
 
   const cartoes = [
     { rotulo: "Entregas em atraso", valor: indicadores.atraso, href: "/entregas?situacao=atrasadas", tom: "alerta" },
