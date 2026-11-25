@@ -46,6 +46,9 @@ export default async function LayoutDoApp({
           <Link href="/sobre" className="link-sobre">
             Sobre o produto
           </Link>
+          <Link href="/conta" className="link-sobre">
+            Segurança da conta
+          </Link>
           <SairDoApp />
         </div>
       </aside>

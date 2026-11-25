@@ -62,5 +62,7 @@ export const config = {
     "/clientes",
     "/revisao",
     "/equipe",
+    "/conta",
+    "/conta/:path*",
   ],
 };

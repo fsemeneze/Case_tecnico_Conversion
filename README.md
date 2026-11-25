@@ -45,6 +45,9 @@ decisões em [`docs/decisoes.md`](docs/decisoes.md).
 | Rota | O que faz |
 | :--- | :--- |
 | `/login` | Porta de entrada. Acesso por convite, sem cadastro público |
+| `/login/esqueci-senha` | Recuperação de senha por link (1 hora) |
+| `/login/nova-senha` | Definição da senha nova após o link |
+| `/conta` | Segurança da conta: verificação em duas etapas (TOTP) |
 | `/inicio` | Indicadores (atraso, vencidas, aguardando cliente, fila de revisão) |
 | `/entregas` | Lista com busca, filtros (cliente, fase, tipo, atraso) e paginação |
 | `/entregas/nova` | Cadastro de entrega com validação |
