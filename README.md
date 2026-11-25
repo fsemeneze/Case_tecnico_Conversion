@@ -79,6 +79,20 @@ npm run dev
 
 O app abre em `http://localhost:3000`.
 
+### Estado de demonstração
+
+Três entregas do cliente **Escola Saber Mais** cobrem os estados que a
+apresentação mostra: aguardando o planejamento do cliente, aguardando a
+aprovação da entrega e em produção com prazo vencido.
+
+```bash
+npm run demo:estado             # recria o estado e emite links de aprovação novos
+npm run demo:estado -- --status # mostra o estado atual
+```
+
+O comando mexe só nas entregas marcadas como demonstração (`origem_linha->>'demo'`),
+e aprovar pelo link consome o token — por isso existe o reset.
+
 ### Banco de dados (Supabase)
 
 As migrations em `supabase/migrations/` criam o modelo estrela do zero. Para
@@ -118,10 +132,11 @@ docs/
   diagnostico.md        Relatório gerado pelo script
   decisoes.md           Decisões, premissas e alternativas descartadas
   acesso_cliente.md     Por que link e não conta de cliente (apoio à apresentação)
+  acesso_avaliador.md   Como testar: perfis, portal, demo e rodar local
   readme_produto.md     README de produto (1 página)
   plano_melhoria_planops.md
 dados/                  Base original do case
-scripts/                Importação, deploy e cópia de artefatos
+scripts/                Importação, deploy, contas de teste e estado de demonstração
 ```
 
 ## Decisões principais

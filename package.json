@@ -10,7 +10,8 @@
     "start": "next start",
     "typecheck": "tsc --noEmit",
     "diagnostico": "python analysis/diagnostico.py",
-    "test:diagnostico": "python -m unittest discover -s analysis -v"
+    "test:diagnostico": "python -m unittest discover -s analysis -v",
+    "demo:estado": "node scripts/demo-estado.mjs"
   },
   "dependencies": {
     "@supabase/ssr": "0.12.7",
