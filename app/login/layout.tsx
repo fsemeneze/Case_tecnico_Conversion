@@ -19,11 +19,6 @@ export default function LayoutLogin({
 
           <h1>Planejamento e entregas</h1>
 
-          <p className="auth-sub">
-            Da solicitação à aprovação do cliente, com histórico de quem decidiu
-            o quê e quando.
-          </p>
-
           <ul className="auth-itens">
             <li>
               <span className="auth-check" aria-hidden="true" />
