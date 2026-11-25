@@ -43,6 +43,9 @@ export default async function LayoutDoApp({
         <div className="menu-usuario">
           <strong>{nome}</strong>
           {papel === "admin" ? "Administrador" : papel}
+          <Link href="/sobre" className="link-sobre">
+            Sobre o produto
+          </Link>
           <SairDoApp />
         </div>
       </aside>

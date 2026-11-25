@@ -309,6 +309,17 @@ footer {
   color: var(--accent);
 }
 
+.link-sobre {
+  display: inline-block;
+  margin-top: 10px;
+  color: var(--muted);
+  font-size: 0.82rem;
+  text-decoration: none;
+  border-bottom: 1px solid var(--border);
+}
+
+.link-sobre:hover { color: var(--accent); border-color: var(--accent); }
+
 /* Área de conteúdo */
 .conteudo {
   padding: 36px 40px 72px;
@@ -482,6 +493,25 @@ footer {
 .convite-form {
   max-width: 460px;
   margin-bottom: 28px;
+}
+
+/* Página /sobre (README de produto) */
+.sobre {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 56px 24px 80px;
+}
+
+.sobre h2 { margin-top: 36px; }
+.sobre ul { padding-left: 1.2rem; color: var(--muted); }
+.sobre li { margin-bottom: 8px; }
+.sobre strong { color: var(--fg); }
+.sobre code {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 1px 5px;
+  font-size: 0.9em;
 }
 
 .cartao-form {
