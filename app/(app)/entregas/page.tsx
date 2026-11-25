@@ -29,9 +29,6 @@ export default async function ListaEntregas({
   const hoje = new Date().toISOString().slice(0, 10);
 
   const supabase = await criarClienteSupabaseServidor();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
 
   let consulta = supabase
     .from("entregas")
@@ -49,6 +46,11 @@ export default async function ListaEntregas({
     consulta = consulta.or(
       `dias_atraso.gt.0,and(data_prevista.lt.${hoje},fase.in.(${FASES_ABERTAS.join(",")}))`,
     );
+  }
+  if (situacao === "vencidas") {
+    consulta = consulta
+      .lt("data_prevista", hoje)
+      .in("fase", FASES_ABERTAS as unknown as string[]);
   }
 
   const offset = (pagina - 1) * POR_PAGINA;
@@ -68,18 +70,15 @@ export default async function ListaEntregas({
   const temFiltro = Boolean(busca || cliente || fase || tipo || situacao);
 
   return (
-    <main className="app">
+    <>
       <header className="topo">
         <div>
-          <p className="eyebrow">PlanOps · {user?.email}</p>
+          <p className="eyebrow">PlanOps</p>
           <h1>Entregas</h1>
         </div>
         <div className="topo-acoes">
           <Link href="/entregas/nova" className="botao">
             + Nova entrega
-          </Link>
-          <Link href="/" className="botao secundario">
-            Diagnóstico
           </Link>
         </div>
       </header>
@@ -123,6 +122,15 @@ export default async function ListaEntregas({
             checked={situacao === "atrasadas"}
           />
           Apenas em atraso
+        </label>
+        <label className="filtro-check">
+          <input
+            type="checkbox"
+            name="situacao"
+            value="vencidas"
+            checked={situacao === "vencidas"}
+          />
+          Vencidas (em aberto)
         </label>
         <button type="submit">Filtrar</button>
         {temFiltro && (
@@ -217,7 +225,7 @@ export default async function ListaEntregas({
           })}
         </nav>
       )}
-    </main>
+    </>
   );
 }
 

@@ -5,75 +5,89 @@ import { redirect } from "next/navigation";
 import { headers } from "next/headers";
 import { criarClienteSupabaseServidor } from "@/lib/supabase/servidor";
 import { criarClienteSupabaseAdmin } from "@/lib/supabase/admin";
+import { schemaEntrega, primeiroErro } from "@/lib/validacao";
 
 const TIPOS = ["Relatório", "Análise", "Conteúdo"] as const;
 
 // ---------------------------------------------------------------------------
-// Cadastro de entrega (time, com sessão — RLS `authenticated` aplica)
+// Cadastro de entrega (time, com sessão — RLS por papel aplica)
 // ---------------------------------------------------------------------------
 
-export async function cadastrarEntrega(formulario: FormData) {
-  const supabase = await criarClienteSupabaseServidor();
+export type ResultadoCadastro =
+  | { ok: false; erro: string; campos?: Record<string, string> }
+  | { ok: true; id: number };
 
+export async function cadastrarEntrega(entrada: Record<string, unknown>): Promise<ResultadoCadastro> {
+  const supabase = await criarClienteSupabaseServidor();
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  if (!user) redirect("/login");
+  if (!user) return { ok: false, erro: "Sua sessão expirou. Entre novamente." };
 
-  const titulo = String(formulario.get("titulo") ?? "").trim();
-  const tipo = String(formulario.get("tipo") ?? "");
-  const novoCliente = String(formulario.get("novo_cliente") ?? "").trim();
-  const clienteId = formulario.get("cliente_id");
+  const { data: perfil } = await supabase
+    .from("usuario")
+    .select("papel")
+    .eq("id", user.id)
+    .maybeSingle();
 
-  if (!titulo) redirect("/entregas/nova?erro=Informe+o+título+da+entrega");
-  if (!TIPOS.includes(tipo as (typeof TIPOS)[number])) {
-    redirect("/entregas/nova?erro=Tipo+inválido");
+  // Só admin, gestor e operador criam entregas.
+  if (!perfil || !["admin", "gestor", "operador"].includes(perfil.papel)) {
+    return { ok: false, erro: "Seu perfil só pode consultar. Peça acesso ao administrador." };
   }
 
+  const dados = schemaEntrega.safeParse(entrada);
+  if (!dados.success) {
+    return { ok: false, erro: primeiroErro(dados) ?? "Dados inválidos.", campos: { titulo: primeiroErro(dados) ?? "" } };
+  }
+  if (!TIPOS.includes(dados.data.tipo as (typeof TIPOS)[number])) {
+    return { ok: false, erro: "Tipo inválido." };
+  }
+  const v = dados.data;
+
   let idCliente: number;
-  if (novoCliente) {
-    const { data: cliente, error: erroCliente } = await supabase
+  if (v.novo_cliente) {
+    const { data: cliente, error } = await supabase
       .from("clientes")
-      .insert({ nome: novoCliente })
+      .insert({ nome: v.novo_cliente })
       .select("id")
       .single();
-    if (erroCliente) {
-      redirect(`/entregas/nova?erro=${encodeURIComponent(erroCliente.message)}`);
+    if (error || !cliente) {
+      return { ok: false, erro: `Não foi possível criar o cliente: ${error?.message ?? "erro"}` };
     }
     idCliente = cliente.id;
   } else {
-    idCliente = Number(clienteId);
-    if (!idCliente) {
-      redirect("/entregas/nova?erro=Selecione+um+cliente+ou+informe+um+nome");
+    const id = Number(v.cliente_id);
+    if (!Number.isInteger(id) || id <= 0) {
+      return { ok: false, erro: "Selecione um cliente ou informe o nome de um novo." };
     }
+    idCliente = id;
   }
-
-  const registro = {
-    cliente_id: idCliente,
-    titulo,
-    tipo,
-    subtipo: String(formulario.get("subtipo") ?? "").trim() || null,
-    squad: String(formulario.get("squad") ?? "").trim() || null,
-    responsavel: String(formulario.get("responsavel") ?? "").trim() || null,
-    data_solicitacao: String(formulario.get("data_solicitacao") ?? "") || null,
-    data_prevista: String(formulario.get("data_prevista") ?? "") || null,
-    link: String(formulario.get("link") ?? "").trim() || null,
-    observacoes: String(formulario.get("observacoes") ?? "").trim() || null,
-    fase: "solicitada" as const,
-  };
 
   const { data, error } = await supabase
     .from("entregas")
-    .insert(registro)
+    .insert({
+      cliente_id: idCliente,
+      titulo: v.titulo,
+      tipo: v.tipo,
+      subtipo: v.subtipo || null,
+      squad: v.squad || null,
+      responsavel: v.responsavel || null,
+      data_solicitacao: v.data_solicitacao || null,
+      data_prevista: v.data_prevista || null,
+      link: v.link || null,
+      observacoes: v.observacoes || null,
+      fase: "solicitada",
+    })
     .select("id")
     .single();
 
-  if (error) {
-    redirect(`/entregas/nova?erro=${encodeURIComponent(error.message)}`);
+  if (error || !data) {
+    return { ok: false, erro: `Não foi possível salvar: ${error?.message ?? "erro"}` };
   }
 
+  revalidatePath("/inicio");
   revalidatePath("/entregas");
-  redirect(`/entregas/${data.id}`);
+  return { ok: true, id: data.id };
 }
 
 // ---------------------------------------------------------------------------
@@ -96,6 +110,15 @@ export async function gerarLinkAprovacao(formulario: FormData) {
     data: { user },
   } = await supabase.auth.getUser();
   if (!user) redirect("/login");
+
+  const { data: perfil } = await supabase
+    .from("usuario")
+    .select("papel")
+    .eq("id", user.id)
+    .maybeSingle();
+  if (!perfil || !["admin", "gestor"].includes(perfil.papel)) {
+    redirect("/entregas?erro=Seu+perfil+não+pode+gerar+links+de+aprovação");
+  }
 
   const entregaId = Number(formulario.get("entrega_id"));
   const etapa = String(formulario.get("etapa") ?? "");
@@ -155,6 +178,7 @@ export async function aprovarViaToken(
     return { ok: false, mensagem: error.message };
   }
 
+  revalidatePath("/inicio");
   revalidatePath("/entregas");
   revalidatePath(`/entregas/${data.entrega_id}`);
   return {

@@ -63,7 +63,7 @@ export default async function DetalheEntrega({
   const tokensAtivos = Number((linksAtivos as { ativos: number } | null)?.ativos ?? 0);
 
   return (
-    <main className="app">
+    <>
       <header className="topo">
         <div>
           <p className="eyebrow">
@@ -238,7 +238,7 @@ export default async function DetalheEntrega({
           passa sem conclusão.
         </p>
       )}
-    </main>
+    </>
   );
 }
 

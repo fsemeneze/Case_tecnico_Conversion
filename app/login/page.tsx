@@ -4,8 +4,9 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { criarClienteSupabaseNavegador } from "@/lib/supabase/navegador";
 
-type Estado = { erro?: string; aviso?: string };
+type Estado = { erro?: string };
 
+// Porta de entrada do PlanOps: login por convite, sem cadastro público.
 export default function PaginaLogin() {
   const router = useRouter();
   const [email, setEmail] = useState("");
@@ -32,80 +33,55 @@ export default function PaginaLogin() {
       });
       return;
     }
-    router.push("/entregas");
+    router.push("/inicio");
     router.refresh();
-  }
-
-  async function criarConta(e: React.FormEvent) {
-    e.preventDefault();
-    setEstado({});
-    setAguardando(true);
-    const supabase = criarClienteSupabaseNavegador();
-    const { data, error } = await supabase.auth.signUp({ email, password: senha });
-    setAguardando(false);
-    if (error) {
-      setEstado({ erro: `Não foi possível criar a conta: ${error.message}` });
-      return;
-    }
-    if (data.session) {
-      router.push("/entregas");
-      router.refresh();
-      return;
-    }
-    setEstado({
-      aviso:
-        "Conta criada. Se o e-mail de confirmação estiver habilitado no projeto, confirme no link enviado antes de entrar.",
-    });
   }
 
   return (
     <main className="login">
-      <form onSubmit={entrar} className="cartao-form">
-        <p className="eyebrow">PlanOps</p>
+      <div className="login-caixa">
+        <p className="marca">PlanOps</p>
         <h1>Planejamento e entregas</h1>
         <p className="muted">
           Acesso do time. O cliente aprova pelo link que o time envia — aqui não.
         </p>
 
-        <label>
-          E-mail
-          <input
-            type="email"
-            required
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="voce@conversion.com.br"
-          />
-        </label>
-        <label>
-          Senha
-          <input
-            type="password"
-            required
-            minLength={6}
-            value={senha}
-            onChange={(e) => setSenha(e.target.value)}
-            placeholder="mínimo de 6 caracteres"
-          />
-        </label>
+        <form onSubmit={entrar} className="cartao-form">
+          <label>
+            E-mail
+            <input
+              type="email"
+              required
+              autoComplete="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="voce@conversion.com.br"
+            />
+          </label>
+          <label>
+            Senha
+            <input
+              type="password"
+              required
+              minLength={6}
+              autoComplete="current-password"
+              value={senha}
+              onChange={(e) => setSenha(e.target.value)}
+              placeholder="sua senha"
+            />
+          </label>
 
-        {estado.erro && <p className="erro">{estado.erro}</p>}
-        {estado.aviso && <p className="aviso">{estado.aviso}</p>}
+          {estado.erro && <p className="erro">{estado.erro}</p>}
 
-        <div className="botoes">
           <button type="submit" disabled={aguardando}>
-            {aguardando ? "Aguardando…" : "Entrar"}
+            {aguardando ? "Entrando…" : "Entrar"}
           </button>
-          <button
-            type="button"
-            className="secundario"
-            disabled={aguardando}
-            onClick={criarConta}
-          >
-            Criar conta
-          </button>
-        </div>
-      </form>
+        </form>
+
+        <p className="muted login-rodape">
+          Acesso por convite. Não tem conta? Peça ao administrador.
+        </p>
+      </div>
     </main>
   );
 }

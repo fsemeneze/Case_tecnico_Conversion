@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { aprovarViaToken } from "@/app/entregas/actions";
+import { aprovarViaToken } from "@/app/(app)/entregas/actions";
 
 export type DadosEntrega = {
   entrega_id: number;
