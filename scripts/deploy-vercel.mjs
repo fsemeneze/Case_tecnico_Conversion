@@ -40,6 +40,7 @@ const arquivos = [
   "app/(app)/conta/page.tsx",
   "app/(app)/conta/seguranca.tsx",
   "app/(app)/inicio/page.tsx",
+  "app/(app)/dashboard/page.tsx",
   "app/(app)/clientes/page.tsx",
   "app/(app)/clientes/actions.ts",
   "app/(app)/revisao/page.tsx",

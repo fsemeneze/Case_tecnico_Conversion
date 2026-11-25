@@ -5,6 +5,7 @@ import type { SVGProps } from "react";
 // fazendo vez de ícone.
 export type NomeIcone =
   | "inicio"
+  | "dashboard"
   | "entregas"
   | "clientes"
   | "revisao"
@@ -27,6 +28,14 @@ const CAMINHOS: Record<NomeIcone, React.ReactNode> = {
       <rect x="14" y="3" width="7" height="7" rx="1.6" />
       <rect x="3" y="14" width="7" height="7" rx="1.6" />
       <rect x="14" y="14" width="7" height="7" rx="1.6" />
+    </>
+  ),
+  dashboard: (
+    <>
+      <path d="M3 21h18" />
+      <rect x="5" y="11" width="3" height="7" rx="1" />
+      <rect x="10.5" y="6" width="3" height="12" rx="1" />
+      <rect x="16" y="9" width="3" height="9" rx="1" />
     </>
   ),
   entregas: (

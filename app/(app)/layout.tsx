@@ -52,6 +52,9 @@ export default async function LayoutDoApp({
           <ItemMenu href="/inicio" icone="inicio">
             Início
           </ItemMenu>
+          <ItemMenu href="/dashboard" icone="dashboard">
+            Dashboard
+          </ItemMenu>
           <ItemMenu href="/entregas" icone="entregas">
             Entregas
           </ItemMenu>
