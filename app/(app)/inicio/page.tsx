@@ -9,7 +9,7 @@ export default async function Inicio() {
   const indicadores = await contarIndicadores(supabase);
 
   const { data: attention } = await supabase
-    .from("vw_entregas")
+    .from("entregas_detalhadas")
     .select("id, titulo, data_prevista, fase, cliente")
     .in("fase", ["ajuste_solicitado", "aguardando_cliente", "aguardando_aprovacao_entrega"])
     .order("data_prevista", { ascending: true, nullsFirst: false })

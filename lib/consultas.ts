@@ -1,7 +1,8 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 
 // Camada de leitura do PlanOps. O app nunca consulta tabelas base:
-// lê das visões (vw_*) e escreve nas tabelas fato, respeitando o RLS.
+// lê das visões (entregas_detalhadas, indicadores_mensais, eventos_detalhados)
+// e escreve nas tabelas do modelo, respeitando o RLS.
 // Assim a regra de negócio fica no banco, e o app só apresenta.
 
 export type EntregaLista = {
@@ -65,7 +66,7 @@ export async function listarEntregas(
   const hoje = new Date().toISOString().slice(0, 10);
 
   let consulta = supabase
-    .from("vw_entregas")
+    .from("entregas_detalhadas")
     .select("*", { count: "exact" });
 
   if (filtros.busca) {
@@ -106,7 +107,7 @@ export async function buscarEntrega(
   id: number,
 ): Promise<EntregaLista | null> {
   const { data } = await supabase
-    .from("vw_entregas")
+    .from("entregas_detalhadas")
     .select("*")
     .eq("id", id)
     .maybeSingle();
@@ -117,7 +118,7 @@ export async function listarClientes(
   supabase: SupabaseClient,
 ): Promise<{ id: number; nome: string }[]> {
   const { data } = await supabase
-    .from("dim_cliente")
+    .from("clientes")
     .select("id, nome")
     .order("nome");
   return (data ?? []) as { id: number; nome: string }[];
@@ -135,20 +136,22 @@ export async function contarIndicadores(
 
   const [atraso, vencidas, aguardando, revisao] = await Promise.all([
     supabase
-      .from("vw_entregas")
+      .from("entregas_detalhadas")
       .select("id", { count: "exact", head: true })
-      .or(`dias_atraso.gt.0,and(data_prevista.lt.${hoje},fase.in.(${FASES_ABERTAS.join(",")}))`),
+      .or(
+        `dias_atraso.gt.0,and(data_prevista.lt.${hoje},fase.in.(${FASES_ABERTAS.join(",")}))`,
+      ),
     supabase
-      .from("vw_entregas")
+      .from("entregas_detalhadas")
       .select("id", { count: "exact", head: true })
       .lt("data_prevista", hoje)
       .in("fase", FASES_ABERTAS),
     supabase
-      .from("vw_entregas")
+      .from("entregas_detalhadas")
       .select("id", { count: "exact", head: true })
       .eq("fase", "aguardando_aprovacao_entrega"),
     supabase
-      .from("fato_erro_importacao")
+      .from("erros_importacao")
       .select("id", { count: "exact", head: true })
       .eq("resolvido", false),
   ]);
@@ -178,7 +181,7 @@ export async function listarEventos(
   }[]
 > {
   const { data } = await supabase
-    .from("vw_eventos_entrega")
+    .from("eventos_detalhados")
     .select("*")
     .eq("entrega_id", entregaId)
     .order("criado_em", { ascending: false })
@@ -201,16 +204,16 @@ export async function listarAprovacoes(
   }[]
 > {
   const { data } = await supabase
-    .from("fato_aprovacao")
+    .from("aprovacoes")
     .select(
-      "id, etapa_id, decisao_id, autor_nome, autor_email, observacao, criado_em, dim_etapa_aprovacao!inner(codigo), dim_status_aprovacao!inner(codigo)",
+      "id, etapa_id, decisao_id, autor_nome, autor_email, observacao, criado_em, etapas_aprovacao!inner(codigo), decisoes_aprovacao!inner(codigo)",
     )
     .eq("entrega_id", entregaId)
     .order("criado_em", { ascending: false });
 
   return (data ?? []).map((linha: Record<string, unknown>) => {
-    const etapa = linha.dim_etapa_aprovacao as { codigo: string };
-    const decisao = linha.dim_status_aprovacao as { codigo: string };
+    const etapa = linha.etapas_aprovacao as { codigo: string };
+    const decisao = linha.decisoes_aprovacao as { codigo: string };
     return {
       id: String(linha.id),
       etapa: etapa.codigo,

@@ -1,17 +1,13 @@
 -- ============================================================================
--- PlanOps — Migration 10: carga das dimensões
+-- PlanOps — Migration 12: carga das dimensões
 --
--- Preenche as dimensões a partir do modelo antigo. Os IDs são determinísticos
--- (a ordem de inserção define o id), o que permite que a migration 11
--- migre os fatos por junção sem depender de nomes.
+-- Os IDs são determinísticos (a ordem de inserção define o id), o que permite
+-- que a migration 13 migre os fatos por junção sem depender de nomes.
 -- ============================================================================
 
--- ---------------------------------------------------------------------------
--- dim_fase — 8 fases, em ordem de processo. IDs 1..8.
+-- Fases: 8, em ordem de processo. IDs 1..8.
 -- Grupo: 1..5 abertas, 6..7 finais, 8 cancelada.
--- ---------------------------------------------------------------------------
-
-insert into public.dim_fase (codigo, rotulo, grupo, ordem, descricao) values
+insert into public.fases (codigo, rotulo, grupo, ordem, descricao) values
   ('solicitada',                  'Solicitada',                    'aberta',    1, 'Pedido recebido, ainda sem produção'),
   ('em_producao',                 'Em produção',                   'aberta',    2, 'Em execução pelo squad'),
   ('aguardando_cliente',          'Aguardando o cliente',          'aberta',    3, 'Depende de retorno do cliente'),
@@ -21,11 +17,8 @@ insert into public.dim_fase (codigo, rotulo, grupo, ordem, descricao) values
   ('aprovada',                    'Aprovada',                      'final',     7, 'Aprovada pelo cliente'),
   ('cancelada',                   'Cancelada',                     'cancelada', 8, 'Cancelada ou suspensa');
 
--- ---------------------------------------------------------------------------
--- dim_status_aprovacao — 6 decisões. IDs 1..6.
--- ---------------------------------------------------------------------------
-
-insert into public.dim_status_aprovacao (codigo, rotulo, conclusiva) values
+-- Decisões de aprovação: 6. IDs 1..6.
+insert into public.decisoes_aprovacao (codigo, rotulo, conclusiva) values
   ('pendente',              'Pendente',              false),
   ('aprovada',              'Aprovada',              true),
   ('aprovada_com_ressalvas','Aprovada com ressalvas', true),
@@ -33,28 +26,19 @@ insert into public.dim_status_aprovacao (codigo, rotulo, conclusiva) values
   ('nao_aplica',            'Não se aplica',         false),
   ('nao_informado',         'Não informado',         false);
 
--- ---------------------------------------------------------------------------
--- dim_etapa_aprovacao — 2 etapas. IDs 1..2.
--- ---------------------------------------------------------------------------
-
-insert into public.dim_etapa_aprovacao (codigo, rotulo, ordem) values
+-- Etapas: 2. IDs 1..2.
+insert into public.etapas_aprovacao (codigo, rotulo, ordem) values
   ('planejamento', 'Planejamento', 1),
   ('entrega',      'Entrega',      2);
 
--- ---------------------------------------------------------------------------
--- dim_origem — 3 origens. IDs 1..3.
--- ---------------------------------------------------------------------------
-
-insert into public.dim_origem (codigo, rotulo) values
+-- Origens: 3. IDs 1..3.
+insert into public.origens (codigo, rotulo) values
   ('planilha',    'Planilha (importação)'),
   ('app',         'App (cadastro manual)'),
   ('importacao',  'Importação');
 
--- ---------------------------------------------------------------------------
--- dim_data — calendário de 2024-01-01 a 2028-12-31 (5 anos)
--- ---------------------------------------------------------------------------
-
-insert into public.dim_data (
+-- Calendário de 2024-01-01 a 2028-12-31 (5 anos).
+insert into public.calendario (
   id, ano, semestre, trimestre, mes, nome_mes, dia,
   dia_semana, nome_dia_semana, semana_ano, eh_dia_util, eh_fim_de_semana
 )

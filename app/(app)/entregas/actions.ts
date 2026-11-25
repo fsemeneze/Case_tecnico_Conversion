@@ -45,11 +45,11 @@ export async function cadastrarEntrega(
   }
   const v = dados.data;
 
-  // Cliente: existente ou novo (cria na dimensão).
+  // Cliente: existente ou novo.
   let clienteId: number;
   if (v.novo_cliente) {
     const { data: cliente, error } = await supabase
-      .from("dim_cliente")
+      .from("clientes")
       .insert({ nome: v.novo_cliente })
       .select("id")
       .single();
@@ -66,33 +66,32 @@ export async function cadastrarEntrega(
   }
 
   // Dimensões derivadas do formulário.
-  const [tipo, fase, status, origem] = await Promise.all([
+  const [tipo, fase, decisao, origem] = await Promise.all([
     supabase
-      .from("dim_tipo_entrega")
+      .from("tipos_entrega")
       .select("id")
       .eq("tipo", v.tipo)
       .is("subtipo", v.subtipo || null)
       .maybeSingle(),
-    supabase.from("dim_fase").select("id").eq("codigo", "solicitada").single(),
-    supabase.from("dim_status_aprovacao").select("id").eq("codigo", "pendente").single(),
-    supabase.from("dim_origem").select("id").eq("codigo", "app").single(),
+    supabase.from("fases").select("id").eq("codigo", "solicitada").single(),
+    supabase.from("decisoes_aprovacao").select("id").eq("codigo", "pendente").single(),
+    supabase.from("origens").select("id").eq("codigo", "app").single(),
   ]);
 
-  if (!tipo.data || !fase.data || !status.data || !origem.data) {
+  if (!tipo.data || !fase.data || !decisao.data || !origem.data) {
     return { ok: false, erro: "Não foi possível resolver as dimensões da entrega." };
   }
 
   const { data, error } = await supabase
-    .from("fato_entrega")
+    .from("entregas")
     .insert({
       cliente_id: clienteId,
       tipo_entrega_id: tipo.data.id,
       fase_id: fase.data.id,
       origem_id: origem.data.id,
-      aprovacao_planejamento_id: status.data.id,
-      aprovacao_entrega_id: status.data.id,
+      aprovacao_planejamento_id: decisao.data.id,
+      aprovacao_entrega_id: decisao.data.id,
       titulo: v.titulo,
-      subtipo: undefined,
       squad_id: null,
       pessoa_id: null,
       data_solicitacao_id: v.data_solicitacao || null,
@@ -109,15 +108,15 @@ export async function cadastrarEntrega(
 
   // Squad e responsável são dimensões: resolve ou cria.
   const squadId = v.squad
-    ? (await supabase.from("dim_squad").select("id").eq("nome", v.squad).maybeSingle()).data?.id ?? null
+    ? (await supabase.from("squads").select("id").eq("nome", v.squad).maybeSingle()).data?.id ?? null
     : null;
   const pessoaId = v.responsavel
-    ? (await supabase.from("dim_pessoa").select("id").eq("nome", v.responsavel).maybeSingle()).data?.id ?? null
+    ? (await supabase.from("pessoas").select("id").eq("nome", v.responsavel).maybeSingle()).data?.id ?? null
     : null;
 
   if (squadId || pessoaId) {
     await supabase
-      .from("fato_entrega")
+      .from("entregas")
       .update({ squad_id: squadId, pessoa_id: pessoaId })
       .eq("id", data.id);
   }
