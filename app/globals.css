@@ -85,12 +85,15 @@
 }
 
 /* Setas e painel do select no escuro. */
-[data-theme="dark"] .app select {
+[data-theme="dark"] .app select,
+[data-theme="dark"] .portal .filtros select {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%239aa3b2' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
 }
 
 [data-theme="dark"] .app select option,
-[data-theme="dark"] .app select optgroup {
+[data-theme="dark"] .app select optgroup,
+[data-theme="dark"] .portal .filtros option,
+[data-theme="dark"] .portal .filtros optgroup {
   background-color: #161922;
   color: #e7e9ef;
   color-scheme: dark;
@@ -732,6 +735,70 @@ footer {
   border: 1px solid var(--border);
   border-radius: var(--radius);
   margin-bottom: 12px;
+}
+
+/* Páginas públicas (portal do cliente) não têm a casca .app: os controles
+   do formulário recebem o mesmo acabamento aqui. */
+.portal .filtros input,
+.portal .filtros select {
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  padding: 8px 11px;
+  background: var(--bg);
+  color: var(--fg);
+  font: inherit;
+  transition: border-color 0.14s ease, box-shadow 0.14s ease;
+}
+
+.portal .filtros select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  padding-right: 30px;
+}
+
+.portal .filtros option,
+.portal .filtros optgroup {
+  background-color: var(--card);
+  color: var(--fg);
+}
+
+.portal .filtros button,
+.portal .filtros .botao {
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 8px 16px;
+  background: var(--card);
+  color: var(--fg);
+  font: inherit;
+  font-weight: 550;
+  cursor: pointer;
+  transition: border-color 0.14s ease, background 0.14s ease;
+}
+
+.portal .filtros button:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.portal .filtros .botao.secundario {
+  background: transparent;
+}
+
+.portal .filtros input[type="search"] {
+  flex: 1 1 220px;
+}
+
+.portal .filtros input::placeholder {
+  color: var(--muted);
+}
+
+.portal .filtros input:focus,
+.portal .filtros select:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--ring);
 }
 
 .filtros input[type="search"] {
