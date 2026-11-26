@@ -76,6 +76,25 @@ export default async function PortalCliente({
   }
 
   const hoje = new Date().toISOString().slice(0, 10);
+
+  // Fases que aguardam decisão do cliente, com a etapa correspondente.
+  const AGUARDANDO = ["aguardando_cliente", "aguardando_aprovacao_entrega"];
+
+  // Entregas em fase de decisão para as quais o time já emitiu link ativo:
+  // só essas podem ser abertas pelo portal (a RPC exige o token do time).
+  let idsComTokenAtivo = new Set<number>();
+  try {
+    const admin = criarClienteSupabaseAdmin();
+    const { data: tokens } = await admin
+      .from("aprovacao_tokens")
+      .select("entrega_id, etapa")
+      .is("usado_em", null)
+      .gt("expira_em", new Date().toISOString());
+    idsComTokenAtivo = new Set((tokens ?? []).map((t) => Number(t.entrega_id)));
+  } catch {
+    // Sem tokens ativos: o portal segue somente leitura.
+  }
+
   const resumo = { total: entregas.length, atrasadas: 0, emAberto: 0, aprovadas: 0 };
   for (const e of entregas) {
     if (e.fase_grupo === "aberta") resumo.emAberto++;
@@ -172,9 +191,9 @@ export default async function PortalCliente({
               <h2>Entregas aguardando você</h2>
               <p className="muted">
                 Estas entregas estão nas fases “Aguardando o cliente” ou
-                “Aguardando aprovação da entrega”. Abra para ver o conteúdo e
-                aprovar ou pedir ajuste — vale na lista abaixo ou na própria
-                linha da tabela.
+                “Aguardando aprovação da entrega”, com o link de aprovação já
+                emitido pelo time. Abra para ver o conteúdo e aprovar ou pedir
+                ajuste — vale aqui ou na própria linha da tabela.
               </p>
               <ul className="lista-chave">
                 {pendencias.map((p) => (
@@ -272,24 +291,27 @@ export default async function PortalCliente({
                         <span className={`badge tom-${situ.tom}`}>{situ.rotulo}</span>
                       </td>
                       <td>
-                        {e.fase === "aguardando_cliente" ||
-                        e.fase === "aguardando_aprovacao_entrega" ? (
-                          <form action={abrirAprovacaoPeloPortal}>
-                            <input type="hidden" name="portal_token" value={token} />
-                            <input type="hidden" name="entrega_id" value={e.id} />
-                            <input
-                              type="hidden"
-                              name="etapa"
-                              value={
-                                e.fase === "aguardando_cliente"
-                                  ? "planejamento"
-                                  : "entrega"
-                              }
-                            />
-                            <button type="submit" className="botao primario">
-                              Abrir aprovação
-                            </button>
-                          </form>
+                        {AGUARDANDO.includes(e.fase) ? (
+                          idsComTokenAtivo.has(e.id) ? (
+                            <form action={abrirAprovacaoPeloPortal}>
+                              <input type="hidden" name="portal_token" value={token} />
+                              <input type="hidden" name="entrega_id" value={e.id} />
+                              <input
+                                type="hidden"
+                                name="etapa"
+                                value={
+                                  e.fase === "aguardando_cliente"
+                                    ? "planejamento"
+                                    : "entrega"
+                                }
+                              />
+                              <button type="submit" className="botao primario">
+                                Abrir aprovação
+                              </button>
+                            </form>
+                          ) : (
+                            <span className="muted">—</span>
+                          )
                         ) : e.link ? (
                           <a
                             href={e.link}
