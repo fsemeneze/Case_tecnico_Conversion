@@ -326,18 +326,43 @@ scripts/                Importação, deploy, contas de teste e estado de demons
 
 ## Uso de IA
 
-Ferramentas usadas, e para quê:
+### Ferramentas
 
-| Ferramenta | Uso |
+| Ferramenta | Onde entrou |
 | :--- | :--- |
-| OpenCode (agente de código) | Estrutura, migrations, app, testes e docs |
-| Plugin `opencode-supabase` | Integração com Supabase (MCP) para schema e dados |
-| Scripts próprios (Python) | Normalização, métricas e testes; nenhuma decisão de negócio delegada |
+| **OpenCode** (agente de código) | Estrutura do projeto, as 24 migrations, o app Next.js, os testes e a documentação |
+| **MCP do Supabase** (`mcp.supabase.com`) | Schema, migrations, dados e logs do projeto durante a modelagem e a depuração |
+| **MCP do Vercel** (`mcp.vercel.com`) | Deploy, domínio `planhub-co.vercel.app` e variáveis de ambiente |
+| **Plugin `opencode-supabase`** | Integração do agente com o projeto Supabase |
+| **Skills `supabase` e `impeccable`** | Convenções de Postgres/RLS e o redesenho visual (login, dashboard, modo escuro) |
+| **`AGENTS.md`** | Contrato de trabalho do agente: stack, convenções, regras de banco e segurança |
 
-Pontos revisados manualmente: inferência de ano em datas abreviadas, tratamento
-de revisões inválidas (`99`, `-1`, "duas") e a decisão de não apagar duplicados.
-Um teste encontrou um bug real no normalizador (um `-1` virava `1`), corrigido
-antes de gerar a base final.
+O agente trabalhou direto no repositório, seguindo o `AGENTS.md`, e consolidou
+cada etapa em migration incremental — nenhuma migration já aplicada foi editada.
+
+### Modelos
+
+| Modelo | Provider |
+| :--- | :--- |
+| `baidu/ernie-5.5-flash-preview:free` | OpenRouter |
+| `z-ai/glm-5.3-flash` | OpenRouter |
+| `deepseek/deepseek-v4.1-flash-1017` | OpenRouter |
+| `anthropic/claude-haiku-5.5` | OpenRouter |
+| `nvidia/nemotron-3.5-lightning:free` | OpenRouter |
+| `nemotron-3.5-super-vl-free` | OpenCode |
+| `deepseek-v4.1-flash-free` | OpenCode |
+
+Foram alternados ao longo das sessões, conforme a tarefa — o agente, o modelo e
+a variante ficam registrados por sessão no próprio OpenCode.
+
+### O que ficou fora do agente
+
+O normalizador em `analysis/diagnostico.py` e os testes em
+`analysis/test_diagnostico.py` são scripts próprios em Python; nenhuma decisão
+de negócio foi delegada. Pontos revisados manualmente: inferência de ano em datas
+abreviadas, tratamento de revisões inválidas (`99`, `-1`, "duas") e a decisão de
+não apagar duplicados. Um teste encontrou um bug real no normalizador (um `-1`
+virava `1`), corrigido antes de gerar a base final.
 
 ## Premissas
 
