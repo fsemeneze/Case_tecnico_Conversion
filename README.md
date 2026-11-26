@@ -112,6 +112,177 @@ Copie `.env.example` para `.env.local` e preencha com um projeto Supabase
 **criado para este case**. Nunca use credenciais pessoais. Nenhum `.env*` é
 versionado.
 
+## Modelo de dados
+
+Modelo em estrela no Postgres/Supabase: três fatos, dez dimensões e dois
+esquemas de acesso. O app lê apenas as visões (`security_invoker`); a regra de
+negócio vive no banco, não no cliente.
+
+### Estrela
+
+```mermaid
+erDiagram
+    CLIENTES ||--o{ ENTREGAS : "recebe"
+    CLIENTES ||--o{ ALIAS_CLIENTE : "grafias da planilha"
+    TIPOS_ENTREGA ||--o{ ENTREGAS : "classifica"
+    FASES ||--o{ ENTREGAS : "situacao"
+    SQUADS |o--o{ ENTREGAS : "squad"
+    PESSOAS |o--o{ ENTREGAS : "responsavel"
+    ORIGENS ||--o{ ENTREGAS : "origem"
+    CALENDARIO ||--o{ ENTREGAS : "datas"
+    DECISOES_APROVACAO ||--o{ ENTREGAS : "planejamento e entrega"
+    ENTREGAS ||--o{ EVENTOS_ENTREGA : "historico"
+    ENTREGAS ||--o{ APROVACOES : "decisoes do cliente"
+    ENTREGAS ||--o{ ERROS_IMPORTACAO : "sujeira da importacao"
+    ETAPAS_APROVACAO ||--o{ APROVACOES : "etapa"
+    DECISOES_APROVACAO ||--o{ APROVACOES : "decisao"
+    ORIGENS ||--o{ EVENTOS_ENTREGA : "origem"
+    FASES |o--o{ EVENTOS_ENTREGA : "fase origem e destino"
+
+    CLIENTES {
+        bigint id PK
+        text nome UK
+        text nome_fantasia
+        text cnpj
+        boolean ativo
+    }
+    ALIAS_CLIENTE {
+        bigint id PK
+        bigint cliente_id FK
+        text grafia UK
+    }
+    PESSOAS {
+        bigint id PK
+        text nome UK
+        uuid usuario_id FK
+    }
+    SQUADS {
+        bigint id PK
+        text nome UK
+    }
+    TIPOS_ENTREGA {
+        bigint id PK
+        text tipo
+        text subtipo
+    }
+    FASES {
+        bigint id PK
+        text codigo UK
+        text grupo
+        smallint ordem UK
+    }
+    DECISOES_APROVACAO {
+        bigint id PK
+        text codigo UK
+        boolean conclusiva
+    }
+    ETAPAS_APROVACAO {
+        bigint id PK
+        text codigo UK
+        smallint ordem UK
+    }
+    ORIGENS {
+        bigint id PK
+        text codigo UK
+    }
+    CALENDARIO {
+        date id PK
+        smallint ano
+        smallint mes
+        boolean eh_dia_util
+    }
+    ENTREGAS {
+        bigint id PK
+        bigint cliente_id FK
+        bigint tipo_entrega_id FK
+        bigint fase_id FK
+        bigint squad_id FK
+        bigint pessoa_id FK
+        bigint origem_id FK
+        date data_prevista_id FK
+        date data_entrega_id FK
+        bigint aprovacao_planejamento_id FK
+        bigint aprovacao_entrega_id FK
+        text titulo
+        integer dias_atraso
+        integer dias_ciclo
+    }
+    EVENTOS_ENTREGA {
+        bigint id PK
+        bigint entrega_id FK
+        text tipo_evento
+        bigint fase_origem_id FK
+        bigint fase_destino_id FK
+        text autor
+    }
+    APROVACOES {
+        uuid id PK
+        bigint entrega_id FK
+        bigint etapa_id FK
+        bigint decisao_id FK
+        text autor_nome
+        text autor_email
+        timestamptz data_decisao
+    }
+    ERROS_IMPORTACAO {
+        uuid id PK
+        bigint entrega_id FK
+        text codigo
+        text severidade
+        boolean resolvido
+    }
+```
+
+### Acesso, convites e tokens
+
+```mermaid
+erDiagram
+    USUARIO ||--o{ CONVITE : "convida"
+    ENTREGAS ||--o{ APROVACAO_TOKENS : "link de aprovacao"
+    CLIENTES ||--o{ CLIENTE_ACESSOS : "portal read-only"
+
+    USUARIO {
+        uuid id PK
+        text nome
+        text email
+        papel_usuario papel
+        boolean ativo
+    }
+    CONVITE {
+        uuid id PK
+        text email
+        papel_usuario papel
+        timestamptz valido_ate
+        timestamptz usado_em
+    }
+    NOTIFICACOES {
+        uuid id PK
+        text tipo
+        text destino
+        text status
+        bigint entidade_id
+    }
+    APROVACAO_TOKENS {
+        uuid id PK
+        text token_hash UK
+        bigint entrega_id FK
+        text etapa
+        timestamptz expira_em
+        timestamptz usado_em
+    }
+    CLIENTE_ACESSOS {
+        uuid id PK
+        text token_hash UK
+        bigint cliente_id FK
+        timestamptz expira_em
+    }
+```
+
+`PK` chave primária · `FK` chave estrangeira · `UK` única. `aprovacao_priv`
+não é exposto pela Data API: as duas tabelas de token guardam apenas
+`sha256(token)`, com expiração e uso único, e só são lidas por funções
+`SECURITY DEFINER`.
+
 ## Estrutura
 
 ```
