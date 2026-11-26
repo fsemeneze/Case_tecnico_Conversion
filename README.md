@@ -57,7 +57,7 @@ Na raiz ficam o `README.md`, o `AGENTS.md` (contrato do agente), o `DESIGN.md`
 | Passo | Onde | O que observar |
 | :--- | :--- | :--- |
 | 1 | `/inicio` | Indicadores de atraso, vencidas, aguardando cliente e fila de revisão |
-| 2 | `/entregas` | Busca, filtros (cliente, fase, tipo, atraso) e paginação |
+| 2 | `/entregas` | Busca, filtros (cliente, fase, tipo, atraso), ordenação por coluna, paginação e exportação CSV |
 | 3 | `/entregas/nova` | Cadastro com validação; grave e veja a entrega na lista |
 | 4 | `/entregas/[id]` | Situação, aprovação em duas etapas, histórico e aprovações registradas |
 | 5 | `/revisao` | Fila da importação: resolver e reabrir com o motivo |
@@ -302,7 +302,7 @@ por funções `SECURITY DEFINER`.
 | `/conta` | Segurança da conta: verificação em duas etapas (TOTP) |
 | `/inicio` | Indicadores (atraso, vencidas, aguardando cliente, fila de revisão) |
 | `/dashboard` | Visão executiva: taxa de atraso, por tipo, por fase, por mês e clientes com mais atraso |
-| `/entregas` | Lista com busca, filtros (cliente, fase, tipo, atraso) e paginação |
+| `/entregas` | Lista com busca, filtros (cliente, fase, tipo, atraso), ordenação por coluna, paginação e exportação CSV |
 | `/entregas/nova` | Cadastro de entrega com validação |
 | `/entregas/[id]` | Detalhe: situação, aprovação em 2 etapas, histórico e aprovações |
 | `/clientes` | Clientes canônicos e grafias da planilha |

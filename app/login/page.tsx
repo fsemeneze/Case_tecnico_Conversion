@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { criarClienteSupabaseNavegador } from "@/lib/supabase/navegador";
+import { verificarLimiteLogin } from "./actions";
 import { Icone } from "@/app/icones";
 
 type Estado = { erro?: string };
@@ -22,6 +23,13 @@ export default function PaginaLogin() {
   async function entrar(e: React.FormEvent) {
     e.preventDefault();
     setEstado({});
+
+    const limite = await verificarLimiteLogin(email);
+    if (!limite.permitido) {
+      setEstado({ erro: limite.mensagem });
+      return;
+    }
+
     setAguardando(true);
     const supabase = criarClienteSupabaseNavegador();
     const { data, error } = await supabase.auth.signInWithPassword({

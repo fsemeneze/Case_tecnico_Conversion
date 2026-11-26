@@ -47,6 +47,19 @@ export type FiltrosLista = {
   situacao?: "atrasadas" | "vencidas" | "";
   pagina?: number;
   porPagina?: number;
+  ordenar?: string;
+  direcao?: "asc" | "desc";
+};
+
+// Colunas que a lista pode ordenar. Só estas valem: o valor vem da URL e
+// vira nome de coluna no PostgREST, então precisa de lista branca.
+const ORDENACAO: Record<string, string> = {
+  titulo: "titulo",
+  cliente: "cliente",
+  tipo: "tipo",
+  fase: "fase_rotulo",
+  data_prevista: "data_prevista",
+  situacao: "dias_atraso",
 };
 
 const FASES_ABERTAS = [
@@ -94,8 +107,12 @@ export async function listarEntregas(
   }
 
   const offset = (pagina - 1) * porPagina;
+  const coluna = filtros.ordenar ? ORDENACAO[filtros.ordenar] : undefined;
   const { data, count } = await consulta
-    .order("data_prevista", { ascending: true, nullsFirst: false })
+    .order(coluna ?? "data_prevista", {
+      ascending: coluna ? filtros.direcao !== "desc" : true,
+      nullsFirst: false,
+    })
     .order("id", { ascending: true })
     .range(offset, offset + porPagina - 1);
 

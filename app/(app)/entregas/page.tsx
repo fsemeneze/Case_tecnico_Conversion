@@ -11,10 +11,25 @@ type Busca = {
   tipo?: string;
   situacao?: string;
   pagina?: string;
+  ord?: string;
+  dir?: string;
 };
 
 const TIPOS = ["Relatório", "Análise", "Conteúdo"];
 const POR_PAGINA = 50;
+
+// Colunas ordenáveis da lista. A chave é o valor que vai na URL; o rótulo é o
+// que aparece no cabeçalho.
+const COLUNAS: { chave: string; rotulo: string }[] = [
+  { chave: "titulo", rotulo: "Título" },
+  { chave: "cliente", rotulo: "Cliente" },
+  { chave: "tipo", rotulo: "Tipo" },
+  { chave: "fase", rotulo: "Fase" },
+  { chave: "data_prevista", rotulo: "Prazo" },
+  { chave: "situacao", rotulo: "Situação" },
+];
+
+const ORDENAVEIS = new Set(COLUNAS.map((c) => c.chave));
 
 export default async function ListaEntregas({
   searchParams,
@@ -28,6 +43,8 @@ export default async function ListaEntregas({
   const tipo = params.tipo ?? "";
   const situacao = params.situacao ?? "";
   const pagina = Math.max(1, Number(params.pagina ?? 1) || 1);
+  const ordenar = params.ord && ORDENAVEIS.has(params.ord) ? params.ord : "";
+  const direcao: "asc" | "desc" = params.dir === "desc" ? "desc" : "asc";
   const hoje = new Date().toISOString().slice(0, 10);
 
   const supabase = await criarClienteSupabaseServidor();
@@ -41,6 +58,8 @@ export default async function ListaEntregas({
       situacao: situacao === "atrasadas" || situacao === "vencidas" ? situacao : "",
       pagina,
       porPagina: POR_PAGINA,
+      ordenar: ordenar || undefined,
+      direcao,
     }),
     listarClientes(supabase),
   ]);
@@ -48,16 +67,36 @@ export default async function ListaEntregas({
   const paginas = Math.max(1, Math.ceil(total / POR_PAGINA));
   const temFiltro = Boolean(busca || cliente || fase || tipo || situacao);
 
-  const parametrosPagina = (p: number) => {
+  const parametrosBase = () => {
     const parametros = new URLSearchParams();
     if (busca) parametros.set("q", busca);
     if (cliente) parametros.set("cliente", cliente);
     if (fase) parametros.set("fase", fase);
     if (tipo) parametros.set("tipo", tipo);
     if (situacao) parametros.set("situacao", situacao);
+    if (ordenar) {
+      parametros.set("ord", ordenar);
+      parametros.set("dir", direcao);
+    }
+    return parametros;
+  };
+
+  const parametrosPagina = (p: number) => {
+    const parametros = parametrosBase();
     parametros.set("pagina", String(p));
     return parametros.toString();
   };
+
+  // Clique no cabeçalho: alterna a direção da coluna, mantendo os filtros.
+  const linkOrdenacao = (chave: string) => {
+    const proxima = ordenar === chave && direcao === "asc" ? "desc" : "asc";
+    const parametros = parametrosBase();
+    parametros.set("ord", chave);
+    parametros.set("dir", proxima);
+    return `/entregas?${parametros.toString()}`;
+  };
+
+  const linkExportar = `/entregas/exportar?${parametrosBase().toString()}`;
 
   return (
     <>
@@ -66,6 +105,10 @@ export default async function ListaEntregas({
           <h1>Entregas</h1>
         </div>
         <div className="topo-acoes">
+          <Link href={linkExportar} className="botao secundario">
+            <Icone nome="download" width={17} height={17} />
+            Exportar CSV
+          </Link>
           <Link href="/entregas/nova" className="botao primario">
             <Icone nome="mais" width={17} height={17} />
             Nova entrega
@@ -140,12 +183,29 @@ export default async function ListaEntregas({
         <table className="tabela">
           <thead>
             <tr>
-              <th>Título</th>
-              <th>Cliente</th>
-              <th>Tipo</th>
-              <th>Fase</th>
-              <th>Prazo</th>
-              <th>Situação</th>
+              {COLUNAS.map((coluna) => {
+                const ativo = ordenar === coluna.chave;
+                const ariaSort = ativo
+                  ? direcao === "asc"
+                    ? "ascending"
+                    : "descending"
+                  : "none";
+                return (
+                  <th key={coluna.chave} aria-sort={ariaSort}>
+                    <Link
+                      href={linkOrdenacao(coluna.chave)}
+                      className={`ordem ${ativo ? "ativo" : ""}`}
+                    >
+                      {coluna.rotulo}
+                      <span
+                        className="seta"
+                        data-dir={ativo ? direcao : undefined}
+                        aria-hidden="true"
+                      />
+                    </Link>
+                  </th>
+                );
+              })}
             </tr>
           </thead>
           <tbody>

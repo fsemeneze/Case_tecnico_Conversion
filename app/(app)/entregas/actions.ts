@@ -6,7 +6,8 @@ import { headers } from "next/headers";
 import { criarClienteSupabaseServidor } from "@/lib/supabase/servidor";
 import { criarClienteSupabaseAdmin } from "@/lib/supabase/admin";
 import { schemaEntrega, primeiroErro } from "@/lib/validacao";
-import { enviarEmail, emailLinkAprovacao, emailDecisaoCliente } from "@/lib/email";
+import { enviarEmail, emailLinkAprovacao, emailDecisaoCliente, emailComprovante } from "@/lib/email";
+import { verificarLimite, chaveDeIp } from "@/lib/rate-limit";
 
 const TIPOS = ["Relatório", "Análise", "Conteúdo"] as const;
 
@@ -267,6 +268,16 @@ export async function aprovarViaToken(
     null;
   const userAgent = cabecalhos.get("user-agent")?.slice(0, 500) ?? null;
 
+  // Limite de tentativas por token + IP: o token já é de uso único, mas sem
+  // isso um link válido pode ser alvo de força bruta.
+  const limite = await verificarLimite(chaveDeIp(`aprovacao:${token}`, ip), 10, 900);
+  if (!limite.permitido) {
+    return {
+      ok: false,
+      mensagem: "Muitas tentativas seguidas. Aguarde alguns minutos e tente novamente.",
+    };
+  }
+
   const admin = criarClienteSupabaseAdmin();
   const { data, error } = await admin.rpc("registrar_aprovacao", {
     p_token: token,
@@ -286,23 +297,52 @@ export async function aprovarViaToken(
   revalidatePath("/entregas");
   revalidatePath(`/entregas/${data.entrega_id}`);
 
+  const { data: ent } = await admin
+    .from("entregas_detalhadas")
+    .select("cliente")
+    .eq("id", data.entrega_id)
+    .maybeSingle();
+  const cliente = ent?.cliente ?? "Cliente";
+
   // Avisa o time por e-mail sobre a decisão do cliente (D).
   const equipe = process.env.EMAIL_EQUIPE;
   if (equipe) {
-    const { data: ent } = await admin
-      .from("entregas_detalhadas")
-      .select("cliente")
-      .eq("id", data.entrega_id)
-      .maybeSingle();
     const tpl = emailDecisaoCliente({
       titulo: data.titulo,
-      cliente: ent?.cliente ?? "Cliente",
+      cliente,
       etapa: data.etapa,
       decisao,
       autor: autorNome,
       observacao: observacao ?? null,
     });
     await enviarEmail({ para: equipe, ...tpl, tipo: "decisao_cliente", entidadeId: data.entrega_id });
+  }
+
+  // Comprovante automático para quem aprovou (D). Se o cliente não tiver
+  // e-mail cadastrado, usa o endereço informado no formulário.
+  let destinoCliente = autorEmail?.trim() ?? null;
+  if (ent?.cliente) {
+    const { data: cli } = await admin
+      .from("clientes")
+      .select("email")
+      .eq("nome", ent.cliente)
+      .maybeSingle();
+    destinoCliente = cli?.email ?? destinoCliente;
+  }
+  if (destinoCliente) {
+    const tpl = emailComprovante({
+      cliente,
+      titulo: data.titulo,
+      etapa: data.etapa,
+      decisao,
+      autor: autorNome,
+    });
+    await enviarEmail({
+      para: destinoCliente,
+      ...tpl,
+      tipo: "comprovante_aprovacao",
+      entidadeId: data.entrega_id,
+    });
   }
 
   return {

@@ -163,6 +163,30 @@ export function emailDecisaoCliente(d: {
   };
 }
 
+export function emailComprovante(d: {
+  cliente: string;
+  titulo: string;
+  etapa: string;
+  decisao: string;
+  autor: string;
+}) {
+  const etapaRotulo = d.etapa === "planejamento" ? "planejamento" : "entrega";
+  const corpo = `
+    <p>Olá, ${d.autor}.</p>
+    <p>Registramos a sua decisão sobre a aprovação de <strong>${etapaRotulo}</strong> da entrega <strong>${d.titulo}</strong>.</p>
+    <ul>
+      <li>Cliente: <strong>${d.cliente}</strong></li>
+      <li>Etapa: <strong>${etapaRotulo}</strong></li>
+      <li>Decisão: <strong>${d.decisao}</strong></li>
+    </ul>
+    <p style="color:#64748b;font-size:13px">Confirmação automática. A decisão já está no histórico da entrega, com data e autor.</p>`;
+  return {
+    assunto: `Comprovante de aprovação — ${d.titulo}`,
+    html: envelope("Comprovante de aprovação", corpo),
+    texto: `Comprovante de aprovação — ${d.titulo}\nCliente: ${d.cliente}\nEtapa: ${etapaRotulo}\nDecisão: ${d.decisao}\n`,
+  };
+}
+
 export function emailPrazoVencido(d: {
   cliente: string;
   entregas: { titulo: string; prazo: string; dias: number }[];
