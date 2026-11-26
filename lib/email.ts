@@ -172,7 +172,7 @@ export function emailPortalCliente(d: {
     <p>Olá, ${d.cliente}.</p>
     <p>Este é o seu portal de acompanhamento de entregas: todas as entregas do
     contrato, com a fase atual, o prazo e o conteúdo de cada uma — e a lista
-    "Aprovações aguardando você", com o que está na sua vez.</p>
+    "Entregas aguardando você", com o que está na sua vez.</p>
     <p style="margin:18px 0">
       <a href="${d.url}" style="background:#1649ff;color:#fff;padding:11px 18px;border-radius:10px;text-decoration:none;font-weight:600">Abrir meu portal</a>
     </p>

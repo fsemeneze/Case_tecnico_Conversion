@@ -24,7 +24,7 @@ entrega: o botão aparece, o envio é recusado pelo banco.
 ## Link do cliente (sem conta)
 
 O cliente não tem login: recebe um link somente leitura com todas as entregas
-dele e a lista "Aprovações aguardando você". O link do e-mail abre o portal do
+dele e a lista "Entregas aguardando você". O link do e-mail abre o portal do
 cliente **Escola Saber Mais**, que tem três entregas de demonstração (abaixo).
 
 Regra do produto: gerar um link novo revoga o anterior, tanto no portal quanto

@@ -169,10 +169,12 @@ export default async function PortalCliente({
 
           {pendencias.length > 0 && (
             <div className="cartao-form">
-              <h2>Aprovações aguardando você</h2>
+              <h2>Entregas aguardando você</h2>
               <p className="muted">
-                Estas entregas estão na fase de decisão. Abra para ver o
-                conteúdo e aprovar ou pedir ajuste.
+                Estas entregas estão nas fases “Aguardando o cliente” ou
+                “Aguardando aprovação da entrega”. Abra para ver o conteúdo e
+                aprovar ou pedir ajuste — vale na lista abaixo ou na própria
+                linha da tabela.
               </p>
               <ul className="lista-chave">
                 {pendencias.map((p) => (
@@ -270,7 +272,23 @@ export default async function PortalCliente({
                         <span className={`badge tom-${situ.tom}`}>{situ.rotulo}</span>
                       </td>
                       <td>
-                        {e.link ? (
+                        {e.fase === "aguardando_cliente" ||
+                        e.fase === "aguardando_aprovacao_entrega" ? (
+                          <form action={abrirAprovacaoPeloPortal}>
+                            <input type="hidden" name="portal_token" value={token} />
+                            <input type="hidden" name="entrega_id" value={e.id} />
+                            <input
+                              type="hidden"
+                              name="etapa"
+                              value={
+                                e.fase === "aguardando_cliente"
+                                  ? "planejamento"
+                                  : "entrega"
+                              }
+                            />
+                            <button type="submit">Abrir aprovação</button>
+                          </form>
+                        ) : e.link ? (
                           <a
                             href={e.link}
                             target="_blank"
@@ -300,9 +318,11 @@ export default async function PortalCliente({
           </div>
 
           <p className="muted">
-            Quando uma entrega chega à sua vez de decidir, ela aparece em
-            “Aprovações aguardando você”. Você pode abrir e decidir por aqui; o
-            time também pode enviar o link por e-mail.
+            Quando uma entrega entra na fase “Aguardando o cliente” ou
+            “Aguardando aprovação da entrega”, ela aparece em “Entregas
+            aguardando você” — e o botão “Abrir aprovação” fica disponível na
+            própria linha da tabela. O time também pode enviar o link por
+            e-mail.
           </p>
         </>
       )}
