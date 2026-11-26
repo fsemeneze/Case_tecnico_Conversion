@@ -72,3 +72,32 @@ revoke all on function public.verificar_rate_limit(text, integer, integer)
   from public, anon, authenticated;
 grant execute on function public.verificar_rate_limit(text, integer, integer)
   to service_role;
+
+-- ---------------------------------------------------------------------------
+-- Limpeza das janelas antigas, chamada pelo cron diário (/api/keepalive).
+-- Sem isso a tabela cresce para sempre: cada tentativa de login ou aprovação
+-- deixa uma linha.
+-- ---------------------------------------------------------------------------
+
+create or replace function public.limpar_rate_limits(
+  p_antigo_segundos integer default 86400
+)
+returns integer
+language plpgsql
+security definer
+set search_path = aprovacao_priv, public
+as $fn$
+declare
+  v_removidos integer;
+begin
+  delete from aprovacao_priv.rate_limits
+  where janela_inicio < now() - make_interval(secs => p_antigo_segundos);
+  get diagnostics v_removidos = row_count;
+  return v_removidos;
+end;
+$fn$;
+
+revoke all on function public.limpar_rate_limits(integer)
+  from public, anon, authenticated;
+grant execute on function public.limpar_rate_limits(integer)
+  to service_role;

@@ -16,7 +16,7 @@ Dados fictícios, criados para o case.
 | :--- | :--- |
 | `app/` | App Next.js (App Router): rotas internas, login, aprovação do cliente e portal read-only |
 | `lib/` | Clientes Supabase, consultas às visões, validação Zod, e-mail e rótulos de tela |
-| `supabase/` | 24 migrations: modelo estrela, RLS, funções e carga de dados |
+| `supabase/` | 25 migrations: modelo estrela, RLS, funções, carga e limite de tentativas |
 | `analysis/` | Diagnóstico em Python, testes do normalizador e saídas geradas |
 | `docs/` | Diagnóstico, decisões, acesso do cliente, README de produto e evidências de teste |
 | `scripts/` | Importação, deploy, contas de teste e reset do estado de demonstração |
@@ -33,7 +33,7 @@ Na raiz ficam o `README.md`, o `AGENTS.md` (contrato do agente), o `DESIGN.md`
 | # | Entregável | Onde está |
 | :--- | :--- | :--- |
 | 1 | Diagnóstico dos dados | Notebook executado em [`docs/diagnostico.ipynb`](docs/diagnostico.ipynb) · saídas em `analysis/out/` · resumo abaixo |
-| 2 | Modelagem Postgres | 24 migrations em [`supabase/migrations/`](supabase/migrations) · diagrama ER abaixo |
+| 2 | Modelagem Postgres | 25 migrations em [`supabase/migrations/`](supabase/migrations) · diagrama ER abaixo |
 | 3 | Fatia funcional do app | App publicado · rotas e roteiro de teste abaixo · evidências em [`docs/testes/`](docs/testes) |
 | 4 | README de produto (até 1 página) | [`docs/readme_produto.md`](docs/readme_produto.md) |
 | — | Vídeo de demonstração (5–10 min) | Entregue à parte, fora do repositório |
@@ -420,7 +420,7 @@ analysis/
   test_diagnostico.py   Testes do normalizador
   out/                  Base normalizada, erros, métricas e relatório
 supabase/
-  migrations/           Modelo estrela, RLS, funções e carga (0001–0024)
+  migrations/           Modelo estrela, RLS, funções e carga (0001–0025)
 docs/
   diagnostico.ipynb     Diagnóstico em notebook (executado)
   decisoes.md           Decisões, premissas e alternativas descartadas
