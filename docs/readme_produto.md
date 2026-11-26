@@ -7,7 +7,7 @@ duas etapas, com histórico de quem decidiu o quê e quando.
 **Para quem.** O time de operações (squads de conteúdo, análise e relatório) e
 o cliente, que aprova pelo link sem precisar de conta.
 
-**Link.** https://planops-co.vercel.app/login
+**Link.** https://planhub-co.vercel.app/login
 
 ---
 

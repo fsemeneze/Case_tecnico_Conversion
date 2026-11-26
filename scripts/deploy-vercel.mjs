@@ -163,8 +163,8 @@ console.log(`id: ${resultado.id}`);
 
 // 3. Aponta o alias de produção para o novo deployment.
 //    Com domínio customizado, o alias NÃO segue o deploy sozinho: sem este
-//    passo, planops-co.vercel.app continua servindo a versão anterior.
-const ALIAS = "planops-co.vercel.app";
+//    passo, planhub-co.vercel.app continua servindo a versão anterior.
+const ALIAS = "planhub-co.vercel.app";
 const alias = await chamada(`/v1/deployments/${resultado.id}/aliases`, {
   alias: ALIAS,
 });

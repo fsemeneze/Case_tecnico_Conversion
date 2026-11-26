@@ -4,7 +4,7 @@ Como testar o PlanHub sem depender de quem construiu. Senhas, link do portal e
 links de aprovação **não ficam neste repositório público**: vão no e-mail de
 entrega e no arquivo local `.credenciais-avaliador.md`.
 
-**App no ar:** https://planops-co.vercel.app/login
+**App no ar:** https://planhub-co.vercel.app/login
 
 ## Contas por perfil
 

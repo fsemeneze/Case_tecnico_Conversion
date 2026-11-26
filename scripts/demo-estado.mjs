@@ -41,7 +41,7 @@ function lerEnvLocal() {
 const env = { ...lerEnvLocal(), ...process.env };
 const URL = env.NEXT_PUBLIC_SUPABASE_URL;
 const SERVICE = env.SUPABASE_SERVICE_ROLE_KEY;
-const APP = (env.APP_URL || "https://planops-co.vercel.app").replace(/\/$/, "");
+const APP = (env.APP_URL || "https://planhub-co.vercel.app").replace(/\/$/, "");
 
 if (!URL || !SERVICE) {
   console.error(

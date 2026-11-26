@@ -5,7 +5,7 @@ O objetivo é tirar o controle de entregas de uma planilha e transformá-lo em u
 app de verdade: diagnóstico dos dados, modelo em estrela e uma fatia funcional
 completa.
 
-**App no ar:** https://planops-co.vercel.app/login
+**App no ar:** https://planhub-co.vercel.app/login
 **README de produto:** [`docs/readme_produto.md`](docs/readme_produto.md) (também
 em `/sobre` no app).
 
