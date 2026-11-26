@@ -89,9 +89,22 @@ export default async function Clientes({ searchParams }: { searchParams: Promise
           </thead>
           <tbody>
             {(clientes ?? []).map((c) => {
+              // Só interessa a grafia que difere de verdade do nome canônico:
+              // case, acento e espaço nas bordas não são variações.
+              const grafiaNormalizada = (s: string) =>
+                s
+                  .trim()
+                  .toLowerCase()
+                  .normalize("NFD")
+                  .replace(/[\u0300-\u036f]/g, "")
+                  .replace(/\s+/g, " ");
               const aliases = (c.aliases_cliente ?? [])
                 .map((a: { grafia: string }) => a.grafia)
-                .filter((g: string) => g !== c.nome);
+                .filter(
+                  (g: string) =>
+                    g.trim() !== "" &&
+                    grafiaNormalizada(g) !== grafiaNormalizada(c.nome),
+                );
               return (
                 <tr key={c.id}>
                   <td>
