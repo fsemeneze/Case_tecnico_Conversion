@@ -28,7 +28,8 @@ refino coeso: identidade preservada, acabamento elevado.
 | `--ok` / `--warn` | `#0f7b52` / `#b45309` | Sucesso / alerta |
 
 Hero de auth: azul-marinho `#000931` com gradiente perolado no canto inferior
-direito (`rgba(191,205,255,.47)` → `rgba(23,23,39,.47)`).
+direito (`rgba(191,205,255,.47)` → `rgba(23,23,39,.47)`). No modo escuro, o
+fundo do app usa o mesmo hero, para a transição do login para dentro ser contínua.
 
 ## Tipografia
 

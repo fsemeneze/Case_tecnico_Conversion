@@ -53,6 +53,17 @@
   --shadow-pop: 0 12px 32px rgba(0, 0, 0, 0.5);
 }
 
+/* O fundo do app no escuro é o mesmo da tela inicial (login): azul-marinho
+   com o gradiente perolado no canto inferior direito. */
+[data-theme="dark"] body {
+  background: radial-gradient(
+      at bottom right,
+      rgba(191, 205, 255, 0.47) 30%,
+      rgba(23, 23, 39, 0.47) 73%
+    ),
+    #000931;
+}
+
 /* O card de auth é claro nos dois temas: mantém o texto escuro localmente. */
 [data-theme="dark"] .auth-cartao {
   --fg: #0e0e10;
