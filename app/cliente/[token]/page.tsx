@@ -35,10 +35,22 @@ export default async function PortalCliente({
   searchParams,
 }: {
   params: Promise<{ token: string }>;
-  searchParams: Promise<{ erro?: string }>;
+  searchParams: Promise<{
+    erro?: string;
+    q?: string;
+    tipo?: string;
+    situacao?: string;
+  }>;
 }) {
   const { token } = await params;
-  const { erro: erroLink } = await searchParams;
+  const sp = await searchParams;
+  const erroLink = sp.erro;
+
+  // Filtros do portal (aplicados depois da busca do token, em memória —
+  // o RPC já devolve todas as entregas do cliente).
+  const busca = sp.q?.trim().toLowerCase() ?? "";
+  const tipoFiltro = sp.tipo ?? "";
+  const situacaoFiltro = sp.situacao ?? ""; // "atrasadas" | "abertas" | "aprovadas" | ""
 
   let cliente: string | null = null;
   let entregas: EntregaCliente[] = [];
@@ -73,6 +85,40 @@ export default async function PortalCliente({
       (e.fase_grupo === "aberta" && e.data_prevista && e.data_prevista < hoje);
     if (atrasada) resumo.atrasadas++;
   }
+
+  const tiposDisponiveis = [...new Set(entregas.map((e) => e.tipo))].sort();
+
+  const situacaoDaLinha = (e: EntregaCliente) => {
+    const atrasada =
+      (e.dias_atraso ?? 0) > 0 ||
+      (e.fase_grupo === "aberta" && e.data_prevista && e.data_prevista < hoje);
+    if (atrasada) return "atrasadas";
+    if (e.fase === "aprovada") return "aprovadas";
+    if (e.fase_grupo === "aberta") return "abertas";
+    return "outras";
+  };
+
+  const entregasFiltradas = entregas.filter((e) => {
+    if (busca && !e.titulo.toLowerCase().includes(busca)) return false;
+    if (tipoFiltro && e.tipo !== tipoFiltro) return false;
+    if (situacaoFiltro && situacaoDaLinha(e) !== situacaoFiltro) return false;
+    return true;
+  });
+
+  const temFiltro = Boolean(busca || tipoFiltro || situacaoFiltro);
+
+  const parametrosFiltro = (sobrescrever: Record<string, string>) => {
+    const u = new URLSearchParams();
+    if (busca) u.set("q", busca);
+    if (tipoFiltro) u.set("tipo", tipoFiltro);
+    if (situacaoFiltro) u.set("situacao", situacaoFiltro);
+    for (const [chave, valor] of Object.entries(sobrescrever)) {
+      if (valor) u.set(chave, valor);
+      else u.delete(chave);
+    }
+    const s = u.toString();
+    return s ? `/cliente/${token}?${s}` : `/cliente/${token}`;
+  };
 
   return (
     <main className="portal">
@@ -154,6 +200,41 @@ export default async function PortalCliente({
             </div>
           )}
 
+          <form className="filtros" method="get">
+            <input
+              type="search"
+              name="q"
+              placeholder="Buscar entrega…"
+              defaultValue={sp.q ?? ""}
+            />
+            <select name="tipo" defaultValue={tipoFiltro}>
+              <option value="">Todos os tipos</option>
+              {tiposDisponiveis.map((t) => (
+                <option key={t} value={t}>
+                  {t}
+                </option>
+              ))}
+            </select>
+            <select name="situacao" defaultValue={situacaoFiltro}>
+              <option value="">Todas as situações</option>
+              <option value="atrasadas">Em atraso</option>
+              <option value="abertas">Em aberto</option>
+              <option value="aprovadas">Aprovadas</option>
+            </select>
+            <button type="submit">Filtrar</button>
+            {temFiltro && (
+              <Link href={`/cliente/${token}`} className="botao secundario">
+                Limpar
+              </Link>
+            )}
+          </form>
+
+          <p className="muted resumo">
+            {temFiltro
+              ? `${entregasFiltradas.length} de ${entregas.length} entregas com o filtro aplicado`
+              : `${entregas.length} entrega${entregas.length === 1 ? "" : "s"}`}
+          </p>
+
           <div className="tabela-wrap">
             <table className="tabela">
               <thead>
@@ -167,7 +248,7 @@ export default async function PortalCliente({
                 </tr>
               </thead>
               <tbody>
-                {entregas.map((e) => {
+                {entregasFiltradas.map((e) => {
                   const situ = situacaoDaEntrega(
                     { fase: e.fase, data_prevista: e.data_prevista, dias_atraso: e.dias_atraso },
                     hoje,
@@ -203,10 +284,12 @@ export default async function PortalCliente({
                     </tr>
                   );
                 })}
-                {entregas.length === 0 && (
+                {entregasFiltradas.length === 0 && (
                   <tr>
                     <td colSpan={6} className="muted">
-                      Nenhuma entrega para este cliente.
+                      {temFiltro
+                        ? "Nenhuma entrega com esses filtros."
+                        : "Nenhuma entrega para este cliente."}
                     </td>
                   </tr>
                 )}
