@@ -32,7 +32,7 @@ npm run dev              # app em http://localhost:3000 (prepara docs antes)
 npm run build            # build de produção (prepara docs antes)
 npm run start            # serve o build
 npm run typecheck        # tsc --noEmit — precisa passar sempre
-npm run diagnostico      # gera docs/diagnostico.md e analysis/out/*
+npm run diagnostico      # gera analysis/out/* e o relatório interno
 npm run test:diagnostico # testes do normalizador (Python unittest)
 npm run demo:estado      # recria o estado de demonstração e emite links novos
 npm run demo:estado -- --status   # mostra o estado atual, sem alterar

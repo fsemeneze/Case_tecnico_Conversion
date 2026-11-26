@@ -1,8 +1,8 @@
 # Diagnóstico dos dados — controle de entregas
 
-Gerado automaticamente por `analysis/diagnostico.py` em 2026-11-23T21:30:33.
+Gerado automaticamente por `analysis/diagnostico.py` em 2026-11-25T23:37:07.
 Arquivo de origem: `dados/controle_entregas.csv`.
-Data de referência para "em atraso hoje": **2026-11-23**.
+Data de referência para "em atraso hoje": **2026-11-25**.
 
 ## 1. Visão geral
 
@@ -29,6 +29,16 @@ Data de referência para "em atraso hoje": **2026-11-23**.
 | Entregas sem data prevista | 47 |
 | Entregas sem data de entrega | 74 |
 | Entregas abertas com prazo vencido hoje | 71 |
+
+### Distribuição do atraso (dias)
+
+| Faixa | Entregas |
+| :--- | ---: |
+| 1 a 3 dias | 94 |
+| 4 a 7 dias | 85 |
+| 8 a 14 dias | 31 |
+| 15 a 30 dias | 55 |
+| 31+ dias | 8 |
 
 ### Por tipo de entrega
 
@@ -96,11 +106,15 @@ Distribuição do número de revisões: {"0": 721, "1": 228, "2": 47, "3": 2}
 | Tipo inferido (vazio ou inválido) | 4 |
 | Concluída sem data de entrega | 15 |
 | Entrega antes da solicitação | 2 |
-| Entrega fora da janela (após out/2026) | 0 |
+| Entrega fora da janela (após out/2026) | 5 |
 | Cancelada com arquivo publicado | 0 |
 | Status "aprovado" sem aprovação registrada | 0 |
 | Aprovação contraditória com o status | 4 |
 | **Linhas em fila de revisão (algum problema crítico)** | **47** |
+
+Ocorrências contam registros de problema; linhas contam entregas distintas.
+São 302 ocorrências em 210 linhas;
+121 ocorrências críticas em 47 linhas.
 
 ### Todos os códigos de qualidade encontrados
 
@@ -120,6 +134,7 @@ Distribuição do número de revisões: {"0": 721, "1": 228, "2": 47, "3": 2}
 | `data_prevista_serial_excel` | 13 |
 | `data_solicitacao_serial_excel` | 10 |
 | `data_solicitacao_texto_ano_inferido` | 8 |
+| `entrega_fora_janela` | 5 |
 | `tipo_inferido` | 4 |
 | `revisoes_outlier` | 3 |
 | `revisoes_negativo` | 3 |

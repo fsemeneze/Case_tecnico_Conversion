@@ -4,7 +4,6 @@ import { copyFileSync, mkdirSync } from "node:fs";
 import { dirname } from "node:path";
 
 const arquivos = [
-  ["docs/diagnostico.md", "public/diagnostico.md"],
   ["docs/decisoes.md", "public/decisoes.md"],
   ["analysis/out/entregas_normalizadas.csv", "public/entregas_normalizadas.csv"],
   ["analysis/out/erros_qualidade.csv", "public/erros_qualidade.csv"],

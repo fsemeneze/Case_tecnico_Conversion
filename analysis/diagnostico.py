@@ -425,7 +425,7 @@ def normalizar(linhas: list[dict]) -> tuple[list[dict], list[dict], dict]:
             flags.append("entrega_antes_solicitacao")
             registrar(linha_id, "entrega_antes_solicitacao", f"{entrega} < {solicitacao}", "critico")
 
-        if entrega and entrega.year >= 2027:
+        if entrega and entrega > date(2026, 10, 31):
             flags.append("entrega_fora_janela")
             registrar(linha_id, "entrega_fora_janela", f"data de entrega {entrega} após out/2026")
 
@@ -494,6 +494,17 @@ def calcular_metricas(linhas: list[dict], brutas: list[dict], extras: dict, erro
     comparaveis = [l for l in linhas if l["data_prevista"] and l["data_entrega"]]
     atrasadas = [l for l in comparaveis if l["dias_atraso"] != "" and int(l["dias_atraso"]) > 0]
     atrasos = sorted(int(l["dias_atraso"]) for l in atrasadas)
+
+    faixas_atraso = [
+        ("1 a 3 dias", lambda n: 1 <= n <= 3),
+        ("4 a 7 dias", lambda n: 4 <= n <= 7),
+        ("8 a 14 dias", lambda n: 8 <= n <= 14),
+        ("15 a 30 dias", lambda n: 15 <= n <= 30),
+        ("31+ dias", lambda n: n >= 31),
+    ]
+    distribuicao_atraso = {
+        rotulo: sum(1 for n in atrasos if filtro(n)) for rotulo, filtro in faixas_atraso
+    }
 
     abertas = [l for l in linhas if l["status_normalizado"] not in STATUS_FINAIS]
     em_atraso_agora = [
@@ -605,6 +616,13 @@ def calcular_metricas(linhas: list[dict], brutas: list[dict], extras: dict, erro
         }
 
     fila_revisao = len({e["id"] for e in erros if e["severidade"] == "critico"})
+    criticos = [e for e in erros if e["severidade"] == "critico"]
+    qualidade = {
+        "ocorrencias": len(erros),
+        "linhas_distintas": len({e["id"] for e in erros}),
+        "ocorrencias_criticas": len(criticos),
+        "linhas_criticas": len({e["id"] for e in criticos}),
+    }
 
     resumo_flags = Counter()
     for linha in linhas:
@@ -639,6 +657,7 @@ def calcular_metricas(linhas: list[dict], brutas: list[dict], extras: dict, erro
             "sem_data_prevista": sum(1 for l in linhas if not l["data_prevista"]),
             "sem_data_entrega": sum(1 for l in linhas if not l["data_entrega"]),
             "abertas_em_atraso_hoje": len(em_atraso_agora),
+            "distribuicao_faixas": distribuicao_atraso,
         },
         "por_tipo": por_tipo,
         "por_squad": por_squad,
@@ -648,6 +667,7 @@ def calcular_metricas(linhas: list[dict], brutas: list[dict], extras: dict, erro
         "observacoes": dict(observacoes),
         "flags": dict(resumo_flags.most_common()),
         "fila_revisao": fila_revisao,
+        "qualidade": qualidade,
         "ids_duplicados_distintos": extras.get("ids_duplicados_distintos", 0),
         "links_repetidos_distintos": extras.get("links_repetidos_distintos", 0),
         "ciclo": {
@@ -673,6 +693,7 @@ def gerar_relatorio(metricas: dict) -> str:
     atraso = metricas["atraso"]
     flags = metricas["flags"]
     c = metricas["contadores_qualidade"]
+    q = metricas["qualidade"]
 
     linhas_tipo = "\n".join(
         f"| {tipo} | {dados['entregas']} | {dados['comparaveis']} | {dados['atrasadas']} | {moeda(dados['taxa'])}% |"
@@ -701,6 +722,10 @@ def gerar_relatorio(metricas: dict) -> str:
     linhas_revisoes = "\n".join(
         f"| {faixa} | {dados['comparaveis']} | {dados['atrasadas']} | {moeda(dados['taxa'])}% |"
         for faixa, dados in metricas["revisoes"]["por_faixa"].items()
+    )
+    linhas_atraso_dist = "\n".join(
+        f"| {faixa} | {total} |"
+        for faixa, total in metricas["atraso"]["distribuicao_faixas"].items()
     )
     linhas_flags = "\n".join(
         f"| `{flag}` | {total} |" for flag, total in metricas["flags"].items()
@@ -737,6 +762,12 @@ Data de referência para "em atraso hoje": **{metricas['data_referencia']}**.
 | Entregas sem data prevista | {atraso['sem_data_prevista']} |
 | Entregas sem data de entrega | {atraso['sem_data_entrega']} |
 | Entregas abertas com prazo vencido hoje | {atraso['abertas_em_atraso_hoje']} |
+
+### Distribuição do atraso (dias)
+
+| Faixa | Entregas |
+| :--- | ---: |
+{linhas_atraso_dist}
 
 ### Por tipo de entrega
 
@@ -792,6 +823,10 @@ Distribuição do número de revisões: {json.dumps(metricas['revisoes']['distri
 | Status "aprovado" sem aprovação registrada | {c.get('status_aprovado_sem_aprovacao', 0)} |
 | Aprovação contraditória com o status | {c.get('aprovacao_contraditoria', 0)} |
 | **Linhas em fila de revisão (algum problema crítico)** | **{metricas['fila_revisao']}** |
+
+Ocorrências contam registros de problema; linhas contam entregas distintas.
+São {q['ocorrencias']} ocorrências em {q['linhas_distintas']} linhas;
+{q['ocorrencias_criticas']} ocorrências críticas em {q['linhas_criticas']} linhas.
 
 ### Todos os códigos de qualidade encontrados
 
@@ -855,7 +890,7 @@ def main() -> int:
     raiz = Path(__file__).resolve().parent.parent
     parser.add_argument("--csv", type=Path, default=raiz / "dados" / "controle_entregas.csv")
     parser.add_argument("--out", type=Path, default=raiz / "analysis" / "out")
-    parser.add_argument("--reporte", type=Path, default=raiz / "docs" / "diagnostico.md")
+    parser.add_argument("--reporte", type=Path, default=raiz / "analysis" / "out" / "relatorio_diagnostico.md")
     args = parser.parse_args()
 
     if not args.csv.exists():

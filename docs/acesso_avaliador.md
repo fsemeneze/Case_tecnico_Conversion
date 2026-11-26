@@ -83,7 +83,7 @@ mostra que o envio não saiu.
 ## Reproduzir a base
 
 ```bash
-npm run diagnostico               # gera docs/diagnostico.md e analysis/out/*
+npm run diagnostico               # gera analysis/out/* e o relatório interno
 npm run test:diagnostico          # testes do normalizador
 node scripts/importar-para-supabase.mjs   # migrations + carga no Supabase
 ```

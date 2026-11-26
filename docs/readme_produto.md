@@ -16,7 +16,7 @@ o cliente, que aprova pelo link sem precisar de conta.
 - As 1.007 entregas da planilha, com as datas originais e a linha da planilha
   preservada em cada registro.
 - Os 25 clientes canônicos, com as 31 grafias originais guardadas como alias.
-- A fila de revisão: 372 problemas encontrados na importação, 193 críticos.
+- A fila de revisão: 302 ocorrências encontradas na importação, 121 críticas (47 linhas).
 
 ## O que mudou
 

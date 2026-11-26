@@ -35,9 +35,9 @@ Base: `dados/controle_entregas.csv`, 1.007 linhas, nov/2025 a out/2026.
 | Entregas abertas com prazo vencido hoje | 71 |
 | IDs repetidos | 12 (24 linhas) |
 | Linhas com assinatura idêntica (fantasmas) | 38 |
-| Problemas na fila de revisão | 372 (193 críticos) |
+| Ocorrências na fila de revisão | 302 (121 críticas) · 47 linhas |
 
-O relatório completo está em [`docs/diagnostico.md`](docs/diagnostico.md) e as
+O diagnóstico completo está no notebook [`docs/diagnostico.ipynb`](docs/diagnostico.ipynb) e as
 decisões em [`docs/decisoes.md`](docs/decisoes.md).
 
 ## O app
@@ -67,7 +67,7 @@ Requisitos: Node.js 20.9+ (testado com Node 26 e Next 16) e Python 3.10+.
 # 1. dependências
 npm install
 
-# 2. diagnóstico (gera docs/diagnostico.md e analysis/out/*)
+# 2. diagnóstico (gera analysis/out/* e o relatório interno)
 npm run diagnostico
 
 # 3. testes do normalizador
@@ -129,7 +129,7 @@ analysis/
 supabase/
   migrations/           Modelo estrela, RLS, funções e carga
 docs/
-  diagnostico.md        Relatório gerado pelo script
+  diagnostico.ipynb     Diagnóstico em notebook (executado)
   decisoes.md           Decisões, premissas e alternativas descartadas
   acesso_cliente.md     Por que link e não conta de cliente (apoio à apresentação)
   acesso_avaliador.md   Como testar: perfis, portal, demo e rodar local

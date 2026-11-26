@@ -1,7 +1,7 @@
 {
-  "gerado_em": "2026-11-23T21:30:33",
+  "gerado_em": "2026-11-25T23:37:07",
   "arquivo_origem": "dados/controle_entregas.csv",
-  "data_referencia": "2026-11-23",
+  "data_referencia": "2026-11-25",
   "total_linhas_origem": 1007,
   "total_linhas_normalizadas": 1007,
   "periodo": {
@@ -73,7 +73,14 @@
     "dias_maximo": 304,
     "sem_data_prevista": 47,
     "sem_data_entrega": 74,
-    "abertas_em_atraso_hoje": 71
+    "abertas_em_atraso_hoje": 71,
+    "distribuicao_faixas": {
+      "1 a 3 dias": 94,
+      "4 a 7 dias": 85,
+      "8 a 14 dias": 31,
+      "15 a 30 dias": 55,
+      "31+ dias": 8
+    }
   },
   "por_tipo": {
     "Relatório": {
@@ -208,6 +215,7 @@
     "data_prevista_serial_excel": 13,
     "data_solicitacao_serial_excel": 10,
     "data_solicitacao_texto_ano_inferido": 8,
+    "entrega_fora_janela": 5,
     "tipo_inferido": 4,
     "revisoes_outlier": 3,
     "revisoes_negativo": 3,
@@ -217,6 +225,12 @@
     "revisoes_texto_nao_numerico": 1
   },
   "fila_revisao": 47,
+  "qualidade": {
+    "ocorrencias": 302,
+    "linhas_distintas": 210,
+    "ocorrencias_criticas": 121,
+    "linhas_criticas": 47
+  },
   "ids_duplicados_distintos": 12,
   "links_repetidos_distintos": 21,
   "ciclo": {
@@ -278,6 +292,7 @@
     "revisoes_outlier": 3,
     "revisoes_negativo": 3,
     "link_textual": 20,
+    "entrega_fora_janela": 5,
     "data_solicitacao_serial_excel": 10,
     "revisoes_texto_nao_numerico": 1,
     "revisoes_vazio": 2,
