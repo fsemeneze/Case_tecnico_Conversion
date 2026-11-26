@@ -6,7 +6,6 @@ Contas de teste (uma por papel) e o resultado de login + permissões (RLS).
 
 | Teste | Arquivo |
 | :--- | :--- |
-| E2E: novo cliente, planejamento, entrega e aprovação | [e2e-novo-cliente.md](./e2e-novo-cliente.md) |
 | Listagem: filtros, busca e paginação | [listagem.md](./listagem.md) |
 | Cadastro de nova entrega (validação + inserção) | [cadastro.md](./cadastro.md) |
 | Aprovação: recusa, uso único e caminho até a entrega | [aprovacao-recusa.md](./aprovacao-recusa.md) |
