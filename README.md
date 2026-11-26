@@ -10,6 +10,24 @@ aprovação do cliente por link, sem login.
 Case técnico — Analista de BI Pleno (AI Builder) · Conversion · novembro/2026.
 Dados fictícios, criados para o case.
 
+## Sumário do repositório
+
+| Pasta | O que tem |
+| :--- | :--- |
+| `app/` | App Next.js (App Router): rotas internas, login, aprovação do cliente e portal read-only |
+| `lib/` | Clientes Supabase, consultas às visões, validação Zod, e-mail e rótulos de tela |
+| `supabase/` | 24 migrations: modelo estrela, RLS, funções e carga de dados |
+| `analysis/` | Diagnóstico em Python, testes do normalizador e saídas geradas |
+| `docs/` | Diagnóstico, decisões, acesso do cliente, README de produto e evidências de teste |
+| `scripts/` | Importação, deploy, contas de teste e reset do estado de demonstração |
+| `dados/` | Base original do case (CSV) |
+| `public/` | Cópias geradas dos artefatos do diagnóstico, servidas pelo app |
+| `.opencode/` | Configuração do agente de código (plugin Supabase) |
+
+Na raiz ficam o `README.md`, o `AGENTS.md` (contrato do agente), o `DESIGN.md`
+(tokens visuais), o `proxy.ts` (guarda de sessão) e os arquivos de configuração
+(`package.json`, `next.config.ts`, `tsconfig.json`, `vercel.json`).
+
 ## Entregáveis
 
 | # | Entregável | Onde está |
