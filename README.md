@@ -1,28 +1,71 @@
 # PlanHub — Planejamento e entregas
 
-Case técnico para a vaga de **Analista de BI Pleno (AI Builder)** na Conversion.
-O objetivo é tirar o controle de entregas de uma planilha e transformá-lo em um
-app de verdade: diagnóstico dos dados, modelo em estrela e uma fatia funcional
-completa.
+O controle de entregas de uma operação de SEO saiu da planilha e virou um app:
+diagnóstico dos dados, modelo em estrela no Postgres e uma fatia funcional com
+aprovação do cliente por link, sem login.
 
-**App no ar:** https://planhub-co.vercel.app/login
-**README de produto:** [`docs/readme_produto.md`](docs/readme_produto.md) (também
-em `/sobre` no app).
+**App publicado:** https://planhub-co.vercel.app/login
+**README de produto (1 página):** [`docs/readme_produto.md`](docs/readme_produto.md)
 
-**Estado atual:** Fases 0 a 4 concluídas. Falta gravar o vídeo de demonstração.
+Case técnico — Analista de BI Pleno (AI Builder) · Conversion · novembro/2026.
+Dados fictícios, criados para o case.
 
-## Fases
+## Entregáveis
 
-| Fase | Entrega | Estado |
+| # | Entregável | Onde está |
 | :--- | :--- | :--- |
-| 0 | Estrutura do projeto, stack, decisões e ambiente | Concluída |
-| 1 | Diagnóstico dos dados e base normalizada | Concluída |
-| 2 | Modelagem Postgres/Supabase (estrela), RLS e importação | Concluída |
-| 3 | Fatia funcional do app | Concluída |
-| 4 | README de produto (1 página) | Concluída |
-| 5 | Vídeo de demonstração (5–10 min) | A fazer |
+| 1 | Diagnóstico dos dados | Notebook executado em [`docs/diagnostico.ipynb`](docs/diagnostico.ipynb) · saídas em `analysis/out/` · resumo abaixo |
+| 2 | Modelagem Postgres | 24 migrations em [`supabase/migrations/`](supabase/migrations) · diagrama ER abaixo |
+| 3 | Fatia funcional do app | App publicado · rotas e roteiro de teste abaixo · evidências em [`docs/testes/`](docs/testes) |
+| 4 | README de produto (até 1 página) | [`docs/readme_produto.md`](docs/readme_produto.md) |
+| — | Vídeo de demonstração (5–10 min) | Entregue à parte, fora do repositório |
 
-## Diagnóstico em números
+## Como testar
+
+1. Abra https://planhub-co.vercel.app/login.
+2. Entre com um dos perfis abaixo. As senhas e os links do cliente vão no e-mail
+   de entrega, não neste repositório.
+3. Siga o roteiro de 5 minutos.
+
+| Perfil | E-mail | O que pode fazer |
+| :--- | :--- | :--- |
+| Admin | `admin@planhub.case` | Tudo: entregas, clientes, equipe, convites, revisão e links |
+| Gestor | `gestor@planhub.case` | Entregas, clientes, links de aprovação e avisos; não mexe em equipe |
+| Operador | `operador@planhub.case` | Cadastra e edita entregas; não gera links nem administra |
+| Leitor | `leitor@planhub.case` | Só consulta — a RLS bloqueia a escrita |
+
+**Roteiro sugerido:**
+
+| Passo | Onde | O que observar |
+| :--- | :--- | :--- |
+| 1 | `/inicio` | Indicadores de atraso, vencidas, aguardando cliente e fila de revisão |
+| 2 | `/entregas` | Busca, filtros (cliente, fase, tipo, atraso) e paginação |
+| 3 | `/entregas/nova` | Cadastro com validação; grave e veja a entrega na lista |
+| 4 | `/entregas/[id]` | Situação, aprovação em duas etapas, histórico e aprovações registradas |
+| 5 | `/revisao` | Fila da importação: resolver e reabrir com o motivo |
+| 6 | `/clientes` | Clientes canônicos e as grafias originais da planilha |
+| 7 | `/equipe` | Papéis e convites (admin) |
+| 8 | Link do e-mail | Aprovação do cliente: nome, e-mail, observação e origem registrados |
+
+O cliente **não tem conta**: recebe um link de uso único por etapa, com validade,
+e um portal read-only com as entregas dele e as aprovações pendentes. A geração
+de um link novo revoga o anterior.
+
+### Estado de demonstração
+
+Três entregas do cliente **Escola Saber Mais** cobrem os estados da apresentação:
+aguardando o planejamento do cliente, aguardando a aprovação da entrega e em
+produção com prazo vencido.
+
+```bash
+npm run demo:estado             # recria o estado e emite links de aprovação novos
+npm run demo:estado -- --status # mostra o estado atual
+```
+
+O comando mexe só nas entregas marcadas como demonstração (`origem_linha->>'demo'`).
+Aprovar pelo link consome o token — por isso existe o reset.
+
+## Diagnóstico
 
 Base: `dados/controle_entregas.csv`, 1.007 linhas, nov/2025 a out/2026.
 
@@ -31,94 +74,43 @@ Base: `dados/controle_entregas.csv`, 1.007 linhas, nov/2025 a out/2026.
 | Clientes após normalização | 25 (eram 31 grafias) |
 | Entregas com prazo e data de entrega | 888 |
 | Entregas após o prazo | 273 (**30,7%**) |
-| Mediana do atraso | 6 dias |
+| Mediana do atraso | 6 dias (P90: 21) |
 | Entregas abertas com prazo vencido hoje | 71 |
 | IDs repetidos | 12 (24 linhas) |
 | Linhas com assinatura idêntica (fantasmas) | 38 |
 | Ocorrências na fila de revisão | 302 (121 críticas) · 47 linhas |
 
-O diagnóstico completo está no notebook [`docs/diagnostico.ipynb`](docs/diagnostico.ipynb) e as
-decisões em [`docs/decisoes.md`](docs/decisoes.md).
+O que o diagnóstico mostrou:
 
-## O app
+- **O atraso é estrutural, não pontual.** 30,7% das 888 entregas comparáveis
+  passaram do prazo; Conteúdo tem a maior taxa (41,1%), seguido de Análise
+  (32,9%) e Relatório (15,9%).
+- **A planilha não respondia "onde está a entrega".** Os 22 valores de `status`
+  misturavam produção, espera e aprovação — a separação em fase e aprovação
+  nasceu daí.
+- **A sujeira é real e precisa ficar visível.** Datas em quatro formatos,
+  duplicados, revisões inválidas (`99`, `-1`, "duas") e 38 linhas-fantasma.
+  Nada foi apagado: tudo vai para a fila de revisão com a linha original
+  preservada.
 
-| Rota | O que faz |
-| :--- | :--- |
-| `/login` | Porta de entrada. Acesso por convite, sem cadastro público |
-| `/login/esqueci-senha` | Recuperação de senha por link (1 hora) |
-| `/login/nova-senha` | Definição da senha nova após o link |
-| `/conta` | Segurança da conta: verificação em duas etapas (TOTP) |
-| `/inicio` | Indicadores (atraso, vencidas, aguardando cliente, fila de revisão) |
-| `/entregas` | Lista com busca, filtros (cliente, fase, tipo, atraso) e paginação |
-| `/entregas/nova` | Cadastro de entrega com validação |
-| `/entregas/[id]` | Detalhe: situação, aprovação em 2 etapas, histórico e aprovações |
-| `/clientes` | Clientes canônicos e grafias da planilha |
-| `/revisao` | Fila de revisão da importação, com resolver/reabrir |
-| `/equipe` | Pessoas, papéis e convites (admin) |
-| `/aprovacao/[token]` | Página pública do cliente, sem login |
-| `/cliente/[token]` | Portal read-only do cliente: acompanhamento e aprovações pendentes |
-| `/sobre` | README de produto |
-
-## Como rodar
-
-Requisitos: Node.js 20.9+ (testado com Node 26 e Next 16) e Python 3.10+.
-
-```bash
-# 1. dependências
-npm install
-
-# 2. diagnóstico (gera analysis/out/* e o relatório interno)
-npm run diagnostico
-
-# 3. testes do normalizador
-npm run test:diagnostico
-
-# 4. app
-npm run dev
-```
-
-O app abre em `http://localhost:3000`.
-
-### Estado de demonstração
-
-Três entregas do cliente **Escola Saber Mais** cobrem os estados que a
-apresentação mostra: aguardando o planejamento do cliente, aguardando a
-aprovação da entrega e em produção com prazo vencido.
-
-```bash
-npm run demo:estado             # recria o estado e emite links de aprovação novos
-npm run demo:estado -- --status # mostra o estado atual
-```
-
-O comando mexe só nas entregas marcadas como demonstração (`origem_linha->>'demo'`),
-e aprovar pelo link consome o token — por isso existe o reset.
-
-### Banco de dados (Supabase)
-
-As migrations em `supabase/migrations/` criam o modelo estrela do zero. Para
-reproduzir a base em outro projeto:
-
-```bash
-# requer a senha do banco (DB_PASSWORD) ou DATABASE_URL
-node scripts/importar-para-supabase.mjs
-```
-
-A conexão usa o pooler do Supabase (`*.pooler.supabase.com`, IPv4): o host
-direto `db.<ref>.supabase.co` resolve apenas IPv6 e não conecta em redes IPv4.
-
-### Variáveis de ambiente
-
-Copie `.env.example` para `.env.local` e preencha com um projeto Supabase
-**criado para este case**. Nunca use credenciais pessoais. Nenhum `.env*` é
-versionado.
+Detalhe completo: [`docs/diagnostico.ipynb`](docs/diagnostico.ipynb),
+`analysis/out/relatorio_diagnostico.md` e as decisões em
+[`docs/decisoes.md`](docs/decisoes.md).
 
 ## Modelo de dados
 
-Modelo em estrela no Postgres/Supabase: três fatos, dez dimensões e dois
-esquemas de acesso. O app lê apenas as visões (`security_invoker`); a regra de
-negócio vive no banco, não no cliente.
+Modelo em estrela no Postgres/Supabase: **3 fatos** (`entregas`,
+`eventos_entrega`, `aprovacoes`), **10 dimensões** (`clientes`, `fases`,
+`tipos_entrega`, `squads`, `pessoas`, `origens`, `calendario`,
+`decisoes_aprovacao`, `etapas_aprovacao`, `aliases_cliente`) e **2 tabelas de
+token** no schema privado `aprovacao_priv`, que a Data API não expõe.
 
-### Estrela
+O app não consulta tabela base: lê as visões `entregas_detalhadas`,
+`indicadores_mensais` e `eventos_detalhados`, todas com `security_invoker`.
+A regra de negócio vive no banco, com RLS por papel em toda tabela.
+
+<details>
+<summary>Diagrama ER (clique para abrir)</summary>
 
 ```mermaid
 erDiagram
@@ -233,8 +225,6 @@ erDiagram
     }
 ```
 
-### Acesso, convites e tokens
-
 ```mermaid
 erDiagram
     USUARIO ||--o{ CONVITE : "convida"
@@ -278,10 +268,123 @@ erDiagram
     }
 ```
 
-`PK` chave primária · `FK` chave estrangeira · `UK` única. `aprovacao_priv`
-não é exposto pela Data API: as duas tabelas de token guardam apenas
-`sha256(token)`, com expiração e uso único, e só são lidas por funções
-`SECURITY DEFINER`.
+</details>
+
+`PK` chave primária · `FK` chave estrangeira · `UK` única. As duas tabelas de
+token guardam apenas `sha256(token)`, com expiração e uso único, e só são lidas
+por funções `SECURITY DEFINER`.
+
+## O app
+
+| Rota | O que faz |
+| :--- | :--- |
+| `/login` | Porta de entrada. Acesso por convite, sem cadastro público |
+| `/login/esqueci-senha` | Recuperação de senha por link (1 hora) |
+| `/login/nova-senha` | Definição da senha nova após o link |
+| `/conta` | Segurança da conta: verificação em duas etapas (TOTP) |
+| `/inicio` | Indicadores (atraso, vencidas, aguardando cliente, fila de revisão) |
+| `/entregas` | Lista com busca, filtros (cliente, fase, tipo, atraso) e paginação |
+| `/entregas/nova` | Cadastro de entrega com validação |
+| `/entregas/[id]` | Detalhe: situação, aprovação em 2 etapas, histórico e aprovações |
+| `/clientes` | Clientes canônicos e grafias da planilha |
+| `/revisao` | Fila de revisão da importação, com resolver/reabrir |
+| `/equipe` | Pessoas, papéis e convites (admin) |
+| `/aprovacao/[token]` | Página pública do cliente, sem login |
+| `/cliente/[token]` | Portal read-only do cliente: acompanhamento e aprovações pendentes |
+| `/sobre` | README de produto |
+
+## Decisões de produto
+
+### O que migrou igual
+
+- As 1.007 entregas, com as datas originais e a linha da planilha preservada em
+  cada registro (`origem_linha`).
+- Os 25 clientes canônicos, com as 31 grafias originais guardadas como alias.
+- A fila de revisão: 302 ocorrências, 121 críticas, em 47 linhas.
+
+### O que mudou
+
+| Antes (planilha) | Agora (PlanHub) |
+| :--- | :--- |
+| 22 valores de status misturando produção, espera e aprovação | **Fase** (andamento) separada de **aprovação** (decisão do cliente) |
+| Atraso não era medível | Atraso com definição única: concluída após o prazo ou em aberto com prazo vencido |
+| Aprovação no e-mail, sem autor nem data | Aprovação por link, com nome, e-mail, data, observação e origem (IP) |
+| Nada de histórico | Histórico de mudanças por entrega, com autor |
+| Acesso aberto a quem tivesse a planilha | Login por convite, com quatro papéis: admin, gestor, operador e leitor |
+| Dados duplicados e datas em quatro formatos | Importação normalizada, com fila de revisão e nada apagado |
+
+### O que ficou de fora
+
+- **E-mail em modo de teste.** O provedor (Resend) está sem domínio verificado:
+  só entrega ao e-mail da própria conta. A tela diz o motivo e mantém o link
+  visível para copiar e enviar pelo canal de contato. Verificar um domínio
+  resolve, sem mudar código.
+- Exportação CSV e gráficos além dos indicadores de atraso.
+- E-mail de comprovante ao cliente após a aprovação.
+- Integração com calendário.
+
+### Próxima entrega
+
+**Escalonamento de aprovações paradas.** Hoje o app mostra o que está aguardando
+o cliente, mas não age: a entrega fica parada até alguém lembrar de cobrar. A
+próxima entrega transforma a espera em fila com prazo — a cada X dias sem decisão,
+o cliente recebe um lembrete com o link reaberto e o gestor do squad recebe um
+alerta com o tempo médio de decisão daquele cliente.
+
+Por quê: o atraso nasce menos na execução e mais na espera. O que a entrega
+precisa já existe (fase, aprovação, link com validade, histórico com data e
+autor), então o trabalho é de regra e de tela, não de modelo novo — e o
+resultado é mensurável: dias até a decisão por cliente e quantas entregas
+destravaram depois do lembrete.
+
+## Como rodar localmente
+
+Requisitos: Node.js 20.9+ (testado com Node 26 e Next 16) e Python 3.10+.
+
+```bash
+npm install
+cp .env.example .env.local   # preencha com um projeto Supabase criado para o case
+npm run dev                  # http://localhost:3000
+```
+
+Variáveis: `NEXT_PUBLIC_SUPABASE_URL`,
+`NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`, `SUPABASE_SERVICE_ROLE_KEY` (só no
+servidor) e, para reimportar a planilha, `DATABASE_URL` ou `DB_PASSWORD`.
+E-mail (`RESEND_API_KEY`, `EMAIL_FROM`, `EMAIL_EQUIPE`) é opcional: sem ele, o
+app gera o link e avisa que o envio não saiu.
+
+Para reproduzir a base em outro projeto Supabase:
+
+```bash
+npm run diagnostico          # gera analysis/out/*
+npm run test:diagnostico     # testes do normalizador
+node scripts/importar-para-supabase.mjs
+```
+
+A conexão usa o pooler (`*.pooler.supabase.com`, IPv4): o host direto
+`db.<ref>.supabase.co` resolve só IPv6.
+
+## Uso de IA
+
+| Ferramenta | Onde entrou |
+| :--- | :--- |
+| **OpenCode** (agente de código) | Estrutura, migrations, app, testes e documentação |
+| **MCP do Supabase** (`mcp.supabase.com`) | Schema, migrations, dados e logs durante a modelagem e a depuração |
+| **MCP do Vercel** (`mcp.vercel.com`) | Deploy, domínio e variáveis de ambiente |
+| **Skills `supabase` e `impeccable`** | Convenções de Postgres/RLS e o redesenho visual |
+| **`AGENTS.md`** | Contrato de trabalho do agente: stack, convenções, regras de banco e segurança |
+
+Modelos usados ao longo das sessões: `baidu/ernie-5.5-flash-preview:free`,
+`z-ai/glm-5.3-flash`, `deepseek/deepseek-v4.1-flash-1017`,
+`anthropic/claude-haiku-5.5`, `nvidia/nemotron-3.5-lightning:free` (OpenRouter),
+`nemotron-3.5-super-vl-free` e `deepseek-v4.1-flash-free` (OpenCode).
+
+**Revisão manual.** O normalizador em `analysis/diagnostico.py` e os testes em
+`analysis/test_diagnostico.py` são scripts próprios. Pontos revisados à mão: a
+inferência de ano em datas abreviadas, o tratamento de revisões inválidas
+(`99`, `-1`, "duas") e a decisão de não apagar duplicados. Um teste encontrou um
+bug real (um `-1` virava `1`), corrigido antes de gerar a base final. Nenhuma
+decisão de negócio foi delegada à IA.
 
 ## Estrutura
 
@@ -294,83 +397,29 @@ app/                    App Next.js (App Router)
 lib/                    Clientes Supabase, consultas e validação
 proxy.ts                Guarda de login e usuário ativo
 analysis/
-  diagnostico.py        Script de diagnóstico e normalização
+  diagnostico.py        Diagnóstico e normalização
   test_diagnostico.py   Testes do normalizador
-  out/                  Saídas geradas: base normalizada, erros, métricas
+  out/                  Base normalizada, erros, métricas e relatório
 supabase/
-  migrations/           Modelo estrela, RLS, funções e carga
+  migrations/           Modelo estrela, RLS, funções e carga (0001–0024)
 docs/
   diagnostico.ipynb     Diagnóstico em notebook (executado)
   decisoes.md           Decisões, premissas e alternativas descartadas
-  acesso_cliente.md     Por que link e não conta de cliente (apoio à apresentação)
-  acesso_avaliador.md   Como testar: perfis, portal, demo e rodar local
+  acesso_cliente.md     Por que link e não conta de cliente
+  acesso_avaliador.md   Como testar: perfis, portal, demo e acesso local
   readme_produto.md     README de produto (1 página)
-  plano_melhoria.md     Plano de melhoria que guiou a fatia funcional
+  plano_melhoria.md     Plano que guiou a fatia funcional
+  testes/               Evidências de teste por perfil e por fluxo
 dados/                  Base original do case
 scripts/                Importação, deploy, contas de teste e estado de demonstração
 ```
 
-## Decisões principais
-
-- **Fase e aprovação são dimensões separadas.** O `status` da planilha não
-  respondia "onde está a entrega".
-- **Nada é apagado em silêncio.** Duplicados e inconsistências vão para a fila
-  de revisão, e a linha original fica preservada.
-- **Cliente aprova por link com token**, sem login, expondo apenas aquela entrega.
-  E-mail obrigatório, origem (IP) registrada e link novo invalidando o anterior;
-  o portal lista e abre as aprovações que o time colocou em aprovação. Ver
-  `docs/acesso_cliente.md`.
-- **Atraso tem definição única**, documentada, usada pelo diagnóstico e pelo app.
-- **Modelo em estrela**: fatos (`entregas`, `eventos_entrega`, `aprovacoes`) e
-  dimensões (`clientes`, `fases`, `calendario`…), com RLS por papel.
-
-## Uso de IA
-
-### Ferramentas
-
-| Ferramenta | Onde entrou |
-| :--- | :--- |
-| **OpenCode** (agente de código) | Estrutura do projeto, as 24 migrations, o app Next.js, os testes e a documentação |
-| **MCP do Supabase** (`mcp.supabase.com`) | Schema, migrations, dados e logs do projeto durante a modelagem e a depuração |
-| **MCP do Vercel** (`mcp.vercel.com`) | Deploy, domínio `planhub-co.vercel.app` e variáveis de ambiente |
-| **Plugin `opencode-supabase`** | Integração do agente com o projeto Supabase |
-| **Skills `supabase` e `impeccable`** | Convenções de Postgres/RLS e o redesenho visual (login, dashboard, modo escuro) |
-| **`AGENTS.md`** | Contrato de trabalho do agente: stack, convenções, regras de banco e segurança |
-
-O agente trabalhou direto no repositório, seguindo o `AGENTS.md`, e consolidou
-cada etapa em migration incremental — nenhuma migration já aplicada foi editada.
-
-### Modelos
-
-| Modelo | Provider |
-| :--- | :--- |
-| `baidu/ernie-5.5-flash-preview:free` | OpenRouter |
-| `z-ai/glm-5.3-flash` | OpenRouter |
-| `deepseek/deepseek-v4.1-flash-1017` | OpenRouter |
-| `anthropic/claude-haiku-5.5` | OpenRouter |
-| `nvidia/nemotron-3.5-lightning:free` | OpenRouter |
-| `nemotron-3.5-super-vl-free` | OpenCode |
-| `deepseek-v4.1-flash-free` | OpenCode |
-
-Foram alternados ao longo das sessões, conforme a tarefa — o agente, o modelo e
-a variante ficam registrados por sessão no próprio OpenCode.
-
-### O que ficou fora do agente
-
-O normalizador em `analysis/diagnostico.py` e os testes em
-`analysis/test_diagnostico.py` são scripts próprios em Python; nenhuma decisão
-de negócio foi delegada. Pontos revisados manualmente: inferência de ano em datas
-abreviadas, tratamento de revisões inválidas (`99`, `-1`, "duas") e a decisão de
-não apagar duplicados. Um teste encontrou um bug real no normalizador (um `-1`
-virava `1`), corrigido antes de gerar a base final.
-
-## Premissas
+## Premissas e limitações
 
 - Dados fictícios, com inconsistências intencionais, tratadas como sujeira real.
 - Datas em nov/2026 ficam fora da janela declarada e são mantidas com sinalização.
 - "ok" em status sem aprovação registrada é tratado como entregue, com flag.
 - Em relatório, aprovação de planejamento vazia é "não se aplica".
 - A data de referência de "atraso hoje" é a data de execução.
-- O provedor de e-mail está em modo de teste (domínio não verificado): só entrega
-  ao e-mail da conta Resend. A falha aparece na tela com o motivo, e o link de
-  aprovação continua visível para copiar e enviar pelo canal de contato.
+- O projeto Supabase do case pode pausar após uma semana sem uso (plano Free);
+  o app tem cron diário de keepalive para evitar isso durante a avaliação.
