@@ -88,20 +88,22 @@ export default async function PortalCliente({
 
   const tiposDisponiveis = [...new Set(entregas.map((e) => e.tipo))].sort();
 
-  const situacaoDaLinha = (e: EntregaCliente) => {
-    const atrasada =
-      (e.dias_atraso ?? 0) > 0 ||
-      (e.fase_grupo === "aberta" && e.data_prevista && e.data_prevista < hoje);
-    if (atrasada) return "atrasadas";
-    if (e.fase === "aprovada") return "aprovadas";
-    if (e.fase_grupo === "aberta") return "abertas";
-    return "outras";
-  };
-
+  // Cada opção espelha a conta do cartão correspondente — com sobreposição:
+  // uma entrega em aberto e vencida aparece em "Em atraso" e em "Em aberto",
+  // como nos cartões. Não é classificação exclusiva.
   const entregasFiltradas = entregas.filter((e) => {
     if (busca && !e.titulo.toLowerCase().includes(busca)) return false;
     if (tipoFiltro && e.tipo !== tipoFiltro) return false;
-    if (situacaoFiltro && situacaoDaLinha(e) !== situacaoFiltro) return false;
+    if (situacaoFiltro === "atrasadas") {
+      const atrasada =
+        (e.dias_atraso ?? 0) > 0 ||
+        (e.fase_grupo === "aberta" && e.data_prevista && e.data_prevista < hoje);
+      if (!atrasada) return false;
+    } else if (situacaoFiltro === "abertas") {
+      if (e.fase_grupo !== "aberta") return false;
+    } else if (situacaoFiltro === "aprovadas") {
+      if (e.fase !== "aprovada") return false;
+    }
     return true;
   });
 
