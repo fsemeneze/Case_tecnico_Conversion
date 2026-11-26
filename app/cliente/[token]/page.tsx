@@ -286,7 +286,9 @@ export default async function PortalCliente({
                                   : "entrega"
                               }
                             />
-                            <button type="submit">Abrir aprovação</button>
+                            <button type="submit" className="botao primario">
+                              Abrir aprovação
+                            </button>
                           </form>
                         ) : e.link ? (
                           <a
