@@ -183,7 +183,6 @@ function markdown(u, resultado) {
 
 **Usuário:** ${u.nome}
 **E-mail:** ${u.email}
-**Senha:** ${u.senha}
 **Papel:** ${u.papel}
 
 ## Resultado
@@ -230,9 +229,11 @@ const indice = `# Testes de acesso por papel
 
 Contas de teste (uma por papel) e o resultado de login + permissões (RLS).
 
-| Papel | E-mail | Senha | Arquivo |
-| :--- | :--- | :--- | :--- |
-${USUARIOS.map((u) => `| ${u.papel} | ${u.email} | ${u.senha} | [${u.papel}.md](./${u.papel}.md) |`).join("\n")}
+| Papel | E-mail | Arquivo |
+| :--- | :--- | :--- |
+${USUARIOS.map((u) => `| ${u.papel} | ${u.email} | [${u.papel}.md](./${u.papel}.md) |`).join("\n")}
+
+_Senhas não versionadas: consultar o e-mail de entrega._
 
 _Login testado contra a mesma API de autenticação usada pela tela /login (Supabase Auth)._
 `;

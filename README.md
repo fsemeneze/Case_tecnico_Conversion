@@ -283,6 +283,7 @@ por funções `SECURITY DEFINER`.
 | `/login/nova-senha` | Definição da senha nova após o link |
 | `/conta` | Segurança da conta: verificação em duas etapas (TOTP) |
 | `/inicio` | Indicadores (atraso, vencidas, aguardando cliente, fila de revisão) |
+| `/dashboard` | Visão executiva: taxa de atraso, por tipo, por fase, por mês e clientes com mais atraso |
 | `/entregas` | Lista com busca, filtros (cliente, fase, tipo, atraso) e paginação |
 | `/entregas/nova` | Cadastro de entrega com validação |
 | `/entregas/[id]` | Detalhe: situação, aprovação em 2 etapas, histórico e aprovações |
