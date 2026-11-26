@@ -3,10 +3,24 @@ import { criarClienteSupabaseServidor } from "@/lib/supabase/servidor";
 import { BotaoCopiar } from "@/app/botao-copiar";
 import { gerarAcessoCliente } from "./actions";
 
-type Busca = { q?: string; link_cliente?: string; erro?: string };
+type Busca = {
+  q?: string;
+  link_cliente?: string;
+  erro?: string;
+  email?: string;
+  email_destino?: string;
+  email_erro?: string;
+  email_teste?: string;
+  email_liberado?: string;
+};
 
 export default async function Clientes({ searchParams }: { searchParams: Promise<Busca> }) {
-  const { q, link_cliente, erro } = await searchParams;
+  const p = await searchParams;
+  const { q, link_cliente, erro } = p;
+  const emailStatus = p.email ?? "";
+  const emailDestino = p.email_destino ?? "";
+  const emailErro = p.email_erro ?? "";
+  const emailLiberado = p.email_liberado ?? "";
   const busca = q?.trim() ?? "";
   const supabase = await criarClienteSupabaseServidor();
 
@@ -55,7 +69,31 @@ export default async function Clientes({ searchParams }: { searchParams: Promise
           <div className="aviso-acoes">
             <BotaoCopiar texto={`${await urlBase()}/cliente/${link_cliente}`} />
           </div>
-          <p className="muted">Envie ao cliente. É somente leitura: mostra todas as entregas dele.</p>
+          {emailStatus === "enviado" && emailDestino && (
+            <p className="aviso">
+              Enviado por e-mail para <strong>{emailDestino}</strong>. Um link
+              novo enviado depois invalida este.
+            </p>
+          )}
+          {emailStatus === "falhou" && (
+            <p className="erro">
+              Não foi possível enviar por e-mail
+              {emailLiberado
+                ? `: o provedor está em modo de teste e só entrega para ${emailLiberado}.`
+                : emailErro
+                  ? `: ${emailErro}`
+                  : "."}{" "}
+              O link acima continua válido para copiar e enviar pelo canal de
+              contato.
+            </p>
+          )}
+          {emailStatus === "sem_email" && (
+            <p className="muted">
+              Cliente sem e-mail cadastrado. Edite o cliente para adicionar um
+              e-mail, ou copie o link acima e envie pelo canal de contato.
+            </p>
+          )}
+          <p className="muted">É somente leitura: mostra todas as entregas dele.</p>
         </div>
       )}
 

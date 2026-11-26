@@ -66,8 +66,10 @@ Na raiz ficam o `README.md`, o `AGENTS.md` (contrato do agente), o `DESIGN.md`
 | 8 | Link do e-mail | Aprovação do cliente: nome, e-mail, observação e origem registrados |
 
 O cliente **não tem conta**: recebe um link de uso único por etapa, com validade,
-e um portal read-only com as entregas dele e as aprovações pendentes. A geração
-de um link novo revoga o anterior.
+e um portal read-only com as entregas dele e as aprovações pendentes. Ao gerar o
+link do portal em `/clientes`, o app envia-o por e-mail ao cliente quando ele
+tem endereço cadastrado — a caixa com o link continua visível para copiar em
+qualquer caso. A geração de um link novo revoga o anterior.
 
 ### Estado de demonstração
 

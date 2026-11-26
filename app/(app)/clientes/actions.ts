@@ -5,8 +5,20 @@ import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { criarClienteSupabaseServidor } from "@/lib/supabase/servidor";
 import { criarClienteSupabaseAdmin } from "@/lib/supabase/admin";
+import { enviarEmail, emailPortalCliente } from "@/lib/email";
+
+function urlBase() {
+  return (async () => {
+    const cabecalhos = await headers();
+    const host = cabecalhos.get("x-forwarded-host") ?? cabecalhos.get("host") ?? "localhost:3000";
+    const protocolo = cabecalhos.get("x-forwarded-proto") ?? "http";
+    return `${protocolo}://${host}`;
+  })();
+}
 
 // Gera o link público de acompanhamento do cliente (C). Só admin/gestor.
+// Envia por e-mail quando o cliente tem endereço cadastrado; a caixa com o
+// link continua aparecendo para copiar em qualquer caso.
 export async function gerarAcessoCliente(formulario: FormData) {
   const supabase = await criarClienteSupabaseServidor();
   const {
@@ -41,7 +53,41 @@ export async function gerarAcessoCliente(formulario: FormData) {
   }
 
   revalidatePath("/clientes");
-  redirect(`/clientes?link_cliente=${data}`);
+
+  // E-mail ao cliente (D). O envio nunca derruba a geração do link.
+  const url = `${await urlBase()}/cliente/${data}`;
+  const retorno = new URLSearchParams({ link_cliente: data });
+
+  const { data: cliente } = await admin
+    .from("clientes")
+    .select("nome, email")
+    .eq("id", clienteId)
+    .maybeSingle();
+
+  if (cliente?.email) {
+    const tpl = emailPortalCliente({
+      cliente: cliente.nome,
+      url,
+      validadeDias: 90,
+    });
+    const r = await enviarEmail({
+      para: cliente.email,
+      ...tpl,
+      tipo: "portal_cliente",
+      entidadeId: clienteId,
+    });
+    retorno.set("email", r.ok ? "enviado" : "falhou");
+    retorno.set("email_destino", cliente.email);
+    if (!r.ok) {
+      retorno.set("email_erro", (r.erro ?? "").slice(0, 240));
+      if (r.modoTeste) retorno.set("email_teste", "1");
+      if (r.enderecoPermitido) retorno.set("email_liberado", r.enderecoPermitido);
+    }
+  } else {
+    retorno.set("email", "sem_email");
+  }
+
+  redirect(`/clientes?${retorno.toString()}`);
 }
 
 // ---------------------------------------------------------------------------

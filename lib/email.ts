@@ -163,6 +163,27 @@ export function emailDecisaoCliente(d: {
   };
 }
 
+export function emailPortalCliente(d: {
+  cliente: string;
+  url: string;
+  validadeDias: number;
+}) {
+  const corpo = `
+    <p>Olá, ${d.cliente}.</p>
+    <p>Este é o seu portal de acompanhamento de entregas: todas as entregas do
+    contrato, com a fase atual, o prazo e o conteúdo de cada uma — e a lista
+    "Aprovações aguardando você", com o que está na sua vez.</p>
+    <p style="margin:18px 0">
+      <a href="${d.url}" style="background:#1649ff;color:#fff;padding:11px 18px;border-radius:10px;text-decoration:none;font-weight:600">Abrir meu portal</a>
+    </p>
+    <p style="color:#64748b;font-size:13px">O link é somente leitura e vale ${d.validadeDias} dias. Um link novo enviado pelo time invalida este.</p>`;
+  return {
+    assunto: `Seu portal de acompanhamento de entregas — ${d.cliente}`,
+    html: envelope("Portal de acompanhamento", corpo),
+    texto: `Portal de acompanhamento de entregas — ${d.cliente}\nLink: ${d.url}\nSomente leitura, válido por ${d.validadeDias} dias.`,
+  };
+}
+
 export function emailComprovante(d: {
   cliente: string;
   titulo: string;

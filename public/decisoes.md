@@ -129,6 +129,21 @@ Nesse caso, a forma certa é passwordless (magic link/OTP), não senha, com RLS 
 
 **Argumento completo para a apresentação:** `docs/acesso_cliente.md`.
 
+## D12. Grafias de cliente: canônico no app, variações de verdade no alias
+
+**Decisão:** a comparação de grafias ignora case, acento e espaços nas bordas —
+"loja alfa", "Loja Alfa " e "Loja Alfa" são o mesmo cliente e não aparecem como
+variação. A lista de clientes só mostra alias que difere de verdade do nome
+canônico ("Loja Alfa Ltda" fica; "Vértice Saúde" para o canônico "Grupo Vértice
+Saúde" saiu — prefixo, não grafia). A limpeza está na migration 0026
+(32 aliases → 1) e o filtro, no app. A linha original de cada entrega segue
+preservada em `origem_linha`, e a base bruta em `dados/`.
+
+**Por quê:** o objetivo do alias é explicar por que duas grafias da planilha
+apontam para o mesmo cliente — e variação de maiúscula ou espaço não explica
+nada; só polui a tela e confunde filtro. Quem precisa da grafia exata de 2025
+consulta a linha original, não o alias.
+
 ## Premissas
 
 1. Os dados são fictícios, mas as inconsistências são tratadas como sujeira real.
