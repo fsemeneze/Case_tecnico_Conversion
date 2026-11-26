@@ -1,5 +1,5 @@
 -- ============================================================================
--- PlanOps — Migration 9: reconstrução do modelo (do zero)
+-- PlanHub — Migration 9: reconstrução do modelo (do zero)
 --
 -- Remove o modelo antigo e cria as dimensões do modelo estrela, com nomes
 -- naturais. A carga vem na migration 12; a validação por contagem na 13.

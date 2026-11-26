@@ -1,6 +1,6 @@
-# DESIGN.md — PlanOps
+# DESIGN.md — PlanHub
 
-Mundo visual do PlanOps, derivado do padrão da Conversion
+Mundo visual do PlanHub, derivado do padrão da Conversion
 (https://www.conversion.com.br/). Documento de referência para manter o
 refino coeso: identidade preservada, acabamento elevado.
 

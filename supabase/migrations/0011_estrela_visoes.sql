@@ -1,5 +1,5 @@
 -- ============================================================================
--- PlanOps — Migration 11: visões de leitura
+-- PlanHub — Migration 11: visões de leitura
 --
 -- O app lê apenas destas visões. `security_invoker = true` faz o RLS das
 -- tabelas base valer para quem consulta (skill supabase).

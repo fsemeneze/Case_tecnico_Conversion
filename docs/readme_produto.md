@@ -20,7 +20,7 @@ o cliente, que aprova pelo link sem precisar de conta.
 
 ## O que mudou
 
-| Antes (planilha) | Agora (PlanOps) |
+| Antes (planilha) | Agora (PlanHub) |
 | :--- | :--- |
 | 22 valores de status misturando produção, espera e aprovação | **Fase** (andamento) separada de **aprovação** (decisão do cliente) |
 | Atraso não era medível | Atraso com definição única: concluída após o prazo ou em aberto com prazo vencido |

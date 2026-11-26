@@ -1,5 +1,5 @@
 -- ============================================================================
--- PlanOps — Migration 10: fatos
+-- PlanHub — Migration 10: fatos
 --
 -- Três fatos, três grãos:
 --   entregas        — uma linha por entrega (estado atual + medidas)

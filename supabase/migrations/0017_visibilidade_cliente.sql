@@ -1,5 +1,5 @@
 -- ============================================================================
--- PlanOps — Migration 17: visibilidade do cliente (portal + aprovação rica)
+-- PlanHub — Migration 17: visibilidade do cliente (portal + aprovação rica)
 --
 -- C — Portal do cliente: um link read-only por cliente (token de longa duração)
 --     com todas as entregas daquele cliente. Sem login.

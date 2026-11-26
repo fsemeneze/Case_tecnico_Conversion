@@ -4,7 +4,7 @@ import { criarClienteSupabaseAdmin } from "./supabase/admin";
 // Configuração por variáveis de ambiente:
 //   RESEND_API_KEY  — chave do Resend (obrigatória)
 //   EMAIL_FROM      — remetente (ex.: "PlanHub <onboarding@resend.dev>")
-//   EMAIL_EQUIPE    — destinatário interno para avisos (ex.: ops@planops.case)
+//   EMAIL_EQUIPE    — destinatário interno para avisos (ex.: ops@planhub.case)
 
 export type ResultadoEmail = {
   ok: boolean;

@@ -1,5 +1,5 @@
 -- ============================================================================
--- PlanOps — Migration 19: cadastro de clientes mais robusto
+-- PlanHub — Migration 19: cadastro de clientes mais robusto
 --
 -- Acrescenta dados de contato e identificação ao cliente, com dados fictícios
 -- para o case. Clientes existentes são preenchidos; nada é apagado.

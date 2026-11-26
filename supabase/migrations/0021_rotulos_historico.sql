@@ -1,5 +1,5 @@
 -- ============================================================================
--- PlanOps — Migration 21: rótulos legíveis do histórico
+-- PlanHub — Migration 21: rótulos legíveis do histórico
 --
 -- Os eventos criados pela importação inicial tinham autor "Importação da
 -- planilha" e tipo "importacao" exibidos como código cru. Esta migration

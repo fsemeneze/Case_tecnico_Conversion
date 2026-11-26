@@ -1,5 +1,5 @@
 -- ============================================================================
--- PlanOps — Migration 15: remove o modelo antigo
+-- PlanHub — Migration 15: remove o modelo antigo
 --
 -- Roda depois da migration 13 validar as contagens. A partir daqui o modelo
 -- estrela (entregas, eventos_entrega, aprovacoes + dimensões) é a única fonte.

@@ -1,4 +1,4 @@
-# PlanOps — plano de testes
+# PlanHub — plano de testes
 
 Como validar o app antes de mostrar. Cada caso tem um resultado esperado
 concreto, para dar para marcar "passou" ou "falhou" sem interpretação.
@@ -112,10 +112,11 @@ Teste com uma conta de cada papel (criadas por convite).
 ```bash
 # normalizador (Python)
 python -m unittest discover -s analysis -v
-
-# app (quando a suíte Vitest/Playwright entrar)
-npm run test
 ```
+
+Não há suíte de testes do app versionada: a validação das regras de fase,
+atraso (D8) e RLS é feita pelos cenários acima e pelos relatórios em
+`docs/testes/`.
 
 ## Registro de execução
 

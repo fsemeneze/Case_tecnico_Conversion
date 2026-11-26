@@ -1,5 +1,5 @@
 -- ============================================================================
--- PlanOps — Migration 18: agregados do dashboard
+-- PlanHub — Migration 18: agregados do dashboard
 --
 -- O PostgREST limita a 1000 linhas por consulta; somar no app a partir de
 -- entregas_detalhadas truncava os agregados. Esta função (security invoker,

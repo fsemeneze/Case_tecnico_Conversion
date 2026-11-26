@@ -1,5 +1,5 @@
 -- ============================================================================
--- PlanOps — Migration 22: endurecimento do acesso do cliente por link
+-- PlanHub — Migration 22: endurecimento do acesso do cliente por link
 --
 -- Mantém a decisão D3 (cliente sem conta) e fecha quatro lacunas:
 --   1. E-mail obrigatório na aprovação (rastreabilidade).

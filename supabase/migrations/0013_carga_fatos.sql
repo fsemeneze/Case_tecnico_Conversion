@@ -1,5 +1,5 @@
 -- ============================================================================
--- PlanOps — Migration 13: carga dos fatos
+-- PlanHub — Migration 13: carga dos fatos
 --
 -- Migra entregas, eventos e aprovações do modelo antigo para o estrela.
 -- A validação por contagem roda no final e bloqueia a migration 14

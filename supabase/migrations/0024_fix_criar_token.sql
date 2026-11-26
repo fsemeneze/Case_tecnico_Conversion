@@ -1,5 +1,5 @@
 -- ============================================================================
--- PlanOps — Migration 24: corrige o cast de etapa em criar_token_aprovacao
+-- PlanHub — Migration 24: corrige o cast de etapa em criar_token_aprovacao
 --
 -- A coluna aprovacao_priv.aprovacao_tokens.etapa é `text`, não o enum
 -- `aprovacao_priv.etapa_token`. A migration 22 comparava a coluna com o cast

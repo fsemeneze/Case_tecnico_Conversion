@@ -1,5 +1,5 @@
 -- ============================================================================
--- PlanOps — Migration 16: conteúdo da entrega na aprovação
+-- PlanHub — Migration 16: conteúdo da entrega na aprovação
 --
 -- A página pública do cliente precisa mostrar o que está sendo aprovado, não só
 -- os metadados. `dados_entrega_por_token` passa a devolver também o `link` da

@@ -134,7 +134,7 @@ docs/
   acesso_cliente.md     Por que link e não conta de cliente (apoio à apresentação)
   acesso_avaliador.md   Como testar: perfis, portal, demo e rodar local
   readme_produto.md     README de produto (1 página)
-  plano_melhoria_planops.md
+  plano_melhoria.md     Plano de melhoria que guiou a fatia funcional
 dados/                  Base original do case
 scripts/                Importação, deploy, contas de teste e estado de demonstração
 ```

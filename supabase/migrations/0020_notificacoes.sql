@@ -1,5 +1,5 @@
 -- ============================================================================
--- PlanOps — Migration 20: notificações por e-mail (D)
+-- PlanHub — Migration 20: notificações por e-mail (D)
 --
 -- Registro de auditoria dos e-mails enviados (link de aprovação, decisão do
 -- cliente, aviso de prazo). O envio é feito pela rota de servidor (service_role);

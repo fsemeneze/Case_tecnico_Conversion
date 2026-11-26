@@ -13,10 +13,10 @@ entrega.
 
 | Perfil | E-mail | O que pode fazer |
 | :--- | :--- | :--- |
-| Admin | `admin@planops.case` | Tudo: entregas, clientes, equipe, convites, revisão e links |
-| Gestor | `gestor@planops.case` | Entregas, clientes, links de aprovação e avisos; não mexe em equipe |
-| Operador | `operador@planops.case` | Cadastra e edita entregas; não gera links nem administra |
-| Leitor | `leitor@planops.case` | Só consulta (a RLS bloqueia escrita) |
+| Admin | `admin@planhub.case` | Tudo: entregas, clientes, equipe, convites, revisão e links |
+| Gestor | `gestor@planhub.case` | Entregas, clientes, links de aprovação e avisos; não mexe em equipe |
+| Operador | `operador@planhub.case` | Cadastra e edita entregas; não gera links nem administra |
+| Leitor | `leitor@planhub.case` | Só consulta (a RLS bloqueia escrita) |
 
 Para testar a RLS de verdade, entre como **leitor** e tente cadastrar uma
 entrega: o botão aparece, o envio é recusado pelo banco.

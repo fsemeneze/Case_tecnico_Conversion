@@ -1,5 +1,5 @@
 -- ============================================================================
--- PlanOps — Migration 14: funções e RLS
+-- PlanHub — Migration 14: funções e RLS
 --
 -- Funções de aprovação (SECURITY DEFINER, EXECUTE só do service_role) e
 -- RLS por papel sobre o modelo estrela.

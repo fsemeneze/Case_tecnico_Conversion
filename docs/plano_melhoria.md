@@ -1,10 +1,10 @@
-# PlanOps — plano de melhoria
+# PlanHub — plano de melhoria
 
 Plano para levar o app de "case de entrevista" a um produto que funciona de verdade:
 login como porta de entrada, usuários com papéis, banco em modelo estrela e
 uma interface com padrões de produto.
 
-Nome do produto: **PlanOps — Planejamento e entregas**.
+Nome do produto: **PlanHub — Planejamento e entregas**.
 
 ---
 
@@ -180,7 +180,7 @@ revisão de produto e passa disso. O corte de escopo está na seção 8.
 
 | Fase | Entrega | Dias |
 |---|---|---|
-| **P0. Segurança e entrada** | Cadastro público desligado, `/` leva ao login, nome PlanOps, layout de app, RLS revisada para `authenticated` | 0,5 |
+| **P0. Segurança e entrada** | Cadastro público desligado, `/` leva ao login, nome PlanHub, layout de app, RLS revisada para `authenticated` | 0,5 |
 | **P1. Modelo estrela** | Dimensões, fatos, `usuario` e papéis, visões `vw_*`, migração validada por contagem, tipos gerados | 1,5 |
 | **P2. Aplicação** | Início, Entregas (lista/novo/detalhe/abas), Clientes, Revisão de dados, Equipe, convites | 2,5 |
 | **P3. Aprovação** | Links com revogação e reenvio, histórico a partir do fato, página pública revisada | 0,5 |

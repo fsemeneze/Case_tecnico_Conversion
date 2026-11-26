@@ -1,5 +1,5 @@
 -- ============================================================================
--- PlanOps — Migration 12: carga das dimensões
+-- PlanHub — Migration 12: carga das dimensões
 --
 -- Os IDs são determinísticos (a ordem de inserção define o id), o que permite
 -- que a migration 13 migre os fatos por junção sem depender de nomes.

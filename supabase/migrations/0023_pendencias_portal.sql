@@ -1,5 +1,5 @@
 -- ============================================================================
--- PlanOps — Migration 23: pendências do portal ancoradas no link ativo
+-- PlanHub — Migration 23: pendências do portal ancoradas no link ativo
 --
 -- A migration 22 filtrava a pendência por fase ('aguardando_cliente' /
 -- 'aguardando_aprovacao_entrega') e por aprovação 'pendente'. A base importada
