@@ -104,7 +104,39 @@ export default function Seguranca() {
     await carregar();
   }
 
+  async function cancelarConfiguracao() {
+    // Sai do modo de configuração e descarta o fator não verificado —
+    // sem isso, "cancelar" deixaria um fator pendente que bloqueia o nome.
+    const fator = fatorNovo;
+    setFatorNovo(null);
+    setQr(null);
+    setSegredo(null);
+    setCodigo("");
+    setEstado({});
+    if (!fator) return;
+    const supabase = criarClienteSupabaseNavegador();
+    await supabase.auth.mfa.unenroll({ factorId: fator });
+    await carregar();
+  }
+
   const ativo = fatores.some((f) => f.status === "verified");
+  // Fatores criados mas não verificados: não ativam o MFA e poluem a tela.
+  // O botão "Descartar" limpa sem afetar os verificados.
+  const pendentes = fatores.filter((f) => f.status !== "verified");
+
+  async function descartarPendentes() {
+    setEstado({});
+    const supabase = criarClienteSupabaseNavegador();
+    let falhas = 0;
+    for (const f of pendentes) {
+      const { error } = await supabase.auth.mfa.unenroll({ factorId: f.id });
+      if (error) falhas += 1;
+    }
+    if (falhas > 0) {
+      setEstado({ erro: `Não foi possível descartar ${falhas} fator(es).` });
+    }
+    await carregar();
+  }
 
   return (
     <div className="cartao seguranca">
@@ -138,6 +170,15 @@ export default function Seguranca() {
               ))}
           </ul>
         </>
+      )}
+
+      {!carregando && !ativo && pendentes.length > 0 && !fatorNovo && (
+        <p className="muted">
+          Existe um fator pendente de verificação.{" "}
+          <button type="button" className="secundario" onClick={descartarPendentes}>
+            Descartar
+          </button>
+        </p>
       )}
 
       {!carregando && !ativo && !fatorNovo && (
@@ -182,11 +223,7 @@ export default function Seguranca() {
               <button
                 type="button"
                 className="secundario"
-                onClick={() => {
-                  setFatorNovo(null);
-                  setQr(null);
-                  setSegredo(null);
-                }}
+                onClick={cancelarConfiguracao}
               >
                 Cancelar
               </button>
