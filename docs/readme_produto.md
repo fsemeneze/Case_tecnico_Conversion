@@ -27,12 +27,14 @@ o cliente, que aprova pelo link sem precisar de conta.
 | Atraso não era medível | Atraso com definição única: concluída após o prazo ou em aberto com prazo vencido |
 | Aprovação no e-mail, sem autor nem data | Aprovação por link, com nome, e-mail, data, observação e origem (IP) |
 | Nada de histórico | Histórico de mudanças por entrega, com autor |
-| Acesso aberto a quem tivesse a planilha | Login por convite, com quatro papéis: admin, gestor, operador e leitor |
+| Acesso aberto a quem tivesse a planilha | Login por convite, com quatro papéis: admin, gestor, operador e leitor; o operador vê e edita só o próprio squad (RLS) |
 | Dados duplicados e datas em quatro formatos | Importação normalizada, com fila de revisão e nada apagado |
+| Nada de histórico | Histórico de mudanças por entrega, com autor |
+| Aprovação no e-mail, sem autor nem data | Aprovação por link, com nome, e-mail, data, observação e origem (IP) |
 
 **Números do diagnóstico:** 30,7% das 888 entregas comparáveis passaram do prazo
 (mediana de 6 dias, P90 de 21). Conteúdo é o tipo com maior taxa (41,1%), seguido
-de Análise (32,9%) e Relatório (15,9%). 71 entregas estão abertas com prazo
+de Análise (32,9%) e Relatório (15,9%). 50 entregas estão abertas com prazo
 vencido hoje.
 
 ## O que ficou de fora
@@ -42,9 +44,9 @@ vencido hoje.
   teste, sem domínio verificado: ele só entrega ao e-mail da própria conta.
   Quando o envio não sai, a tela diz o motivo e mantém o link visível para
   copiar e mandar pelo canal de contato. Verificar um domínio no Resend resolve.
-- Exportação CSV e gráficos além dos indicadores de atraso.
-- E-mail de comprovante ao cliente após a aprovação.
+- Exportação de gráficos além dos indicadores de atraso.
 - Integração com o calendário.
+- Ambientes de homologação separados (hoje `main` é produção direto).
 
 ## Próxima entrega e por quê
 
@@ -79,12 +81,19 @@ decisão por cliente e quantas entregas destravaram depois do lembrete.
 
 ## Uso de IA
 
-Código, migrations, testes e este documento foram escritos com OpenCode (agente
-de código) e revisados manualmente. Os pontos revisados: a inferência de ano em
-datas abreviadas, o tratamento de revisões inválidas (`99`, `-1`, "duas") e a
-decisão de não apagar duplicados. Um teste encontrou um bug real no normalizador
-(um `-1` virava `1`) e foi corrigido antes de gerar a base final. Nenhuma decisão
-de negócio foi delegada à IA.
+Código, migrations, testes e este documento foram escritos com **OpenCode**
+(agente de código), com revisão manual. O agente trabalhou com:
+
+- **MCP do Supabase** — schema, migrations, dados e depuração;
+- **MCP do Vercel** — deploy, domínio e variáveis;
+- **Skills `supabase` e `impeccable`** — convenções de Postgres/RLS e o redesenho visual;
+- Modelos alternados por tarefa (OpenRouter e OpenCode).
+
+Os pontos revisados à mão: a inferência de ano em datas abreviadas, o tratamento
+de revisões inválidas (`99`, `-1`, "duas") e a decisão de não apagar duplicados.
+Um teste encontrou um bug real no normalizador (um `-1` virava `1`) e foi
+corrigido antes de gerar a base final. Nenhuma decisão de negócio foi delegada
+à IA.
 
 ---
 
