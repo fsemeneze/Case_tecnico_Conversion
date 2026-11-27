@@ -110,11 +110,11 @@ export async function listarEntregas(
   // já foi aprovada, o planejamento é considerado aprovado também.
   const APROVADAS = ["aprovada", "aprovada_com_ressalvas"];
   if (filtros.planejamento === "pendente") {
+    // Entrega aprovada implica planejamento aprovado: exclui as duas pontas.
     consulta = consulta
       .in("aprovacao_planejamento", ["pendente", "nao_informado"])
-      .or(
-        `not(or(fase.eq.aprovada,aprovacao_entrega.in.(${APROVADAS.join(",")})))`,
-      );
+      .neq("fase", "aprovada")
+      .not("aprovacao_entrega", "in", `(${APROVADAS.join(",")})`);
   } else if (filtros.planejamento === "aprovado") {
     consulta = consulta.or(
       `aprovacao_planejamento.in.(${APROVADAS.join(",")}),fase.eq.aprovada,aprovacao_entrega.in.(${APROVADAS.join(",")})`,
