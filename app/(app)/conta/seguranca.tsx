@@ -39,7 +39,17 @@ export default function Seguranca() {
       friendlyName: "PlanHub",
     });
     if (error || !data) {
-      setEstado({ erro: "Não foi possível iniciar a configuração." });
+      // Mostra o motivo real: sem isso, a tela só diz "não foi possível"
+      // e o time não sabe se é MFA desligado no projeto, sessão ou cota.
+      const motivo =
+        error?.message ??
+        (data ? "sem dados do fator" : "erro desconhecido do provedor");
+      const dica = /mfa|multi.factor/i.test(motivo)
+        ? " Verifique se o MFA está habilitado em Authentication → Settings no painel do Supabase."
+        : "";
+      setEstado({
+        erro: `Não foi possível iniciar a configuração: ${motivo}.${dica}`,
+      });
       return;
     }
     setFatorNovo(data.id);
