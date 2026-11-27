@@ -144,6 +144,26 @@ apontam para o mesmo cliente — e variação de maiúscula ou espaço não expl
 nada; só polui a tela e confunde filtro. Quem precisa da grafia exata de 2025
 consulta a linha original, não o alias.
 
+## D13. Encerramento de entregas paradas
+
+**Decisão:** entrega aberta e vencida há mais de 90 dias entra na fila de
+encerramento (na tela de Revisão de dados). O time decide entre três saídas,
+sempre com motivo obrigatório e registro no histórico:
+
+- **Retomar** — volta para produção com novo prazo combinado;
+- **Entregar** — conclui com o atraso registrado;
+- **Cancelar** — encerra como cancelada, com motivo.
+
+Aos 30 dias, o lembrete de prazo vencido (D — notificação) já avisa cliente e
+gestor. Nada é apagado: a linha original, as aprovações e os eventos ficam
+(D4), e o cancelamento não apaga o atraso — o indicador continua contando.
+
+**Por quê:** 72 entregas abertas vencidas (25 com mais de 90 dias, maior atraso
+363 dias) mostram que "em aberto" eterno não é estado, é dívida. Sem uma fila
+com decisão humana, a lista só cresce e o número de atraso perde credibilidade.
+Cancelar em massa por regra seria o "apagar em silêncio" que o case proíbe;
+por isso a saída é uma fila com dono, prazo e motivo.
+
 ## Premissas
 
 1. Os dados são fictícios, mas as inconsistências são tratadas como sujeira real.

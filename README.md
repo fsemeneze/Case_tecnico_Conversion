@@ -308,7 +308,7 @@ por funções `SECURITY DEFINER`.
 | `/entregas/nova` | Cadastro de entrega com validação |
 | `/entregas/[id]` | Detalhe: situação, aprovação em 2 etapas, histórico e aprovações |
 | `/clientes` | Clientes canônicos e grafias da planilha |
-| `/revisao` | Fila de revisão da importação, com resolver/reabrir |
+| `/revisao` | Fila de revisão da importação (resolver/reabrir) e encerramento de entregas paradas (retomar/entregar/cancelar) |
 | `/equipe` | Pessoas, papéis e convites (admin) |
 | `/aprovacao/[token]` | Página pública do cliente, sem login |
 | `/cliente/[token]` | Portal read-only do cliente: acompanhamento e aprovações pendentes |

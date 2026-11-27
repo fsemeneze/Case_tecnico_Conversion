@@ -2,6 +2,7 @@ import Link from "next/link";
 import { criarClienteSupabaseServidor } from "@/lib/supabase/servidor";
 import { rotuloCodigo } from "@/lib/eventos";
 import { BotaoResolver } from "./botao-resolver";
+import { BotaoEncerrar } from "./botao-encerrar";
 
 type Busca = { codigo?: string; severidade?: string; status?: string };
 
@@ -11,6 +12,25 @@ export default async function Revisao({ searchParams }: { searchParams: Promise<
   const severidade = params.severidade ?? "";
   const status = params.status ?? "pendentes";
   const supabase = await criarClienteSupabaseServidor();
+
+  // Fila de encerramento (D13): abertas, vencidas há mais de 90 dias e sem
+  // cancelamento ativo. A elegibilidade é calculada aqui, em memória, sobre
+  // as abertas com prazo — a base é pequena e a regra evita fila duplicada.
+  const hoje = new Date().toISOString().slice(0, 10);
+  const limite = new Date(Date.now() - 90 * 86400000).toISOString().slice(0, 10);
+  const { data: abertas } = await supabase
+    .from("entregas_detalhadas")
+    .select("id, titulo, cliente, fase, fase_rotulo, data_prevista")
+    .in("fase_grupo", ["aberta"])
+    .lt("data_prevista", limite);
+  const { data: canceladas } = await supabase
+    .from("encerramentos")
+    .select("entrega_id")
+    .eq("decisao", "cancelada");
+  const canceladasSet = new Set((canceladas ?? []).map((c) => Number(c.entrega_id)));
+  const filaEncerramento = (abertas ?? []).filter(
+    (e) => !canceladasSet.has(Number(e.id)),
+  );
 
   let consulta = supabase
     .from("erros_importacao")
@@ -60,6 +80,58 @@ export default async function Revisao({ searchParams }: { searchParams: Promise<
         linha original está preservada na entrega. Marque como resolvido quando
         conferir.
       </p>
+
+      {filaEncerramento.length > 0 && (
+        <div className="cartao">
+          <h2>Encerramento de entregas paradas</h2>
+          <p className="muted">
+            Abertas e vencidas há mais de 90 dias. Nada é apagado: retome com
+            novo prazo, entregue ou cancele com motivo — a decisão fica no
+            histórico.
+          </p>
+          <div className="tabela-wrap">
+            <table className="tabela">
+              <thead>
+                <tr>
+                  <th>Entrega</th>
+                  <th>Cliente</th>
+                  <th>Fase</th>
+                  <th>Prazo</th>
+                  <th>Ação</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filaEncerramento.map((e) => {
+                  const dias = Math.floor(
+                    (Date.parse(hoje) - Date.parse(String(e.data_prevista))) /
+                      86_400_000,
+                  );
+                  return (
+                    <tr key={e.id}>
+                      <td>
+                        <Link href={`/entregas/${e.id}`} className="titulo-link">
+                          {e.titulo}
+                        </Link>
+                      </td>
+                      <td>{e.cliente}</td>
+                      <td>
+                        <span className="badge tom-alerta">{e.fase_rotulo}</span>
+                      </td>
+                      <td>
+                        {e.data_prevista}
+                        <div className="muted">vencida há {dias} dias</div>
+                      </td>
+                      <td>
+                        <BotaoEncerrar entregaId={Number(e.id)} />
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
 
       <div className="stats">
         {Object.entries(
