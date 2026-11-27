@@ -8,7 +8,7 @@ const TIPOS = ["Relatório", "Análise", "Conteúdo"];
 
 export default async function NovaEntrega() {
   const supabase = await criarClienteSupabaseServidor();
-  const [clientes, squads, pessoas, vinculos] = await Promise.all([
+  const [clientes, squads, pessoas, vinculos, tiposEntrega] = await Promise.all([
     listarClientes(supabase),
     supabase.from("squads").select("id, nome").order("nome"),
     supabase.from("pessoas").select("id, nome").order("nome"),
@@ -16,7 +16,22 @@ export default async function NovaEntrega() {
       .from("entregas")
       .select("pessoa_id, squad_id")
       .not("pessoa_id", "is", null),
+    // Vocabulário de subtipos vem da dimensão (mesma fonte do cadastro),
+    // ordenada como deve aparecer no formulário.
+    supabase
+      .from("tipos_entrega")
+      .select("tipo, subtipo")
+      .not("subtipo", "is", null)
+      .order("tipo")
+      .order("subtipo"),
   ]);
+
+  // Subtipos agrupados por tipo para o <select> do formulário.
+  const subtipos: Record<string, string[]> = {};
+  for (const t of tiposEntrega.data ?? []) {
+    if (!t.subtipo) continue;
+    (subtipos[t.tipo] ??= []).push(t.subtipo);
+  }
 
   // Squad de cada pessoa: o mais frequente entre as entregas dela.
   const contagem = new Map<number, Map<number, number>>();
@@ -52,6 +67,7 @@ export default async function NovaEntrega() {
       <FormularioNovaEntrega
         clientes={clientes}
         tipos={TIPOS}
+        subtipos={subtipos}
         squads={(squads.data ?? []).map((s) => s.nome)}
         pessoas={pessoasComSquad}
       />
