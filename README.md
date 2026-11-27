@@ -434,7 +434,7 @@ docs/
   plano_melhoria.md     Plano que guiou a fatia funcional
   testes/               Evidências de teste por perfil e por fluxo
 dados/                  Base original do case
-scripts/                Deploy, contas de teste, usuários por squad e estado de demonstração
+scripts/                Deploy, contas de teste, usuários por squad, reset de MFA e estado de demonstração
 ```
 
 ## Premissas e limitações
