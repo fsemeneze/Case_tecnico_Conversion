@@ -4,19 +4,17 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { alterarFaseEntrega } from "../actions";
 
-type Fase = { id: number; codigo: string; rotulo: string };
-
 export function AlterarSituacao({
   entregaId,
-  faseAtual,
+  faseAtualId,
   fases,
 }: {
   entregaId: number;
-  faseAtual: string;
-  fases: Fase[];
+  faseAtualId: number;
+  fases: { id: number; codigo: string; rotulo: string }[];
 }) {
   const router = useRouter();
-  const [fase, setFase] = useState(faseAtual);
+  const [faseId, setFaseId] = useState(String(faseAtualId));
   const [erro, setErro] = useState<string | null>(null);
   const [pendente, setPendente] = useState(false);
   const [salvo, setSalvo] = useState(false);
@@ -25,7 +23,7 @@ export function AlterarSituacao({
     e.preventDefault();
     setErro(null);
     setPendente(true);
-    const r = await alterarFaseEntrega(entregaId, Number(fase));
+    const r = await alterarFaseEntrega(entregaId, Number(faseId));
     setPendente(false);
     if (r.ok) {
       setSalvo(true);
@@ -41,9 +39,9 @@ export function AlterarSituacao({
     <form onSubmit={enviar} className="form-linha">
       <label>
         Situação
-        <select value={fase} onChange={(e) => setFase(e.target.value)}>
+        <select value={faseId} onChange={(e) => setFaseId(e.target.value)}>
           {fases.map((f) => (
-            <option key={f.id} value={f.codigo}>
+            <option key={f.id} value={f.id}>
               {f.rotulo}
             </option>
           ))}

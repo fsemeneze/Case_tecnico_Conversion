@@ -191,7 +191,7 @@ export default async function DetalheEntrega({
           {!podeEditar && (
             <AlterarSituacao
               entregaId={entrega.id}
-              faseAtual={entrega.fase}
+              faseAtualId={entrega.fase_id}
               fases={fases ?? []}
             />
           )}
