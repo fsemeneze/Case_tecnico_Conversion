@@ -5,7 +5,15 @@ import { useRouter } from "next/navigation";
 import { atualizarEntrega } from "../../actions";
 import type { EntregaLista } from "@/lib/consultas";
 
-export function FormularioEdicao({ entrega }: { entrega: EntregaLista }) {
+export function FormularioEdicao({
+  entrega,
+  squads,
+  pessoas,
+}: {
+  entrega: EntregaLista;
+  squads: string[];
+  pessoas: string[];
+}) {
   const router = useRouter();
   const [erro, setErro] = useState<string | null>(null);
   const [salvo, setSalvo] = useState(false);
@@ -90,12 +98,26 @@ export function FormularioEdicao({ entrega }: { entrega: EntregaLista }) {
 
       <label>
         Squad
-        <input name="squad" defaultValue={entrega.squad ?? ""} />
+        <select name="squad" defaultValue={entrega.squad ?? ""} disabled={false}>
+          <option value="">Selecione…</option>
+          {squads.map((s) => (
+            <option key={s} value={s}>
+              {s}
+            </option>
+          ))}
+        </select>
       </label>
 
       <label>
         Responsável
-        <input name="responsavel" defaultValue={entrega.responsavel ?? ""} />
+        <select name="responsavel" defaultValue={entrega.responsavel ?? ""}>
+          <option value="">Selecione…</option>
+          {pessoas.map((p) => (
+            <option key={p} value={p}>
+              {p}
+            </option>
+          ))}
+        </select>
       </label>
 
       <label>

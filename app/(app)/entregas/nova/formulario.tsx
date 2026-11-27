@@ -10,9 +10,13 @@ type Campos = Record<string, string>;
 export function FormularioNovaEntrega({
   clientes,
   tipos,
+  squads,
+  pessoas,
 }: {
   clientes: Cliente[];
   tipos: string[];
+  squads: string[];
+  pessoas: string[];
 }) {
   const router = useRouter();
   const [pendente, iniciar] = useTransition();
@@ -96,12 +100,26 @@ export function FormularioNovaEntrega({
 
       <label>
         Squad
-        <input name="squad" placeholder="Squad Azul" />
+        <select name="squad" defaultValue="">
+          <option value="">Selecione…</option>
+          {squads.map((s) => (
+            <option key={s} value={s}>
+              {s}
+            </option>
+          ))}
+        </select>
       </label>
 
       <label>
         Responsável
-        <input name="responsavel" placeholder="Ana" />
+        <select name="responsavel" defaultValue="">
+          <option value="">Selecione…</option>
+          {pessoas.map((p) => (
+            <option key={p} value={p}>
+              {p}
+            </option>
+          ))}
+        </select>
       </label>
 
       <label>

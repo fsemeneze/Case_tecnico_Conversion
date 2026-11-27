@@ -17,6 +17,11 @@ export default async function EditarEntrega({
   const entrega = await buscarEntrega(supabase, entregaId);
   if (!entrega) notFound();
 
+  const [squads, pessoas] = await Promise.all([
+    supabase.from("squads").select("nome").order("nome"),
+    supabase.from("pessoas").select("nome").order("nome"),
+  ]);
+
   return (
     <>
       <header className="topo">
@@ -31,7 +36,11 @@ export default async function EditarEntrega({
         </Link>
       </header>
 
-      <FormularioEdicao entrega={entrega} />
+      <FormularioEdicao
+        entrega={entrega}
+        squads={(squads.data ?? []).map((s) => s.nome)}
+        pessoas={(pessoas.data ?? []).map((p) => p.nome)}
+      />
     </>
   );
 }

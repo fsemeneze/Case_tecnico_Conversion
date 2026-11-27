@@ -8,7 +8,11 @@ const TIPOS = ["Relatório", "Análise", "Conteúdo"];
 
 export default async function NovaEntrega() {
   const supabase = await criarClienteSupabaseServidor();
-  const clientes = await listarClientes(supabase);
+  const [clientes, squads, pessoas] = await Promise.all([
+    listarClientes(supabase),
+    supabase.from("squads").select("nome").order("nome"),
+    supabase.from("pessoas").select("nome").order("nome"),
+  ]);
 
   return (
     <>
@@ -22,7 +26,12 @@ export default async function NovaEntrega() {
         </Link>
       </header>
 
-      <FormularioNovaEntrega clientes={clientes} tipos={TIPOS} />
+      <FormularioNovaEntrega
+        clientes={clientes}
+        tipos={TIPOS}
+        squads={(squads.data ?? []).map((s) => s.nome)}
+        pessoas={(pessoas.data ?? []).map((p) => p.nome)}
+      />
     </>
   );
 }
