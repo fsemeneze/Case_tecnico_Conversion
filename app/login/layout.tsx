@@ -13,7 +13,8 @@ export default function LayoutLogin({
       <div className="auth-grade">
         <section className="auth-marca">
           <Link href="/login" className="auth-logo">
-            <span className="auth-logo-mark" aria-hidden="true" />
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/conversion-mark.svg" alt="" width={26} height={26} className="auth-logo-mark" />
             PlanHub
           </Link>
 

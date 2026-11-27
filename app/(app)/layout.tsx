@@ -42,7 +42,8 @@ export default async function LayoutDoApp({
     <div className="app">
       <aside className="menu-lateral">
         <Link href="/inicio" className="marca">
-          <span className="marca-mark" aria-hidden="true" />
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/conversion-mark.svg" alt="" width={30} height={30} className="marca-mark" />
           <span>
             PlanHub
             <small>Planejamento e entregas</small>

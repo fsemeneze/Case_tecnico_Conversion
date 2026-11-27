@@ -401,9 +401,12 @@ footer {
   width: 30px;
   height: 30px;
   flex: 0 0 auto;
-  border-radius: 9px;
-  background: linear-gradient(135deg, var(--accent) 0%, #6e8bff 100%);
-  box-shadow: 0 4px 12px rgba(22, 73, 255, 0.35);
+  object-fit: contain;
+  border-radius: 8px;
+}
+
+.menu-lateral .marca .marca-mark {
+  background: transparent;
 }
 
 .menu-lateral .marca small {
@@ -1160,9 +1163,10 @@ main.auth {
 .auth-logo-mark {
   width: 26px;
   height: 26px;
-  border-radius: 8px;
-  background: linear-gradient(135deg, #1649ff 0%, #6e8bff 100%);
-  box-shadow: 0 4px 14px rgba(22, 73, 255, 0.45);
+  object-fit: contain;
+  border-radius: 7px;
+  background: transparent;
+  box-shadow: none;
 }
 
 .auth-marca h1 {
