@@ -818,7 +818,7 @@ footer {
   border: 1px solid var(--border);
   border-radius: 9px;
   padding: 8px 11px;
-  background: var(--bg);
+  background-color: var(--bg);
   color: var(--fg);
   font: inherit;
   transition: border-color 0.14s ease, box-shadow 0.14s ease;
@@ -1009,7 +1009,7 @@ footer {
   border: 1px solid var(--border);
   border-radius: 9px;
   padding: 9px 12px;
-  background: var(--bg);
+  background-color: var(--bg);
   color: var(--fg);
   font: inherit;
   width: 100%;
@@ -1854,7 +1854,7 @@ main.auth {
   border: 1px solid var(--border);
   border-radius: 9px;
   padding: 6px 10px;
-  background: var(--bg);
+  background-color: var(--bg);
   color: var(--fg);
   font: inherit;
   font-size: 0.85rem;
