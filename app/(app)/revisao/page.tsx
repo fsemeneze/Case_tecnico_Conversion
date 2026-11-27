@@ -24,7 +24,7 @@ export default async function Revisao({ searchParams }: { searchParams: Promise<
   const params = await searchParams;
   const codigo = params.codigo ?? "";
   const severidade = params.severidade ?? "";
-  const status = params.status ?? "pendentes";
+  const status = params.status || "pendentes";
   const supabase = await criarClienteSupabaseServidor();
 
   // Fila de encerramento (D13): abertas, vencidas há mais de 90 dias e sem
@@ -314,7 +314,7 @@ export default async function Revisao({ searchParams }: { searchParams: Promise<
         <select name="status" defaultValue={status}>
           <option value="pendentes">Pendentes</option>
           <option value="resolvidos">Resolvidos</option>
-          <option value="">Todos</option>
+          <option value="todos">Todos</option>
         </select>
         <button type="submit">Filtrar</button>
         {temFiltro && (
