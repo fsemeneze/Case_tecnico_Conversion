@@ -196,6 +196,19 @@ Um link `http(s)` válido nunca é sobrescrito.
 mostraria um texto morto. A decisão é a mesma da D15, com a diferença de que
 aqui existe um valor para substituir, não um vazio.
 
+## D17. Ano inferido em data curta: confirmar ou corrigir na fila
+
+**Decisão:** as 40 entregas com data curta ("10/nov") sem ano — 17 na prevista,
+15 na entrega, 8 na solicitação — entram na fila de revisão com a data que o
+normalizador inferiu (D5) pré-preenchida. O time confirma (mantém) ou corrige;
+o app grava a data e registra evento no histórico. O diagnóstico continua
+marcando a flag: a inferência é uma premissa, não um dado.
+
+**Por quê:** a inferência acerta quando o ano está ancorado na solicitação ou
+no título ("Relatório mensal 11/2025"), mas é uma premissa — e premissa
+confirmada por humano vira dado. Sem a fila, a flag fica eterna e o número
+não tem dono.
+
 ## Premissas
 
 1. Os dados são fictícios, mas as inconsistências são tratadas como sujeira real.
