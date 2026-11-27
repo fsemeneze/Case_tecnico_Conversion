@@ -131,8 +131,7 @@ O app não consulta tabela base: lê as visões `entregas_detalhadas`,
 `indicadores_mensais` e `eventos_detalhados`, todas com `security_invoker`.
 A regra de negócio vive no banco, com RLS por papel em toda tabela.
 
-<details>
-<summary>Diagrama ER (clique para abrir)</summary>
+### Estrela
 
 ```mermaid
 erDiagram
@@ -289,8 +288,6 @@ erDiagram
         timestamptz expira_em
     }
 ```
-
-</details>
 
 `PK` chave primária · `FK` chave estrangeira · `UK` única. As duas tabelas de
 token guardam apenas `sha256(token)`, com expiração e uso único, e só são lidas
