@@ -65,8 +65,19 @@ export default async function Revisao({ searchParams }: { searchParams: Promise<
     };
   });
 
+  // Erros já resolvidos não voltam para as filas de preenchimento: "não sei"
+  // e "não tem arquivo" são decisões válidas, mesmo mantendo o campo vazio.
+  const { data: resolvidos } = await supabase
+    .from("erros_importacao")
+    .select("entrega_id, codigo")
+    .eq("resolvido", true)
+    .in("codigo", ["concluida_sem_data_entrega", "sem_link", "link_textual"]);
+  const resolvidosSet = new Set(
+    (resolvidos ?? []).map((e) => `${e.codigo}:${e.entrega_id}`),
+  );
+
   // D14: concluídas sem data de entrega (flag da importação) — o time
-  // preenche a data real ou confirma que não sabe.
+  // preenche a data real ou confirme que não sabe.
   const { data: semData } = await supabase
     .from("entregas_detalhadas")
     .select("id, titulo, cliente, fase_rotulo, data_prevista")
@@ -79,7 +90,11 @@ export default async function Revisao({ searchParams }: { searchParams: Promise<
     .contains("flags", ["concluida_sem_data_entrega"])
     .not("data_entrega", "is", null);
   const comDataSet = new Set((comData ?? []).map((e) => Number(e.id)));
-  const filaSemData = (semData ?? []).filter((e) => !comDataSet.has(Number(e.id)));
+  const filaSemData = (semData ?? []).filter(
+    (e) =>
+      !comDataSet.has(Number(e.id)) &&
+      !resolvidosSet.has(`concluida_sem_data_entrega:${e.id}`),
+  );
 
   // D15: entregas sem link de arquivo — o time preenche o link ou confirma
   // ausência.
@@ -91,7 +106,12 @@ export default async function Revisao({ searchParams }: { searchParams: Promise<
     .limit(200);
   const filaSemLink = (semLink ?? []).filter((e: any) => {
     const flags = e.flags;
-    return !Array.isArray(flags) || !flags.includes("concluida_sem_data_entrega");
+    const semFlag =
+      Array.isArray(flags) && flags.includes("concluida_sem_data_entrega");
+    const resolvido =
+      resolvidosSet.has(`sem_link:${e.id}`) ||
+      resolvidosSet.has(`link_textual:${e.id}`);
+    return !semFlag && !resolvido;
   });
 
   let consulta = supabase
