@@ -95,6 +95,15 @@ export default async function DetalheEntrega({
     hoje,
   );
 
+  // Botões "Gerar link" só para etapas sem decisão conclusiva. Planejamento
+  // "não se aplica" (D6) nunca tem link; etapa aprovada não é reaprovada.
+  const planejamentoAberto = ["pendente", "nao_informado"].includes(
+    entrega.aprovacao_planejamento,
+  );
+  const entregaAberta = ["pendente", "nao_informado"].includes(
+    entrega.aprovacao_entrega,
+  );
+
   return (
     <>
       <header className="topo">
@@ -256,13 +265,15 @@ export default async function DetalheEntrega({
                   {ROTULO_APROVACAO[entrega.aprovacao_planejamento]}
                 </span>
               </p>
-              <form action={gerarLinkAprovacao}>
-                <input type="hidden" name="entrega_id" value={entrega.id} />
-                <input type="hidden" name="etapa" value="planejamento" />
-                <button type="submit" className="botao primario">
-                  Gerar link de planejamento
-                </button>
-              </form>
+              {planejamentoAberto && (
+                <form action={gerarLinkAprovacao}>
+                  <input type="hidden" name="entrega_id" value={entrega.id} />
+                  <input type="hidden" name="etapa" value="planejamento" />
+                  <button type="submit" className="botao primario">
+                    Gerar link de planejamento
+                  </button>
+                </form>
+              )}
             </div>
             <div>
               <strong>2 · Entrega</strong>
@@ -271,13 +282,15 @@ export default async function DetalheEntrega({
                   {ROTULO_APROVACAO[entrega.aprovacao_entrega]}
                 </span>
               </p>
-              <form action={gerarLinkAprovacao}>
-                <input type="hidden" name="entrega_id" value={entrega.id} />
-                <input type="hidden" name="etapa" value="entrega" />
-                <button type="submit" className="botao primario">
-                  Gerar link de entrega
-                </button>
-              </form>
+              {entregaAberta && (
+                <form action={gerarLinkAprovacao}>
+                  <input type="hidden" name="entrega_id" value={entrega.id} />
+                  <input type="hidden" name="etapa" value="entrega" />
+                  <button type="submit" className="botao primario">
+                    Gerar link de entrega
+                  </button>
+                </form>
+              )}
             </div>
           </div>
 
