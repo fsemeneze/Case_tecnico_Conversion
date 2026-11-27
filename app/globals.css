@@ -1476,6 +1476,33 @@ main.auth {
   box-shadow: var(--shadow-card);
 }
 
+/* Ação compacta da fila: botão que abre o formulário inline (details). */
+.acao-revisao > summary {
+  cursor: pointer;
+  list-style: none;
+  user-select: none;
+}
+
+.acao-revisao > summary::-webkit-details-marker {
+  display: none;
+}
+
+.acao-revisao > summary::marker {
+  content: "";
+}
+
+.acao-revisao[open] > summary {
+  margin-bottom: 8px;
+}
+
+.acao-revisao-form {
+  min-width: 320px;
+  padding: 10px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface-subtle);
+}
+
 /* Formulários inline da fila de revisão (D13–D16): um padrão só.
    Botões usam .botao/.botao.secundario do app; aqui só o layout e o input. */
 .form-linha {

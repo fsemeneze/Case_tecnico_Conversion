@@ -2,6 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { preencherDataEntrega } from "./data-entrega-actions";
+import { AcaoRevisao } from "./acao-revisao";
 
 export function BotaoDataEntrega({ entregaId }: { entregaId: number }) {
   const [data, setData] = useState("");
@@ -29,28 +30,32 @@ export function BotaoDataEntrega({ entregaId }: { entregaId: number }) {
   }
 
   return (
-    <form onSubmit={confirmar} className="form-linha">
-      <label>
-        Data de entrega
-        <input
-          type="date"
-          value={data}
-          disabled={naoSei}
-          onChange={(e) => setData(e.target.value)}
-        />
-      </label>
-      <label className="filtro-check">
-        <input
-          type="checkbox"
-          checked={naoSei}
-          onChange={(e) => setNaoSei(e.target.checked)}
-        />
-        Não sei
-      </label>
-      <button type="submit" className="botao primario" disabled={pendente}>
-        {pendente ? "…" : "Confirmar"}
-      </button>
-      {erro && <span className="erro-campo">{erro}</span>}
-    </form>
+    <AcaoRevisao rotulo="Data de entrega">
+      <form onSubmit={confirmar} className="form-linha">
+        <label>
+          Data
+          <input
+            type="date"
+            value={data}
+            disabled={naoSei}
+            onChange={(e) => setData(e.target.value)}
+          />
+        </label>
+        <label className="filtro-check">
+          <input
+            type="checkbox"
+            checked={naoSei}
+            onChange={(e) => setNaoSei(e.target.checked)}
+          />
+          Não sei
+        </label>
+        <span className="acao-linha">
+          <button type="submit" className="botao primario" disabled={pendente}>
+            {pendente ? "…" : "Confirmar"}
+          </button>
+        </span>
+        {erro && <span className="erro-campo">{erro}</span>}
+      </form>
+    </AcaoRevisao>
   );
 }

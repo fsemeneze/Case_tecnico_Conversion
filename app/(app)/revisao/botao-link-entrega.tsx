@@ -2,6 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { preencherLinkEntrega } from "./link-entrega-actions";
+import { AcaoRevisao } from "./acao-revisao";
 
 export function BotaoLinkEntrega({ entregaId }: { entregaId: number }) {
   const [link, setLink] = useState("");
@@ -29,29 +30,33 @@ export function BotaoLinkEntrega({ entregaId }: { entregaId: number }) {
   }
 
   return (
-    <form onSubmit={confirmar} className="form-linha">
-      <label>
-        Link do arquivo
-        <input
-          type="url"
-          placeholder="https://drive.google.com/..."
-          value={link}
-          disabled={naoSei}
-          onChange={(e) => setLink(e.target.value)}
-        />
-      </label>
-      <label className="filtro-check">
-        <input
-          type="checkbox"
-          checked={naoSei}
-          onChange={(e) => setNaoSei(e.target.checked)}
-        />
-        Não tem arquivo
-      </label>
-      <button type="submit" className="botao primario" disabled={pendente}>
-        {pendente ? "…" : "Confirmar"}
-      </button>
-      {erro && <span className="erro-campo">{erro}</span>}
-    </form>
+    <AcaoRevisao rotulo="Link do arquivo">
+      <form onSubmit={confirmar} className="form-linha">
+        <label>
+          Link
+          <input
+            type="url"
+            placeholder="https://drive.google.com/..."
+            value={link}
+            disabled={naoSei}
+            onChange={(e) => setLink(e.target.value)}
+          />
+        </label>
+        <label className="filtro-check">
+          <input
+            type="checkbox"
+            checked={naoSei}
+            onChange={(e) => setNaoSei(e.target.checked)}
+          />
+          Não tem arquivo
+        </label>
+        <span className="acao-linha">
+          <button type="submit" className="botao primario" disabled={pendente}>
+            {pendente ? "…" : "Confirmar"}
+          </button>
+        </span>
+        {erro && <span className="erro-campo">{erro}</span>}
+      </form>
+    </AcaoRevisao>
   );
 }

@@ -2,6 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { encerrarEntrega } from "./encerrar-actions";
+import { AcaoRevisao } from "./acao-revisao";
 
 type Decisao = "retomada" | "entregue" | "cancelada";
 
@@ -12,7 +13,7 @@ const ROTULO: Record<Decisao, string> = {
 };
 
 export function BotaoEncerrar({ entregaId }: { entregaId: number }) {
-  const [decisao, setDecisao] = useState<Decisao | null>(null);
+  const [decisao, setDecisao] = useState<Decisao>("retomada");
   const [motivo, setMotivo] = useState("");
   const [novoPrazo, setNovoPrazo] = useState("");
   const [erro, setErro] = useState<string | null>(null);
@@ -20,7 +21,7 @@ export function BotaoEncerrar({ entregaId }: { entregaId: number }) {
 
   function confirmar(e: React.FormEvent) {
     e.preventDefault();
-    if (!decisao || !motivo.trim()) return;
+    if (!motivo.trim()) return;
     setErro(null);
     if (decisao === "retomada" && !novoPrazo) {
       setErro("Informe o novo prazo.");
@@ -30,82 +31,60 @@ export function BotaoEncerrar({ entregaId }: { entregaId: number }) {
       const r = await encerrarEntrega(entregaId, decisao, motivo, novoPrazo || null);
       if (!r.ok) setErro(r.erro ?? "Não foi possível encerrar.");
       else {
-        setDecisao(null);
         setMotivo("");
         setNovoPrazo("");
       }
     });
   }
 
-  // Um gatilho só, como as outras ações da fila: o formulário abre ao clicar.
-  if (decisao === null) {
-    return (
-      <button
-        type="button"
-        className="botao secundario"
-        onClick={() => setDecisao("retomada")}
-      >
-        Encerrar
-      </button>
-    );
-  }
-
   return (
-    <form onSubmit={confirmar} className="form-linha">
-      <label>
-        Decisão
-        <select
-          value={decisao}
-          onChange={(e) => setDecisao(e.target.value as Decisao)}
-        >
-          <option value="retomada">Retomar</option>
-          <option value="entregue">Entregar</option>
-          <option value="cancelada">Cancelar</option>
-        </select>
-      </label>
-      <label>
-        Motivo *
-        <input
-          required
-          value={motivo}
-          onChange={(e) => setMotivo(e.target.value)}
-          placeholder={
-            decisao === "cancelada"
-              ? "Por que cancelar?"
-              : decisao === "retomada"
-                ? "O que destravou?"
-                : "O que foi entregue?"
-          }
-        />
-      </label>
-      {decisao === "retomada" && (
+    <AcaoRevisao rotulo="Encerrar">
+      <form onSubmit={confirmar} className="form-linha">
         <label>
-          Novo prazo *
+          Decisão
+          <select
+            value={decisao}
+            onChange={(e) => setDecisao(e.target.value as Decisao)}
+          >
+            <option value="retomada">Retomar</option>
+            <option value="entregue">Entregar</option>
+            <option value="cancelada">Cancelar</option>
+          </select>
+        </label>
+        <label>
+          Motivo *
           <input
-            type="date"
             required
-            value={novoPrazo}
-            onChange={(e) => setNovoPrazo(e.target.value)}
+            value={motivo}
+            onChange={(e) => setMotivo(e.target.value)}
+            placeholder={
+              decisao === "cancelada"
+                ? "Por que cancelar?"
+                : decisao === "retomada"
+                  ? "O que destravou?"
+                  : "O que foi entregue?"
+            }
           />
         </label>
-      )}
-      <span className="acao-linha">
-        <button type="submit" className="botao primario" disabled={pendente}>
-          {pendente ? "…" : "Confirmar"}
-        </button>
-        <button
-          type="button"
-          className="botao secundario"
-          disabled={pendente}
-          onClick={() => {
-            setDecisao(null);
-            setErro(null);
-          }}
-        >
-          Voltar
-        </button>
-      </span>
-      {erro && <span className="erro-campo">{erro}</span>}
-    </form>
+        {decisao === "retomada" && (
+          <label>
+            Novo prazo *
+            <input
+              type="date"
+              required
+              value={novoPrazo}
+              onChange={(e) => setNovoPrazo(e.target.value)}
+            />
+          </label>
+        )}
+        <span className="acao-linha">
+          <button type="submit" className="botao primario" disabled={pendente}>
+            {pendente ? "…" : "Confirmar"}
+          </button>
+          <span className="muted">{ROTULO[decisao]}</span>
+        </span>
+        {erro && <span className="erro-campo">{erro}</span>}
+      </form>
+    </AcaoRevisao>
   );
 }
