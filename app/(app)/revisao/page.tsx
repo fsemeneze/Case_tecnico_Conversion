@@ -4,6 +4,7 @@ import { rotuloCodigo } from "@/lib/eventos";
 import { BotaoResolver } from "./botao-resolver";
 import { BotaoEncerrar } from "./botao-encerrar";
 import { BotaoDataEntrega } from "./botao-data-entrega";
+import { BotaoLinkEntrega } from "./botao-link-entrega";
 
 type Busca = { codigo?: string; severidade?: string; status?: string };
 
@@ -48,6 +49,19 @@ export default async function Revisao({ searchParams }: { searchParams: Promise<
     .not("data_entrega", "is", null);
   const comDataSet = new Set((comData ?? []).map((e) => Number(e.id)));
   const filaSemData = (semData ?? []).filter((e) => !comDataSet.has(Number(e.id)));
+
+  // D15: entregas sem link de arquivo — o time preenche o link ou confirma
+  // ausência.
+  const { data: semLink } = await supabase
+    .from("entregas_detalhadas")
+    .select("id, titulo, cliente, fase_rotulo")
+    .is("link", null)
+    .or("link.eq.")
+    .limit(200);
+  const filaSemLink = (semLink ?? []).filter((e: any) => {
+    const flags = e.flags;
+    return !Array.isArray(flags) || !flags.includes("concluida_sem_data_entrega");
+  });
 
   let consulta = supabase
     .from("erros_importacao")
@@ -130,6 +144,45 @@ export default async function Revisao({ searchParams }: { searchParams: Promise<
                     <td>{e.data_prevista ?? "—"}</td>
                     <td>
                       <BotaoDataEntrega entregaId={Number(e.id)} />
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
+
+      {filaSemLink.length > 0 && (
+        <div className="cartao">
+          <h2>Entregas sem link de arquivo</h2>
+          <p className="muted">
+            O status indica entrega concluída, mas não há link de arquivo — sem
+            ele, o cliente não recebe nada pelo portal. Informe o link ou
+            confirme que não tem arquivo; o app nunca inventa um link.
+          </p>
+          <div className="tabela-wrap">
+            <table className="tabela">
+              <thead>
+                <tr>
+                  <th>Entrega</th>
+                  <th>Cliente</th>
+                  <th>Fase</th>
+                  <th>Ação</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filaSemLink.map((e) => (
+                  <tr key={e.id}>
+                    <td>
+                      <Link href={`/entregas/${e.id}`} className="titulo-link">
+                        {e.titulo}
+                      </Link>
+                    </td>
+                    <td>{e.cliente}</td>
+                    <td>{e.fase_rotulo}</td>
+                    <td>
+                      <BotaoLinkEntrega entregaId={Number(e.id)} />
                     </td>
                   </tr>
                 ))}

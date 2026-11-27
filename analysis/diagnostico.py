@@ -676,6 +676,16 @@ def calcular_metricas(linhas: list[dict], brutas: list[dict], extras: dict, erro
             for l in linhas
             if "concluida_sem_data_entrega" in filter(None, l["flags"].split("|"))
         ],
+        "sem_link": [
+            {
+                "legacy_id": l["legacy_id"],
+                "cliente": l["cliente"],
+                "titulo": l["titulo"],
+                "tipo": l["tipo"],
+            }
+            for l in linhas
+            if "sem_link" in filter(None, l["flags"].split("|"))
+        ],
         "fila_revisao": fila_revisao,
         "qualidade": qualidade,
         "ids_duplicados_distintos": extras.get("ids_duplicados_distintos", 0),
@@ -743,6 +753,10 @@ def gerar_relatorio(metricas: dict) -> str:
     linhas_sem_data_entrega = "\n".join(
         f"| {l['legacy_id']} | {l['cliente']} | {l['titulo']} | {l['data_prevista'] or '—'} |"
         for l in metricas["sem_data_entrega"]
+    )
+    linhas_sem_link = "\n".join(
+        f"| {l['legacy_id']} | {l['cliente']} | {l['titulo']} | {l['tipo']} |"
+        for l in metricas["sem_link"]
     )
 
     return f"""# Diagnóstico dos dados — controle de entregas
@@ -853,6 +867,17 @@ para esses casos: a sujeira fica visível de propósito.
 | legacy_id | Cliente | Título | Prazo |
 | :--- | :--- | :--- | :--- |
 {linhas_sem_data_entrega}
+
+### Entregas sem link de arquivo ({c.get('sem_link', 0)})
+
+São entregas concluídas sem link do arquivo. Sem o link, o cliente não recebe
+nada pelo portal e a aprovação perde sentido. A decisão de produto (D15): o
+time preenche o link real na fila de revisão, ou confirma que não tem arquivo.
+O diagnóstico **não inventa** link.
+
+| legacy_id | Cliente | Título | Tipo |
+| :--- | :--- | :--- | :--- |
+{linhas_sem_link}
 
 ### Todos os códigos de qualidade encontrados
 

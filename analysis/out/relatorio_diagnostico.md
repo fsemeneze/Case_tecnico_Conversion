@@ -1,6 +1,6 @@
 # Diagnóstico dos dados — controle de entregas
 
-Gerado automaticamente por `analysis/diagnostico.py` em 2026-11-26T21:30:55.
+Gerado automaticamente por `analysis/diagnostico.py` em 2026-11-26T21:51:40.
 Arquivo de origem: `dados/controle_entregas.csv`.
 Data de referência para "em atraso hoje": **2026-11-26**.
 
@@ -141,6 +141,75 @@ para esses casos: a sujeira fica visível de propósito.
 | 733 | AutoPeças Rodas | Artigo: comparativo de planos | 2026-08-07 |
 | 812 | Hotel Mirante | Análise de backlinks | 2026-09-03 |
 | 943 | Viagens Atlântico | Artigo: comparativo de produtos | 2026-10-20 |
+
+### Entregas sem link de arquivo (59)
+
+São entregas concluídas sem link do arquivo. Sem o link, o cliente não recebe
+nada pelo portal e a aprovação perde sentido. A decisão de produto (D15): o
+time preenche o link real na fila de revisão, ou confirma que não tem arquivo.
+O diagnóstico **não inventa** link.
+
+| legacy_id | Cliente | Título | Tipo |
+| :--- | :--- | :--- | :--- |
+| 26 | Café Montanha | Mapeamento de conteúdo | Análise |
+| 44 | Farmácia Bem Estar | Pesquisa de palavras-chave | Análise |
+| 61 | Editora Páginas | Artigo: checklist de serviços | Conteúdo |
+| 67 | Farmácia Bem Estar | Artigo: perguntas frequentes sobre preços | Conteúdo |
+| 113 | Editora Páginas | Artigo: como escolher manutenção | Conteúdo |
+| 196 | Clínica Sorriso | Artigo: glossário de atendimento | Conteúdo |
+| 309 | Loja Alfa | Artigo: comparativo de planos | Conteúdo |
+| 310 | Clínica Sorriso | Artigo: glossário de produtos | Conteúdo |
+| 435 | Café Montanha | Mapeamento de conteúdo | Análise |
+| 622 | Café Montanha | Artigo: guia completo de planos | Conteúdo |
+| 628 | Casa Bela Móveis | Artigo: checklist de planos | Conteúdo |
+| 679 | Seguros Confia | Artigo: perguntas frequentes sobre inovação | Conteúdo |
+| 682 | Cosméticos Bela | Artigo: guia completo de segurança | Conteúdo |
+| 723 | TechNova Software | Artigo: tendências de produtos | Conteúdo |
+| 728 | Café Montanha | Pesquisa de palavras-chave | Análise |
+| 730 | TechNova Software | Artigo: guia completo de preços | Conteúdo |
+| 735 | Logística Rápida | Artigo: erros comuns em serviços | Conteúdo |
+| 775 | AutoPeças Rodas | Artigo: perguntas frequentes sobre atendimento | Conteúdo |
+| 798 | Clínica Sorriso | Análise de backlinks | Análise |
+| 813 | Moda Urbana | Artigo: tendências de planos | Conteúdo |
+| 815 | Farmácia Bem Estar | Análise de concorrência | Análise |
+| 816 | Advocacia Lima | Auditoria técnica do site | Análise |
+| 820 | Casa Bela Móveis | Relatório mensal 09/2026 | Relatório |
+| 826 | Farmácia Bem Estar | Relatório mensal 09/2026 | Relatório |
+| 842 | Pet&Cia | Mapeamento de conteúdo | Análise |
+| 846 | Hotel Mirante | Artigo: erros comuns em atendimento | Conteúdo |
+| 883 | Café Montanha | Artigo: glossário de serviços | Conteúdo |
+| 894 | Casa Bela Móveis | Artigo: guia completo de planos | Conteúdo |
+| 901 | Loja Alfa | Relatório mensal 10/2026 | Relatório |
+| 910 | Farmácia Bem Estar | Relatório mensal 10/2026 | Relatório |
+| 913 | Moda Urbana | Relatório mensal 10/2026 | Relatório |
+| 916 | Café Montanha | Relatório mensal 10/2026 | Relatório |
+| 927 | Farmácia Bem Estar | Artigo: guia completo de preços | Conteúdo |
+| 928 | Hotel Mirante | Artigo: perguntas frequentes sobre produtos | Conteúdo |
+| 933 | Hotel Mirante | Artigo: guia completo de manutenção | Conteúdo |
+| 937 | Hotel Mirante | Artigo: perguntas frequentes sobre segurança | Conteúdo |
+| 938 | Café Montanha | Artigo: como escolher atendimento | Conteúdo |
+| 942 | TechNova Software | Análise de Core Web Vitals | Análise |
+| 945 | Imobiliária Lar | Artigo: comparativo de preços | Conteúdo |
+| 946 | Seguros Confia | Artigo: comparativo de segurança | Conteúdo |
+| 948 | Academia Força | Diagnóstico de indexação | Análise |
+| 951 | Farmácia Bem Estar | Artigo: guia completo de atendimento | Conteúdo |
+| 960 | Moda Urbana | Artigo: checklist de produtos | Conteúdo |
+| 962 | Logística Rápida | Artigo: checklist de segurança | Conteúdo |
+| 963 | Loja Alfa | Artigo: erros comuns em planos | Conteúdo |
+| 965 | Grupo Vértice Saúde | Análise de concorrência | Análise |
+| 967 | Escola Saber Mais | Artigo: glossário de inovação | Conteúdo |
+| 969 | Pet&Cia | Diagnóstico de indexação | Análise |
+| 971 | Grupo Vértice Saúde | Artigo: como escolher produtos | Conteúdo |
+| 972 | Grupo Vértice Saúde | Auditoria técnica do site | Análise |
+| 974 | Pet&Cia | Mapeamento de conteúdo | Análise |
+| 975 | Editora Páginas | Mapeamento de conteúdo | Análise |
+| 976 | Clínica Sorriso | Artigo: erros comuns em planos | Conteúdo |
+| 977 | Moda Urbana | Artigo: comparativo de planos | Conteúdo |
+| 979 | Agro Verde | Pesquisa de palavras-chave | Análise |
+| 981 | Distribuidora Sol | Artigo: guia completo de planos | Conteúdo |
+| 983 | Ótica Visão | Diagnóstico de indexação | Análise |
+| 984 | Imobiliária Lar | Artigo: tendências de preços | Conteúdo |
+| 985 | Pet&Cia | Artigo: guia completo de planos | Conteúdo |
 
 ### Todos os códigos de qualidade encontrados
 

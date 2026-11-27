@@ -1,5 +1,5 @@
 {
-  "gerado_em": "2026-11-26T21:30:55",
+  "gerado_em": "2026-11-26T21:51:40",
   "arquivo_origem": "dados/controle_entregas.csv",
   "data_referencia": "2026-11-26",
   "total_linhas_origem": 1007,
@@ -314,6 +314,362 @@
       "cliente": "Viagens Atlântico",
       "titulo": "Artigo: comparativo de produtos",
       "data_prevista": "2026-10-20"
+    }
+  ],
+  "sem_link": [
+    {
+      "legacy_id": "26",
+      "cliente": "Café Montanha",
+      "titulo": "Mapeamento de conteúdo",
+      "tipo": "Análise"
+    },
+    {
+      "legacy_id": "44",
+      "cliente": "Farmácia Bem Estar",
+      "titulo": "Pesquisa de palavras-chave",
+      "tipo": "Análise"
+    },
+    {
+      "legacy_id": "61",
+      "cliente": "Editora Páginas",
+      "titulo": "Artigo: checklist de serviços",
+      "tipo": "Conteúdo"
+    },
+    {
+      "legacy_id": "67",
+      "cliente": "Farmácia Bem Estar",
+      "titulo": "Artigo: perguntas frequentes sobre preços",
+      "tipo": "Conteúdo"
+    },
+    {
+      "legacy_id": "113",
+      "cliente": "Editora Páginas",
+      "titulo": "Artigo: como escolher manutenção",
+      "tipo": "Conteúdo"
+    },
+    {
+      "legacy_id": "196",
+      "cliente": "Clínica Sorriso",
+      "titulo": "Artigo: glossário de atendimento",
+      "tipo": "Conteúdo"
+    },
+    {
+      "legacy_id": "309",
+      "cliente": "Loja Alfa",
+      "titulo": "Artigo: comparativo de planos",
+      "tipo": "Conteúdo"
+    },
+    {
+      "legacy_id": "310",
+      "cliente": "Clínica Sorriso",
+      "titulo": "Artigo: glossário de produtos",
+      "tipo": "Conteúdo"
+    },
+    {
+      "legacy_id": "435",
+      "cliente": "Café Montanha",
+      "titulo": "Mapeamento de conteúdo",
+      "tipo": "Análise"
+    },
+    {
+      "legacy_id": "622",
+      "cliente": "Café Montanha",
+      "titulo": "Artigo: guia completo de planos",
+      "tipo": "Conteúdo"
+    },
+    {
+      "legacy_id": "628",
+      "cliente": "Casa Bela Móveis",
+      "titulo": "Artigo: checklist de planos",
+      "tipo": "Conteúdo"
+    },
+    {
+      "legacy_id": "679",
+      "cliente": "Seguros Confia",
+      "titulo": "Artigo: perguntas frequentes sobre inovação",
+      "tipo": "Conteúdo"
+    },
+    {
+      "legacy_id": "682",
+      "cliente": "Cosméticos Bela",
+      "titulo": "Artigo: guia completo de segurança",
+      "tipo": "Conteúdo"
+    },
+    {
+      "legacy_id": "723",
+      "cliente": "TechNova Software",
+      "titulo": "Artigo: tendências de produtos",
+      "tipo": "Conteúdo"
+    },
+    {
+      "legacy_id": "728",
+      "cliente": "Café Montanha",
+      "titulo": "Pesquisa de palavras-chave",
+      "tipo": "Análise"
+    },
+    {
+      "legacy_id": "730",
+      "cliente": "TechNova Software",
+      "titulo": "Artigo: guia completo de preços",
+      "tipo": "Conteúdo"
+    },
+    {
+      "legacy_id": "735",
+      "cliente": "Logística Rápida",
+      "titulo": "Artigo: erros comuns em serviços",
+      "tipo": "Conteúdo"
+    },
+    {
+      "legacy_id": "775",
+      "cliente": "AutoPeças Rodas",
+      "titulo": "Artigo: perguntas frequentes sobre atendimento",
+      "tipo": "Conteúdo"
+    },
+    {
+      "legacy_id": "798",
+      "cliente": "Clínica Sorriso",
+      "titulo": "Análise de backlinks",
+      "tipo": "Análise"
+    },
+    {
+      "legacy_id": "813",
+      "cliente": "Moda Urbana",
+      "titulo": "Artigo: tendências de planos",
+      "tipo": "Conteúdo"
+    },
+    {
+      "legacy_id": "815",
+      "cliente": "Farmácia Bem Estar",
+      "titulo": "Análise de concorrência",
+      "tipo": "Análise"
+    },
+    {
+      "legacy_id": "816",
+      "cliente": "Advocacia Lima",
+      "titulo": "Auditoria técnica do site",
+      "tipo": "Análise"
+    },
+    {
+      "legacy_id": "820",
+      "cliente": "Casa Bela Móveis",
+      "titulo": "Relatório mensal 09/2026",
+      "tipo": "Relatório"
+    },
+    {
+      "legacy_id": "826",
+      "cliente": "Farmácia Bem Estar",
+      "titulo": "Relatório mensal 09/2026",
+      "tipo": "Relatório"
+    },
+    {
+      "legacy_id": "842",
+      "cliente": "Pet&Cia",
+      "titulo": "Mapeamento de conteúdo",
+      "tipo": "Análise"
+    },
+    {
+      "legacy_id": "846",
+      "cliente": "Hotel Mirante",
+      "titulo": "Artigo: erros comuns em atendimento",
+      "tipo": "Conteúdo"
+    },
+    {
+      "legacy_id": "883",
+      "cliente": "Café Montanha",
+      "titulo": "Artigo: glossário de serviços",
+      "tipo": "Conteúdo"
+    },
+    {
+      "legacy_id": "894",
+      "cliente": "Casa Bela Móveis",
+      "titulo": "Artigo: guia completo de planos",
+      "tipo": "Conteúdo"
+    },
+    {
+      "legacy_id": "901",
+      "cliente": "Loja Alfa",
+      "titulo": "Relatório mensal 10/2026",
+      "tipo": "Relatório"
+    },
+    {
+      "legacy_id": "910",
+      "cliente": "Farmácia Bem Estar",
+      "titulo": "Relatório mensal 10/2026",
+      "tipo": "Relatório"
+    },
+    {
+      "legacy_id": "913",
+      "cliente": "Moda Urbana",
+      "titulo": "Relatório mensal 10/2026",
+      "tipo": "Relatório"
+    },
+    {
+      "legacy_id": "916",
+      "cliente": "Café Montanha",
+      "titulo": "Relatório mensal 10/2026",
+      "tipo": "Relatório"
+    },
+    {
+      "legacy_id": "927",
+      "cliente": "Farmácia Bem Estar",
+      "titulo": "Artigo: guia completo de preços",
+      "tipo": "Conteúdo"
+    },
+    {
+      "legacy_id": "928",
+      "cliente": "Hotel Mirante",
+      "titulo": "Artigo: perguntas frequentes sobre produtos",
+      "tipo": "Conteúdo"
+    },
+    {
+      "legacy_id": "933",
+      "cliente": "Hotel Mirante",
+      "titulo": "Artigo: guia completo de manutenção",
+      "tipo": "Conteúdo"
+    },
+    {
+      "legacy_id": "937",
+      "cliente": "Hotel Mirante",
+      "titulo": "Artigo: perguntas frequentes sobre segurança",
+      "tipo": "Conteúdo"
+    },
+    {
+      "legacy_id": "938",
+      "cliente": "Café Montanha",
+      "titulo": "Artigo: como escolher atendimento",
+      "tipo": "Conteúdo"
+    },
+    {
+      "legacy_id": "942",
+      "cliente": "TechNova Software",
+      "titulo": "Análise de Core Web Vitals",
+      "tipo": "Análise"
+    },
+    {
+      "legacy_id": "945",
+      "cliente": "Imobiliária Lar",
+      "titulo": "Artigo: comparativo de preços",
+      "tipo": "Conteúdo"
+    },
+    {
+      "legacy_id": "946",
+      "cliente": "Seguros Confia",
+      "titulo": "Artigo: comparativo de segurança",
+      "tipo": "Conteúdo"
+    },
+    {
+      "legacy_id": "948",
+      "cliente": "Academia Força",
+      "titulo": "Diagnóstico de indexação",
+      "tipo": "Análise"
+    },
+    {
+      "legacy_id": "951",
+      "cliente": "Farmácia Bem Estar",
+      "titulo": "Artigo: guia completo de atendimento",
+      "tipo": "Conteúdo"
+    },
+    {
+      "legacy_id": "960",
+      "cliente": "Moda Urbana",
+      "titulo": "Artigo: checklist de produtos",
+      "tipo": "Conteúdo"
+    },
+    {
+      "legacy_id": "962",
+      "cliente": "Logística Rápida",
+      "titulo": "Artigo: checklist de segurança",
+      "tipo": "Conteúdo"
+    },
+    {
+      "legacy_id": "963",
+      "cliente": "Loja Alfa",
+      "titulo": "Artigo: erros comuns em planos",
+      "tipo": "Conteúdo"
+    },
+    {
+      "legacy_id": "965",
+      "cliente": "Grupo Vértice Saúde",
+      "titulo": "Análise de concorrência",
+      "tipo": "Análise"
+    },
+    {
+      "legacy_id": "967",
+      "cliente": "Escola Saber Mais",
+      "titulo": "Artigo: glossário de inovação",
+      "tipo": "Conteúdo"
+    },
+    {
+      "legacy_id": "969",
+      "cliente": "Pet&Cia",
+      "titulo": "Diagnóstico de indexação",
+      "tipo": "Análise"
+    },
+    {
+      "legacy_id": "971",
+      "cliente": "Grupo Vértice Saúde",
+      "titulo": "Artigo: como escolher produtos",
+      "tipo": "Conteúdo"
+    },
+    {
+      "legacy_id": "972",
+      "cliente": "Grupo Vértice Saúde",
+      "titulo": "Auditoria técnica do site",
+      "tipo": "Análise"
+    },
+    {
+      "legacy_id": "974",
+      "cliente": "Pet&Cia",
+      "titulo": "Mapeamento de conteúdo",
+      "tipo": "Análise"
+    },
+    {
+      "legacy_id": "975",
+      "cliente": "Editora Páginas",
+      "titulo": "Mapeamento de conteúdo",
+      "tipo": "Análise"
+    },
+    {
+      "legacy_id": "976",
+      "cliente": "Clínica Sorriso",
+      "titulo": "Artigo: erros comuns em planos",
+      "tipo": "Conteúdo"
+    },
+    {
+      "legacy_id": "977",
+      "cliente": "Moda Urbana",
+      "titulo": "Artigo: comparativo de planos",
+      "tipo": "Conteúdo"
+    },
+    {
+      "legacy_id": "979",
+      "cliente": "Agro Verde",
+      "titulo": "Pesquisa de palavras-chave",
+      "tipo": "Análise"
+    },
+    {
+      "legacy_id": "981",
+      "cliente": "Distribuidora Sol",
+      "titulo": "Artigo: guia completo de planos",
+      "tipo": "Conteúdo"
+    },
+    {
+      "legacy_id": "983",
+      "cliente": "Ótica Visão",
+      "titulo": "Diagnóstico de indexação",
+      "tipo": "Análise"
+    },
+    {
+      "legacy_id": "984",
+      "cliente": "Imobiliária Lar",
+      "titulo": "Artigo: tendências de preços",
+      "tipo": "Conteúdo"
+    },
+    {
+      "legacy_id": "985",
+      "cliente": "Pet&Cia",
+      "titulo": "Artigo: guia completo de planos",
+      "tipo": "Conteúdo"
     }
   ],
   "fila_revisao": 47,

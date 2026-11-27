@@ -179,6 +179,12 @@ inventá-la (fallback silencioso) contaminaria o indicador que o avaliador vai
 olhar. Em 15 casos, o certo é a decisão humana — e o "não sei" também é uma
 resposta válida, que fecha o item sem mentir o dado.
 
+## D15. Entrega sem link de arquivo: o time preenche ou confirma ausência
+
+**Decisão:** as 62 entregas sem `link` (arquivo de entrega) entram na fila de revisão da importação. O time preenche o link real ou confirma que não tem arquivo. Ao preencher, o app grava o link na entrega e registra evento no histórico. A flag `sem_link` continua visível no diagnóstico até ser resolvida.
+
+**Por quê:** o link de arquivo é o conteúdo da entrega — sem ele, o cliente não recebe nada pelo portal e a aprovação perde sentido. Em 62 casos, o certo é a decisão humana: preencher ou registrar formalmente que não existe arquivo (por exemplo, entregas canceladas ou entregues por outro canal). Nada é apagado nem inventado.
+
 ## Premissas
 
 1. Os dados são fictícios, mas as inconsistências são tratadas como sujeira real.
