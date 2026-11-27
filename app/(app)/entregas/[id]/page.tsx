@@ -8,6 +8,7 @@ import { buscarEntrega, listarEventos, listarAprovacoes } from "@/lib/consultas"
 import { Icone } from "@/app/icones";
 import { BotaoCopiar } from "@/app/botao-copiar";
 import { gerarLinkAprovacao } from "../actions";
+import { AlterarSituacao } from "./alterar-situacao";
 
 type Params = { id: string };
 
@@ -43,6 +44,20 @@ export default async function DetalheEntrega({
 
   const hoje = new Date().toISOString().slice(0, 10);
   const supabase = await criarClienteSupabaseServidor();
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  const { data: perfil } = await supabase
+    .from("usuario")
+    .select("papel")
+    .eq("id", user?.id ?? "")
+    .maybeSingle();
+  const podeEditar = perfil?.papel === "admin" || perfil?.papel === "gestor";
+  const { data: fases } = await supabase
+    .from("fases")
+    .select("id, codigo, rotulo")
+    .order("ordem");
 
   const [entrega, aprovacoes, historico] = await Promise.all([
     buscarEntrega(supabase, entregaId),
@@ -100,9 +115,11 @@ export default async function DetalheEntrega({
           </p>
         </div>
         <div className="topo-acoes">
-          <Link href={`/entregas/${entrega.id}/editar`} className="botao primario">
-            Editar
-          </Link>
+          {podeEditar && (
+            <Link href={`/entregas/${entrega.id}/editar`} className="botao primario">
+              Editar
+            </Link>
+          )}
           <Link href="/entregas" className="botao secundario">
             <Icone nome="voltar" width={17} height={17} />
             Voltar
@@ -171,6 +188,13 @@ export default async function DetalheEntrega({
             <span className={`badge tom-${situ.tom}`}>{situ.rotulo}</span>{" "}
             <span className="badge tom-info">{entrega.fase_rotulo}</span>
           </p>
+          {!podeEditar && (
+            <AlterarSituacao
+              entregaId={entrega.id}
+              faseAtual={entrega.fase}
+              fases={fases ?? []}
+            />
+          )}
           <ul className="lista-chave">
             <li>
               <span>Prazo</span>

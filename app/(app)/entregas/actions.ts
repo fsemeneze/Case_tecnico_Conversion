@@ -129,10 +129,14 @@ export async function cadastrarEntrega(
 }
 
 // ---------------------------------------------------------------------------
-// Edição de entrega existente (time, com sessão — RLS por papel e por squad)
+// Edição de entrega existente (admin/gestor; operador só muda a situação)
 // ---------------------------------------------------------------------------
 
 export type ResultadoEdicao = { ok: false; erro: string } | { ok: true };
+
+function exigeEdicao(perfil: { papel: string } | null): boolean {
+  return Boolean(perfil && ["admin", "gestor"].includes(perfil.papel));
+}
 
 export async function atualizarEntrega(
   entrada: Record<string, unknown>,
@@ -149,8 +153,8 @@ export async function atualizarEntrega(
     .eq("id", user.id)
     .maybeSingle();
 
-  if (!perfil || !["admin", "gestor", "operador"].includes(perfil.papel)) {
-    return { ok: false, erro: "Seu perfil só pode consultar. Peça acesso ao administrador." };
+  if (!exigeEdicao(perfil) || !perfil) {
+    return { ok: false, erro: "Apenas admin e gestor podem editar a entrega." };
   }
 
   const entregaId = Number(entrada.entrega_id);
@@ -244,6 +248,70 @@ export async function atualizarEntrega(
   revalidatePath("/inicio");
   revalidatePath("/entregas");
   revalidatePath(`/entregas/${entregaId}`);
+  return { ok: true };
+}
+
+// ---------------------------------------------------------------------------
+// Alteração de situação (status) — operador pode mudar a fase
+// ---------------------------------------------------------------------------
+
+export async function alterarFaseEntrega(
+  entregaId: number,
+  faseId: number,
+): Promise<ResultadoEdicao> {
+  const supabase = await criarClienteSupabaseServidor();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return { ok: false, erro: "Sua sessão expirou." };
+
+  const { data: perfil } = await supabase
+    .from("usuario")
+    .select("papel, nome")
+    .eq("id", user.id)
+    .maybeSingle();
+
+  if (!perfil || !["admin", "gestor", "operador"].includes(perfil.papel)) {
+    return { ok: false, erro: "Seu perfil só pode consultar." };
+  }
+
+  const { data: atual } = await supabase
+    .from("entregas")
+    .select("fase_id")
+    .eq("id", entregaId)
+    .maybeSingle();
+  if (!atual) return { ok: false, erro: "Entrega não encontrada ou sem permissão." };
+  if (atual.fase_id === faseId) return { ok: true };
+
+  const { data: fase } = await supabase
+    .from("fases")
+    .select("codigo, rotulo")
+    .eq("id", faseId)
+    .maybeSingle();
+  if (!fase) return { ok: false, erro: "Situação inválida." };
+
+  const { error } = await supabase
+    .from("entregas")
+    .update({ fase_id: faseId, atualizado_em: new Date().toISOString() })
+    .eq("id", entregaId);
+  if (error) return { ok: false, erro: error.message };
+
+  const { data: antiga } = await supabase
+    .from("fases")
+    .select("codigo")
+    .eq("id", atual.fase_id)
+    .maybeSingle();
+  await supabase.from("eventos_entrega").insert({
+    entrega_id: entregaId,
+    tipo_evento: "fase",
+    campo: "fase",
+    valor_antigo: antiga?.codigo ?? String(atual.fase_id),
+    valor_novo: fase.codigo,
+    autor: perfil.nome,
+  });
+
+  revalidatePath(`/entregas/${entregaId}`);
+  revalidatePath("/entregas");
   return { ok: true };
 }
 
