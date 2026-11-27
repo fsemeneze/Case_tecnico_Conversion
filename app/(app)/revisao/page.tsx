@@ -79,6 +79,25 @@ export default async function Revisao({ searchParams }: { searchParams: Promise<
     .order("codigo")
     .limit(200);
 
+  // Cartões com o total do filtro, não o que coube na página.
+  const contar = async (sev: "critico" | "aviso") => {
+    let q = supabase
+      .from("erros_importacao")
+      .select("id", { count: "exact", head: true })
+      .eq("severidade", sev);
+    if (codigo) q = q.eq("codigo", codigo);
+    if (severidade) q = q.eq("severidade", severidade);
+    if (status === "pendentes") q = q.eq("resolvido", false);
+    if (status === "resolvidos") q = q.eq("resolvido", true);
+    const { count: n } = await q;
+    return n ?? 0;
+  };
+
+  const [totalCriticos, totalAvisos] = await Promise.all([
+    contar("critico"),
+    contar("aviso"),
+  ]);
+
   // O seletor de tipos conta só o que está pendente: código sem pendência
   // não deve aparecer como se ainda houvesse trabalho.
   const { data: contagem } = await supabase
@@ -248,19 +267,18 @@ export default async function Revisao({ searchParams }: { searchParams: Promise<
       )}
 
       <div className="stats">
-        {Object.entries(
-          (erros ?? []).reduce<Record<string, number>>((acc, e) => {
-            acc[e.severidade] = (acc[e.severidade] ?? 0) + 1;
-            return acc;
-          }, {}),
-        ).map(([sev, n]) => (
-          <div key={sev} className={`stat ${sev === "critico" ? "alert" : ""}`}>
-            <span className="value">{n}</span>
-            <span className="label">
-              {sev === "critico" ? "críticos (página atual)" : "avisos (página atual)"}
-            </span>
-          </div>
-        ))}
+        <div className="stat alert">
+          <span className="value">{totalCriticos}</span>
+          <span className="label">críticos</span>
+        </div>
+        <div className="stat">
+          <span className="value">{totalAvisos}</span>
+          <span className="label">avisos</span>
+        </div>
+        <div className="stat">
+          <span className="value">{count ?? 0}</span>
+          <span className="label">no total</span>
+        </div>
       </div>
 
       <form className="filtros" method="get">
