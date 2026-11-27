@@ -68,12 +68,23 @@ export async function cadastrarEntrega(
   }
 
   // Dimensões derivadas do formulário.
+  // Subtipo vazio tem fallback (D9): Análise → "Análise não especificada",
+  // Conteúdo → "Artigo", Relatório → sem subtipo. Sem isso, o cadastro de
+  // Análise/Conteúdo falharia ao deixar o subtipo em branco.
+  const subtipoBase =
+    v.subtipo ||
+    (v.tipo === "Análise"
+      ? "Análise não especificada"
+      : v.tipo === "Conteúdo"
+        ? "Artigo"
+        : null);
+
   const [tipo, fase, decisao, origem] = await Promise.all([
     supabase
       .from("tipos_entrega")
       .select("id")
       .eq("tipo", v.tipo)
-      .is("subtipo", v.subtipo || null)
+      .is("subtipo", subtipoBase)
       .maybeSingle(),
     supabase.from("fases").select("id").eq("codigo", "solicitada").single(),
     supabase.from("decisoes_aprovacao").select("id").eq("codigo", "pendente").single(),
