@@ -52,9 +52,6 @@ export default async function LayoutDoApp({
           <ItemMenu href="/inicio" icone="inicio">
             Início
           </ItemMenu>
-          <ItemMenu href="/dashboard" icone="dashboard">
-            Dashboard
-          </ItemMenu>
           <ItemMenu href="/entregas" icone="entregas">
             Entregas
           </ItemMenu>
@@ -63,6 +60,9 @@ export default async function LayoutDoApp({
           </ItemMenu>
           <ItemMenu href="/revisao" icone="revisao">
             Revisão de dados
+          </ItemMenu>
+          <ItemMenu href="/dashboard" icone="dashboard">
+            Dashboard
           </ItemMenu>
           <span className="secao">Administração</span>
           <ItemMenu href="/equipe" icone="equipe">
@@ -86,10 +86,6 @@ export default async function LayoutDoApp({
           </div>
           <div className="usuario-acoes">
             <TemaToggle />
-            <Link href="/sobre">
-              <Icone nome="info" width={17} height={17} />
-              Sobre o produto
-            </Link>
             <SairDoApp />
           </div>
         </div>

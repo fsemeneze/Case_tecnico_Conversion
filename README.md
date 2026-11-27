@@ -305,17 +305,16 @@ por funções `SECURITY DEFINER`.
 | `/login/nova-senha` | Definição da senha nova após o link |
 | `/conta` | Segurança da conta: verificação em duas etapas (TOTP) |
 | `/inicio` | Indicadores (atraso, vencidas, aguardando cliente, fila de revisão) |
-| `/dashboard` | Visão executiva: taxa de atraso, por tipo, por fase, por mês e clientes com mais atraso |
 | `/entregas` | Lista com busca, filtros (cliente, fase, tipo, atraso, planejamento), ordenação por coluna, paginação e exportação CSV |
 | `/entregas/nova` | Cadastro de entrega com validação |
 | `/entregas/[id]` | Detalhe: situação, aprovação em 2 etapas, histórico e aprovações |
 | `/entregas/[id]/editar` | Edição da entrega — prazo, revisões, link, observações, squad e responsável (admin/gestor) |
 | `/clientes` | Clientes canônicos e grafias da planilha |
 | `/revisao` | Fila de revisão da importação (resolver/reabrir) e encerramento de entregas paradas (retomar/entregar/cancelar) |
+| `/dashboard` | Visão executiva: taxa de atraso, por tipo, por fase, por mês e clientes com mais atraso |
 | `/equipe` | Pessoas, papéis e convites (admin) |
 | `/aprovacao/[token]` | Página pública do cliente, sem login |
 | `/cliente/[token]` | Portal read-only do cliente: acompanhamento e aprovações pendentes |
-| `/sobre` | README de produto |
 
 ## Decisões de produto
 
