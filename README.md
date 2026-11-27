@@ -5,6 +5,7 @@ diagnóstico dos dados, modelo em estrela no Postgres e uma fatia funcional com
 aprovação do cliente por link, sem login.
 
 **App publicado:** https://planhub-co.vercel.app/login
+**Vídeo de demonstração (5–10 min):** https://drive.google.com/file/d/1awqhgC7BKRDU7mQkFmGUGgsITSm7cgtA/view?usp=sharing
 **README de produto (1 página):** [`docs/readme_produto.md`](docs/readme_produto.md)
 
 Case técnico — Analista de BI Pleno (AI Builder) · Conversion · novembro/2026.
@@ -36,7 +37,7 @@ Na raiz ficam o `README.md`, o `AGENTS.md` (contrato do agente), o `DESIGN.md`
 | 2 | Modelagem Postgres | 39 migrations em [`supabase/migrations/`](supabase/migrations) · diagrama ER abaixo |
 | 3 | Fatia funcional do app | App publicado · rotas e roteiro de teste abaixo · evidências em [`docs/testes/`](docs/testes) |
 | 4 | README de produto (até 1 página) | [`docs/readme_produto.md`](docs/readme_produto.md) |
-| — | Vídeo de demonstração (5–10 min) | Entregue à parte, fora do repositório |
+| — | Vídeo de demonstração (5–10 min) | [Google Drive](https://drive.google.com/file/d/1awqhgC7BKRDU7mQkFmGUGgsITSm7cgtA/view?usp=sharing) |
 
 ## Como testar
 

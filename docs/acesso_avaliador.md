@@ -5,6 +5,7 @@ links de aprovação **não ficam neste repositório público**: vão no e-mail 
 entrega e no arquivo local `.credenciais-avaliador.md`.
 
 **App no ar:** https://planhub-co.vercel.app/login
+**Vídeo de demonstração:** https://drive.google.com/file/d/1awqhgC7BKRDU7mQkFmGUGgsITSm7cgtA/view?usp=sharing
 
 ## Contas por perfil
 
