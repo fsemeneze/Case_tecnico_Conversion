@@ -164,6 +164,11 @@ Uma mudança só está pronta quando:
 4. A regra de negócio está no lugar certo (banco/visão, não no cliente).
 5. Nenhum segredo, senha ou link de avaliação entrou no diff.
 6. Comportamento novo está refletido em `docs/` (decisões, README de produto).
+7. **Mudança que altera números, filas ou o modelo de dados → `docs/diagnostico.ipynb`
+  atualizado e reexecutado.** O notebook é o entregável do diagnóstico: se ele
+  ficar com saída velha, a entrega fica inconsistente. Rode
+  `python analysis/diagnostico.py` e reexecute o notebook (nbclient) antes de
+  fechar.
 
 ## 11. Antes de escrever código, leia a doc da versão
 
