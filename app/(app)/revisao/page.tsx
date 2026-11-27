@@ -274,7 +274,11 @@ export default async function Revisao({ searchParams }: { searchParams: Promise<
                 </td>
                 <td className="muted">{e.detalhe ?? "—"}</td>
                 <td>
-                  <BotaoResolver id={e.id} resolvido={e.resolvido} />
+                  {e.codigo === "concluida_sem_data_entrega" && e.entrega_id ? (
+                    <BotaoDataEntrega entregaId={Number(e.entrega_id)} />
+                  ) : (
+                    <BotaoResolver id={e.id} resolvido={e.resolvido} />
+                  )}
                 </td>
               </tr>
             ))}

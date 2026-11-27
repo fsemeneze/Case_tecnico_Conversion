@@ -26,6 +26,13 @@ export async function preencherDataEntrega(
 
   if (error) return { ok: false, erro: error.message };
 
+  // Marca o erro de revisão como resolvido (se houver).
+  await supabase
+    .from("erros_importacao")
+    .update({ resolvido: true, resolvido_por: user.id, resolvido_em: new Date().toISOString() })
+    .eq("entrega_id", entregaId)
+    .eq("codigo", "concluida_sem_data_entrega");
+
   revalidatePath("/revisao");
   revalidatePath("/inicio");
   revalidatePath(`/entregas/${entregaId}`);
