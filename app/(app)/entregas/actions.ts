@@ -91,8 +91,8 @@ export async function cadastrarEntrega(
     supabase.from("origens").select("id").eq("codigo", "app").single(),
   ]);
 
-  // Subtipo inexistente na dimensão (ex.: digitado à mão) cai no genérico —
-  // a entrega é cadastrada, não bloqueada (D9).
+  // Subtipo inexistente na dimensão (ex.: digitado à mão, ou de outro tipo)
+  // cai no genérico — a entrega é cadastrada, não bloqueada (D9).
   let tipoId = tipo.data?.id ?? null;
   if (!tipoId) {
     const generico =
@@ -101,7 +101,7 @@ export async function cadastrarEntrega(
         : v.tipo === "Conteúdo"
           ? "Artigo"
           : null;
-    if (generico && generico !== subtipoBase) {
+    if (generico !== subtipoBase) {
       const { data: alternativo } = await supabase
         .from("tipos_entrega")
         .select("id")
