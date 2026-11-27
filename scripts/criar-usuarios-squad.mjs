@@ -113,13 +113,26 @@ for (const pessoa of pessoas ?? []) {
   linhas.push({ nome: pessoa.nome, email, senha: senhaGerada, squad: squads?.find((s) => s.id === squadId)?.nome ?? "—" });
 }
 
-const md = `# Credenciais dos operadores por squad (NÃO versionar)
+const bloco = `## Operadores por squad
 
 | Responsável | E-mail | Senha | Squad |
 | :--- | :--- | :--- | :--- |
 ${linhas.map((l) => `| ${l.nome} | ${l.email} | ${l.senha ?? "(usuário já existia)"} | ${l.squad} |`).join("\n")}
 
-_Gerado por scripts/criar-usuarios-squad.mjs em ${new Date().toISOString()}_
-`;
-writeFileSync(path.join(raiz, ".credenciais-squad.md"), md, "utf8");
-console.log(`${linhas.length} operador(es) criados/vinculados. Senhas em .credenciais-squad.md`);
+_Gerado por scripts/criar-usuarios-squad.mjs em ${new Date().toISOString()}_`;
+
+// Mantém todas as credenciais num único arquivo: substitui o bloco entre os
+// marcadores, ou acrescenta ao final se ainda não existir.
+const alvo = path.join(raiz, ".credenciais-avaliador.md");
+const marcadorIni = "<!-- OPERADORES -->";
+const marcadorFim = "<!-- /OPERADORES -->";
+let atual = readFileSync(alvo, "utf8");
+const ini = atual.indexOf(marcadorIni);
+const fim = atual.indexOf(marcadorFim);
+if (ini >= 0 && fim > ini) {
+  atual = atual.slice(0, ini) + marcadorIni + "\n" + bloco + "\n" + atual.slice(fim);
+} else {
+  atual = `${atual}\n${marcadorIni}\n${bloco}\n${marcadorFim}\n`;
+}
+writeFileSync(alvo, atual, "utf8");
+console.log(`${linhas.length} operador(es) criados/vinculados. Senhas em .credenciais-avaliador.md`);
