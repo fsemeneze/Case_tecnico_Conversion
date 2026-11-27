@@ -202,8 +202,7 @@ aqui existe um valor para substituir, não um vazio.
 15 na entrega, 8 na solicitação — ficam com a data que o normalizador inferiu
 (D5) e a flag é removida. A inferência é aceita em bloco: ela acerta quando o
 ano está ancorado na solicitação ou no título ("Relatório mensal 11/2025").
-A fila de revisão continua existindo para o caso de alguém discordar de uma
-data específica — aí corrige na própria entrega.
+Quem discordar de uma data corrige na própria entrega.
 
 **Por quê:** confirmar 40 linhas uma a uma custa mais do que o ganho; a
 inferência é determinística e auditável (a regra está em `docs/decisoes.md` e

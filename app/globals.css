@@ -1478,8 +1478,7 @@ main.auth {
 
 /* Formulário de encerramento dentro da tabela (D13). */
 .encerramento-form,
-.data-entrega-form,
-.data-inferida-form {
+.data-entrega-form {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
@@ -1487,8 +1486,7 @@ main.auth {
 }
 
 .encerramento-form label,
-.data-entrega-form label,
-.data-inferida-form label {
+.data-entrega-form label {
   display: grid;
   gap: 4px;
   font-size: 0.82rem;
@@ -1509,26 +1507,6 @@ main.auth {
   background: var(--bg);
   color: var(--fg);
   font: inherit;
-}
-
-.data-inferida-form input {
-  border: 1px solid var(--border);
-  border-radius: 9px;
-  padding: 7px 10px;
-  background: var(--bg);
-  color: var(--fg);
-  font: inherit;
-}
-
-.data-inferida-form button {
-  border: 1px solid var(--accent);
-  border-radius: 9px;
-  padding: 7px 14px;
-  background: var(--accent);
-  color: #fff;
-  font: inherit;
-  font-weight: 550;
-  cursor: pointer;
 }
 
 .encerramento-form input:focus,

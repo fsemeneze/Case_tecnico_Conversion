@@ -5,7 +5,6 @@ import { BotaoResolver } from "./botao-resolver";
 import { BotaoEncerrar } from "./botao-encerrar";
 import { BotaoDataEntrega } from "./botao-data-entrega";
 import { BotaoLinkEntrega } from "./botao-link-entrega";
-import { BotaoDataInferida } from "./botao-data-inferida";
 
 type Busca = { codigo?: string; severidade?: string; status?: string };
 
@@ -79,19 +78,6 @@ export default async function Revisao({ searchParams }: { searchParams: Promise<
     .order("severidade", { ascending: false })
     .order("codigo")
     .limit(200);
-
-  // Datas atuais das entregas citadas, para o formulário de data inferida vir
-  // pré-preenchido com o valor que o normalizador escolheu.
-  const idsErros = (erros ?? [])
-    .map((e) => e.entrega_id)
-    .filter((id): id is number => Boolean(id));
-  const { data: datas } = await supabase
-    .from("entregas")
-    .select("id, data_solicitacao_id, data_prevista_id, data_entrega_id")
-    .in("id", idsErros.length ? idsErros : [-1]);
-  const mapaDatas = new Map(
-    (datas ?? []).map((d) => [Number(d.id), d as Record<string, unknown>]),
-  );
 
   const { data: contagem } = await supabase
     .from("erros_importacao")
@@ -320,56 +306,37 @@ export default async function Revisao({ searchParams }: { searchParams: Promise<
             </tr>
           </thead>
           <tbody>
-            {(erros ?? []).map((e) => {
-              const campoInferido = e.codigo.endsWith("_texto_ano_inferido")
-                ? (e.codigo.replace("_texto_ano_inferido", "") as
-                    | "data_solicitacao"
-                    | "data_prevista"
-                    | "data_entrega")
-                : null;
-              const dataAtual = campoInferido
-                ? ((mapaDatas.get(Number(e.entrega_id))?.[campoInferido] as
-                    | string
-                    | null) ?? null)
-                : null;
-              return (
-                <tr key={e.id}>
-                  <td>
-                    <span className={`badge tom-${e.severidade === "critico" ? "erro" : "alerta"}`}>
-                      {e.severidade === "critico" ? "Crítico" : "Aviso"}
-                    </span>
-                  </td>
-                  <td>{rotuloCodigo(e.codigo)}</td>
-                  <td>
-                    {e.entrega_id ? (
-                      <Link href={`/entregas/${e.entrega_id}`} className="titulo-link">
-                        #{e.entrega_id}
-                      </Link>
-                    ) : e.legacy_id ? (
-                      <span className="muted">registro nº {e.legacy_id}</span>
-                    ) : (
-                      "—"
-                    )}
-                  </td>
-                  <td className="muted">{e.detalhe ?? "—"}</td>
-                  <td>
-                    {e.codigo === "concluida_sem_data_entrega" && e.entrega_id ? (
-                      <BotaoDataEntrega entregaId={Number(e.entrega_id)} />
-                    ) : (e.codigo === "sem_link" || e.codigo === "link_textual") && e.entrega_id ? (
-                      <BotaoLinkEntrega entregaId={Number(e.entrega_id)} />
-                    ) : campoInferido && e.entrega_id ? (
-                      <BotaoDataInferida
-                        entregaId={Number(e.entrega_id)}
-                        campo={campoInferido}
-                        dataAtual={dataAtual}
-                      />
-                    ) : (
-                      <BotaoResolver id={e.id} resolvido={e.resolvido} />
-                    )}
-                  </td>
-                </tr>
-              );
-            })}
+            {(erros ?? []).map((e) => (
+              <tr key={e.id}>
+                <td>
+                  <span className={`badge tom-${e.severidade === "critico" ? "erro" : "alerta"}`}>
+                    {e.severidade === "critico" ? "Crítico" : "Aviso"}
+                  </span>
+                </td>
+                <td>{rotuloCodigo(e.codigo)}</td>
+                <td>
+                  {e.entrega_id ? (
+                    <Link href={`/entregas/${e.entrega_id}`} className="titulo-link">
+                      #{e.entrega_id}
+                    </Link>
+                  ) : e.legacy_id ? (
+                    <span className="muted">registro nº {e.legacy_id}</span>
+                  ) : (
+                    "—"
+                  )}
+                </td>
+                <td className="muted">{e.detalhe ?? "—"}</td>
+                <td>
+                  {e.codigo === "concluida_sem_data_entrega" && e.entrega_id ? (
+                    <BotaoDataEntrega entregaId={Number(e.entrega_id)} />
+                  ) : (e.codigo === "sem_link" || e.codigo === "link_textual") && e.entrega_id ? (
+                    <BotaoLinkEntrega entregaId={Number(e.entrega_id)} />
+                  ) : (
+                    <BotaoResolver id={e.id} resolvido={e.resolvido} />
+                  )}
+                </td>
+              </tr>
+            ))}
             {(erros ?? []).length === 0 && (
               <tr>
                 <td colSpan={5} className="muted">
