@@ -16,6 +16,7 @@ type LinhaRevisao = {
   detalhe: string | null;
   resolvido: boolean;
   entrega_id: number | null;
+  titulo?: string | null;
   sintetico?: boolean;
 };
 
@@ -56,9 +57,10 @@ export default async function Revisao({ searchParams }: { searchParams: Promise<
       legacy_id: null as number | null,
       codigo: "encerramento_parada",
       severidade: "aviso",
-      detalhe: `vencida há ${dias} dias`,
+      detalhe: `${e.cliente} · vencida há ${dias} dias`,
       resolvido: false,
       entrega_id: Number(e.id),
+      titulo: String(e.titulo),
       sintetico: true,
     };
   });
@@ -328,7 +330,14 @@ export default async function Revisao({ searchParams }: { searchParams: Promise<
                 </td>
                 <td>{rotuloCodigo(e.codigo)}</td>
                 <td>
-                  {e.entrega_id ? (
+                  {e.sintetico && e.titulo && e.entrega_id ? (
+                    <Link
+                      href={`/entregas/${e.entrega_id}`}
+                      className="titulo-link"
+                    >
+                      {e.titulo}
+                    </Link>
+                  ) : e.entrega_id ? (
                     <Link href={`/entregas/${e.entrega_id}`} className="titulo-link">
                       #{e.entrega_id}
                     </Link>
