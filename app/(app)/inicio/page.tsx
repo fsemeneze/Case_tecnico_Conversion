@@ -7,6 +7,16 @@ const numero = (valor: number) => valor.toLocaleString("pt-BR");
 export default async function Inicio() {
   const supabase = await criarClienteSupabaseServidor();
 
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  const { data: perfil } = await supabase
+    .from("usuario")
+    .select("nome")
+    .eq("id", user?.id ?? "")
+    .maybeSingle();
+  const nome = perfil?.nome ?? "";
+
   // Indicadores e a lista de atenção são independentes: disparam juntos.
   const [indicadores, { data: attention }] = await Promise.all([
     contarIndicadores(supabase),
@@ -29,7 +39,8 @@ export default async function Inicio() {
     <>
       <header className="topo">
         <div>
-          <h1>Início</h1>
+          <h1>Olá{nome ? `, ${nome}` : ""}</h1>
+          <p className="muted">Aqui está o pulso da operação.</p>
         </div>
       </header>
 
