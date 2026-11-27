@@ -309,6 +309,7 @@ por funções `SECURITY DEFINER`.
 | `/entregas` | Lista com busca, filtros (cliente, fase, tipo, atraso), ordenação por coluna, paginação e exportação CSV |
 | `/entregas/nova` | Cadastro de entrega com validação |
 | `/entregas/[id]` | Detalhe: situação, aprovação em 2 etapas, histórico e aprovações |
+| `/entregas/[id]/editar` | Edição da entrega (prazo, revisões, link, observações, squad e responsável) |
 | `/clientes` | Clientes canônicos e grafias da planilha |
 | `/revisao` | Fila de revisão da importação (resolver/reabrir) e encerramento de entregas paradas (retomar/entregar/cancelar) |
 | `/equipe` | Pessoas, papéis e convites (admin) |
@@ -334,7 +335,7 @@ por funções `SECURITY DEFINER`.
 | Atraso não era medível | Atraso com definição única: concluída após o prazo ou em aberto com prazo vencido |
 | Aprovação no e-mail, sem autor nem data | Aprovação por link, com nome, e-mail, data, observação e origem (IP) |
 | Nada de histórico | Histórico de mudanças por entrega, com autor |
-| Acesso aberto a quem tivesse a planilha | Login por convite, com quatro papéis: admin, gestor, operador e leitor |
+| Acesso aberto a quem tivesse a planilha | Login por convite, com quatro papéis: admin, gestor, operador e leitor; o operador só vê e edita as entregas do próprio squad (RLS) |
 | Dados duplicados e datas em quatro formatos | Importação normalizada, com fila de revisão e nada apagado |
 
 ### O que ficou de fora

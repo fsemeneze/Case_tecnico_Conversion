@@ -99,10 +99,15 @@ export default async function DetalheEntrega({
               .join(" · ")}
           </p>
         </div>
-        <Link href="/entregas" className="botao secundario">
-          <Icone nome="voltar" width={17} height={17} />
-          Voltar
-        </Link>
+        <div className="topo-acoes">
+          <Link href={`/entregas/${entrega.id}/editar`} className="botao primario">
+            Editar
+          </Link>
+          <Link href="/entregas" className="botao secundario">
+            <Icone nome="voltar" width={17} height={17} />
+            Voltar
+          </Link>
+        </div>
       </header>
 
       {erro && <p className="erro">{erro}</p>}

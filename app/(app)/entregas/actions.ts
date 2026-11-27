@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 import { headers } from "next/headers";
 import { criarClienteSupabaseServidor } from "@/lib/supabase/servidor";
 import { criarClienteSupabaseAdmin } from "@/lib/supabase/admin";
-import { schemaEntrega, primeiroErro } from "@/lib/validacao";
+import { schemaEntrega, schemaEdicaoEntrega, primeiroErro } from "@/lib/validacao";
 import { enviarEmail, emailLinkAprovacao, emailDecisaoCliente, emailComprovante } from "@/lib/email";
 import { verificarLimite, chaveDeIp } from "@/lib/rate-limit";
 
@@ -126,6 +126,125 @@ export async function cadastrarEntrega(
   revalidatePath("/inicio");
   revalidatePath("/entregas");
   return { ok: true, id: data.id };
+}
+
+// ---------------------------------------------------------------------------
+// Edição de entrega existente (time, com sessão — RLS por papel e por squad)
+// ---------------------------------------------------------------------------
+
+export type ResultadoEdicao = { ok: false; erro: string } | { ok: true };
+
+export async function atualizarEntrega(
+  entrada: Record<string, unknown>,
+): Promise<ResultadoEdicao> {
+  const supabase = await criarClienteSupabaseServidor();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return { ok: false, erro: "Sua sessão expirou. Entre novamente." };
+
+  const { data: perfil } = await supabase
+    .from("usuario")
+    .select("papel, nome")
+    .eq("id", user.id)
+    .maybeSingle();
+
+  if (!perfil || !["admin", "gestor", "operador"].includes(perfil.papel)) {
+    return { ok: false, erro: "Seu perfil só pode consultar. Peça acesso ao administrador." };
+  }
+
+  const entregaId = Number(entrada.entrega_id);
+  if (!Number.isInteger(entregaId) || entregaId <= 0) {
+    return { ok: false, erro: "Entrega inválida." };
+  }
+
+  const dados = schemaEdicaoEntrega.safeParse(entrada);
+  if (!dados.success) {
+    return { ok: false, erro: primeiroErro(dados) ?? "Dados inválidos." };
+  }
+  const v = dados.data;
+
+  // A leitura respeita o RLS: operador só carrega a entrega do próprio squad.
+  const { data: atual } = await supabase
+    .from("entregas")
+    .select("*")
+    .eq("id", entregaId)
+    .maybeSingle();
+  if (!atual) {
+    return { ok: false, erro: "Entrega não encontrada ou sem permissão." };
+  }
+
+  // Squad e responsável são dimensões: resolve pelo nome, mantém se vazio.
+  let squadId: number | null = null;
+  if (v.squad) {
+    const { data: sq } = await supabase
+      .from("squads")
+      .select("id")
+      .eq("nome", v.squad)
+      .maybeSingle();
+    squadId = sq?.id ?? null;
+  }
+  let pessoaId: number | null = null;
+  if (v.responsavel) {
+    const { data: pe } = await supabase
+      .from("pessoas")
+      .select("id")
+      .eq("nome", v.responsavel)
+      .maybeSingle();
+    pessoaId = pe?.id ?? null;
+  }
+
+  const numRevisoes = v.num_revisoes === "" ? null : Number(v.num_revisoes);
+
+  const { error } = await supabase
+    .from("entregas")
+    .update({
+      titulo: v.titulo,
+      data_prevista_id: v.data_prevista || null,
+      data_entrega_id: v.data_entrega || null,
+      num_revisoes: numRevisoes,
+      link: v.link || null,
+      observacoes: v.observacoes || null,
+      squad_id: squadId,
+      pessoa_id: pessoaId,
+      atualizado_em: new Date().toISOString(),
+    })
+    .eq("id", entregaId);
+
+  if (error) {
+    return { ok: false, erro: `Não foi possível salvar: ${error.message}` };
+  }
+
+  // Histórico: um evento por campo que de fato mudou.
+  const campos: [string, unknown, unknown][] = [
+    ["titulo", atual.titulo, v.titulo],
+    ["data_prevista", atual.data_prevista_id, v.data_prevista || null],
+    ["data_entrega", atual.data_entrega_id, v.data_entrega || null],
+    ["num_revisoes", atual.num_revisoes, numRevisoes],
+    ["link", atual.link, v.link || null],
+    ["observacoes", atual.observacoes, v.observacoes || null],
+    ["squad_id", atual.squad_id, squadId],
+    ["pessoa_id", atual.pessoa_id, pessoaId],
+  ];
+  const autor = perfil.nome || "Usuário";
+  for (const [campo, antigo, novo] of campos) {
+    if (String(antigo ?? "") !== String(novo ?? "")) {
+      await supabase.from("eventos_entrega").insert({
+        entrega_id: entregaId,
+        tipo_evento: "campo",
+        campo,
+        valor_antigo: antigo == null ? null : String(antigo),
+        valor_novo: novo == null ? null : String(novo),
+        autor,
+        origem_id: atual.origem_id,
+      });
+    }
+  }
+
+  revalidatePath("/inicio");
+  revalidatePath("/entregas");
+  revalidatePath(`/entregas/${entregaId}`);
+  return { ok: true };
 }
 
 // ---------------------------------------------------------------------------
