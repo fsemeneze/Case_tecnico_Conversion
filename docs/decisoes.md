@@ -229,6 +229,27 @@ case, não regra de negócio: as datas são internamente consistentes
 e no notebook. Se o avaliador considerar a janela um limite rígido, a flag
 continua no diagnóstico (a base não muda).
 
+## D20. Aprovação contraditória: prevalece a decisão do cliente
+
+**Decisão:** quando o status diz "aguardando aprovação" e a coluna de aprovação
+do cliente diz "Sim" (ou "aprovado c/ ressalvas"), vale a decisão do cliente:
+a fase vai para `aprovada`. Foram 4 casos, todos com aprovação de entrega
+registrada e status defasado.
+
+**Por quê:** a aprovação é o fato (cliente decidiu); o status é o campo do time,
+que não acompanhou. Manter a contradição deixaria a entrega "aguardando" algo
+que já foi decidido.
+
+## D21. Tipo inferido e revisões inválidas: aceitar em bloco
+
+**Decisão:** tipo vazio inferido pelo título (4), revisões `-1`/`99`/vazio/
+"1 ou 2" (8) e "duas"/"2x" convertidas (2) ficam como o normalizador deixou —
+tipo e número plausível; valor inválido vira nulo. A correção pontual é feita
+na própria entrega.
+
+**Por quê:** são regras determinísticas (título → tipo; número → revisão), não
+premissas. Confirmar uma a uma não muda o dado.
+
 ## Premissas
 
 1. Os dados são fictícios, mas as inconsistências são tratadas como sujeira real.
