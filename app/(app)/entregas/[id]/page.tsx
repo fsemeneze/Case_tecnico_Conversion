@@ -108,10 +108,11 @@ export default async function DetalheEntrega({
 
   // Botões "Gerar link" só para etapas sem decisão conclusiva. Planejamento
   // "não se aplica" (D6) nunca tem link; etapa aprovada não é reaprovada.
-  const planejamentoAberto = ["pendente", "nao_informado"].includes(
+  // Recusada DEVE permitir novo link: é o retrabalho do time (D3).
+  const planejamentoAberto = ["pendente", "nao_informado", "recusada"].includes(
     entrega.aprovacao_planejamento,
   );
-  const entregaAberta = ["pendente", "nao_informado"].includes(
+  const entregaAberta = ["pendente", "nao_informado", "recusada"].includes(
     entrega.aprovacao_entrega,
   );
 

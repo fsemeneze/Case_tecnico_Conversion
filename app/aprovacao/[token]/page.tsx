@@ -12,6 +12,16 @@ export default async function PaginaAprovacao({
 }) {
   const { token } = await params;
 
+  type EstadoToken = {
+    status: "usado" | "expirado" | "invalido";
+    titulo?: string;
+    etapa?: string;
+    decisao?: string;
+    autor?: string;
+    quando?: string;
+  };
+  let estadoToken: EstadoToken | null = null;
+
   let dados: DadosEntrega | null = null;
   let erroToken: string | null = null;
 
@@ -23,6 +33,12 @@ export default async function PaginaAprovacao({
     if (error || !data) {
       erroToken =
         error?.message ?? "Token inválido, expirado ou já utilizado.";
+      // Diferencia "já usado" de "inválido/expirado": usado merece a
+      // confirmação da decisão, não um erro.
+      const { data: estado } = await admin.rpc("estado_token", {
+        p_token: token,
+      });
+      estadoToken = (estado as EstadoToken | null) ?? null;
     } else {
       dados = data as DadosEntrega;
     }
@@ -37,10 +53,32 @@ export default async function PaginaAprovacao({
         PlanHub
       </a>
 
-      {erroToken && (
+      {estadoToken?.status === "usado" && (
+        <div className="cartao-form confirmacao">
+          <h2>Solicitação registrada ✅</h2>
+          <p>
+            Sua decisão sobre <strong>{estadoToken.titulo}</strong> (etapa{" "}
+            {estadoToken.etapa === "planejamento" ? "planejamento" : "entrega"})
+            já foi registrada
+            {estadoToken.decisao ? ` como “${estadoToken.decisao}”` : ""}
+            {estadoToken.autor ? ` por ${estadoToken.autor}` : ""}
+            {estadoToken.quando
+              ? ` em ${new Date(estadoToken.quando).toLocaleString("pt-BR")}`
+              : ""}
+            .
+          </p>
+          <p className="muted">Pode fechar esta página. Obrigado!</p>
+        </div>
+      )}
+
+      {erroToken && estadoToken?.status !== "usado" && (
         <div className="cartao-form">
           <h2>Este link não está mais válido</h2>
-          <p className="muted">{erroToken}</p>
+          <p className="muted">
+            {estadoToken?.status === "expirado"
+              ? "Este link expirou."
+              : erroToken}
+          </p>
           <p>
             Se ainda precisa aprovar, peça um novo link ao time da Conversion —
             cada etapa recebe um link próprio.

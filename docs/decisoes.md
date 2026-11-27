@@ -278,6 +278,19 @@ e um trigger mantém a regra nas próximas atualizações.
 **Por quê:** sem a regra, uma entrega aprovada podia aparecer com planejamento
 "pendente" ou "não informado" — contradição que confundia filtro e leitura.
 
+## D24. Recusa permite novo link
+
+**Decisão:** etapa com decisão **recusada** volta a aceitar "Gerar link" —
+o retrabalho do time termina em um link novo, que revoga o anterior (uso
+único), e o cliente decide de novo. A fase acompanha: ao gerar, vai para
+"Aguardando o cliente" / "Aguardando aprovação da entrega".
+
+**Por quê:** recusa não encerra a entrega — pede ajuste. Sem o botão, o
+ciclo de refação travava após a primeira recusa.
+
+E a página de aprovação distingue token **usado** (mostra "Solicitação
+registrada" com a decisão) de **expirado/inválido** (pede novo link).
+
 ## Premissas
 
 1. Os dados são fictícios, mas as inconsistências são tratadas como sujeira real.
