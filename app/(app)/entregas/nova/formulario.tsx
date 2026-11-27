@@ -10,11 +10,13 @@ type Campos = Record<string, string>;
 export function FormularioNovaEntrega({
   clientes,
   tipos,
+  subtipos,
   squads,
   pessoas,
 }: {
   clientes: Cliente[];
   tipos: string[];
+  subtipos: Record<string, string[]>;
   squads: string[];
   pessoas: { nome: string; squad: string | null }[];
 }) {
@@ -23,6 +25,11 @@ export function FormularioNovaEntrega({
   const [erro, setErro] = useState<string | null>(null);
   const [campos, setCampos] = useState<Campos>({});
   const [squad, setSquad] = useState("");
+  const [tipo, setTipo] = useState(tipos[0] ?? "Relatório");
+
+  // Subtipos válidos para o tipo escolhido: vêm da dimensão tipos_entrega.
+  // Relatório não tem subtipo no modelo (D9) — o campo fica desabilitado.
+  const subtiposDoTipo = subtipos[tipo] ?? [];
 
   // Responsável filtrado pelo squad selecionado; sem squad, lista todos.
   const pessoasDoSquad = squad
@@ -80,7 +87,12 @@ export function FormularioNovaEntrega({
 
       <label>
         Tipo *
-        <select name="tipo" defaultValue="Relatório" required>
+        <select
+          name="tipo"
+          value={tipo}
+          onChange={(e) => setTipo(e.target.value)}
+          required
+        >
           {tipos.map((t) => (
             <option key={t} value={t}>
               {t}
@@ -91,7 +103,24 @@ export function FormularioNovaEntrega({
 
       <label>
         Subtipo (opcional)
-        <input name="subtipo" placeholder="Ex.: Core Web Vitals" />
+        {subtiposDoTipo.length === 0 ? (
+          // Sem subtipo para este tipo (Relatório): select desabilitado não
+          // é enviado — a ação cadastra com subtipo nulo, como no modelo.
+          <select name="subtipo" disabled>
+            <option value="">Não se aplica</option>
+          </select>
+        ) : (
+          // key reinicia a escolha quando o tipo muda: subtipo de outro tipo
+          // não pode vazar para o cadastro.
+          <select name="subtipo" defaultValue="" key={tipo}>
+            <option value="">Selecione…</option>
+            {subtiposDoTipo.map((s) => (
+              <option key={s} value={s}>
+                {s}
+              </option>
+            ))}
+          </select>
+        )}
       </label>
 
       <label>
