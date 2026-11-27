@@ -37,25 +37,32 @@ export function BotaoEncerrar({ entregaId }: { entregaId: number }) {
     });
   }
 
+  // Um gatilho só, como as outras ações da fila: o formulário abre ao clicar.
   if (decisao === null) {
     return (
-      <span className="acao-linha">
-        {(Object.keys(ROTULO) as Decisao[]).map((d) => (
-          <button
-            key={d}
-            type="button"
-            className="botao secundario"
-            onClick={() => setDecisao(d)}
-          >
-            {ROTULO[d]}
-          </button>
-        ))}
-      </span>
+      <button
+        type="button"
+        className="botao secundario"
+        onClick={() => setDecisao("retomada")}
+      >
+        Encerrar
+      </button>
     );
   }
 
   return (
     <form onSubmit={confirmar} className="form-linha">
+      <label>
+        Decisão
+        <select
+          value={decisao}
+          onChange={(e) => setDecisao(e.target.value as Decisao)}
+        >
+          <option value="retomada">Retomar</option>
+          <option value="entregue">Entregar</option>
+          <option value="cancelada">Cancelar</option>
+        </select>
+      </label>
       <label>
         Motivo *
         <input
@@ -84,7 +91,7 @@ export function BotaoEncerrar({ entregaId }: { entregaId: number }) {
       )}
       <span className="acao-linha">
         <button type="submit" className="botao primario" disabled={pendente}>
-          {pendente ? "…" : `Confirmar ${ROTULO[decisao].toLowerCase()}`}
+          {pendente ? "…" : "Confirmar"}
         </button>
         <button
           type="button"

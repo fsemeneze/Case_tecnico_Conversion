@@ -110,9 +110,9 @@ export default async function Revisao({ searchParams }: { searchParams: Promise<
       </header>
 
       <p className="muted">
-        Problemas encontrados na importação dos dados. Nada foi apagado: cada
-        linha original está preservada na entrega. Marque como resolvido quando
-        conferir.
+        Problemas encontrados na importação dos dados e entregas abertas há mais
+        de 90 dias. Nada foi apagado: cada linha original está preservada na
+        entrega. Marque como resolvido quando conferir.
       </p>
 
       {filaSemData.length > 0 && (
