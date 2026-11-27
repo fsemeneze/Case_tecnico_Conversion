@@ -150,34 +150,57 @@ export async function contarIndicadores(
   revisao: number;
 }> {
   const hoje = new Date().toISOString().slice(0, 10);
+  // Fila de encerramento (D13): abertas vencidas há mais de 90 dias, sem
+  // cancelamento ativo. Entra na "fila de revisão" para o número bater com
+  // a tela /revisao, que lista essas linhas junto dos erros.
+  const limite90 = new Date(Date.now() - 90 * 86400000)
+    .toISOString()
+    .slice(0, 10);
 
-  const [atraso, vencidas, aguardando, revisao] = await Promise.all([
-    supabase
-      .from("entregas_detalhadas")
-      .select("id", { count: "exact", head: true })
-      .or(
-        `dias_atraso.gt.0,and(data_prevista.lt.${hoje},fase.in.(${FASES_ABERTAS.join(",")}))`,
-      ),
-    supabase
-      .from("entregas_detalhadas")
-      .select("id", { count: "exact", head: true })
-      .lt("data_prevista", hoje)
-      .in("fase", FASES_ABERTAS),
-    supabase
-      .from("entregas_detalhadas")
-      .select("id", { count: "exact", head: true })
-      .eq("fase", "aguardando_aprovacao_entrega"),
-    supabase
-      .from("erros_importacao")
-      .select("id", { count: "exact", head: true })
-      .eq("resolvido", false),
-  ]);
+  const [atraso, vencidas, aguardando, revisao, abertas90, canceladas] =
+    await Promise.all([
+      supabase
+        .from("entregas_detalhadas")
+        .select("id", { count: "exact", head: true })
+        .or(
+          `dias_atraso.gt.0,and(data_prevista.lt.${hoje},fase.in.(${FASES_ABERTAS.join(",")}))`,
+        ),
+      supabase
+        .from("entregas_detalhadas")
+        .select("id", { count: "exact", head: true })
+        .lt("data_prevista", hoje)
+        .in("fase", FASES_ABERTAS),
+      supabase
+        .from("entregas_detalhadas")
+        .select("id", { count: "exact", head: true })
+        .eq("fase", "aguardando_aprovacao_entrega"),
+      supabase
+        .from("erros_importacao")
+        .select("id", { count: "exact", head: true })
+        .eq("resolvido", false),
+      supabase
+        .from("entregas_detalhadas")
+        .select("id")
+        .in("fase_grupo", ["aberta"])
+        .lt("data_prevista", limite90),
+      supabase
+        .from("encerramentos")
+        .select("entrega_id")
+        .eq("decisao", "cancelada"),
+    ]);
+
+  const canceladasSet = new Set(
+    (canceladas.data ?? []).map((c) => Number(c.entrega_id)),
+  );
+  const paradas = (abertas90.data ?? []).filter(
+    (e) => !canceladasSet.has(Number(e.id)),
+  ).length;
 
   return {
     atraso: atraso.count ?? 0,
     vencidas: vencidas.count ?? 0,
     aguardando: aguardando.count ?? 0,
-    revisao: revisao.count ?? 0,
+    revisao: (revisao.count ?? 0) + paradas,
   };
 }
 
