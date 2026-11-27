@@ -302,7 +302,3 @@ registrada" com a decisão) de **expirado/inválido** (pede novo link).
 6. Cancelamento no texto livre (`observacoes`) prevalece sobre status de produção.
 7. A data de referência do diagnóstico é a data de execução do script.
 
-## Pendências conhecidas
-
-- Gravar o vídeo de demonstração (Fase 5).
-- Definir identidade visual mínima; não é critério do case.
