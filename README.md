@@ -429,7 +429,6 @@ docs/
   acesso_cliente.md     Por que link e não conta de cliente
   acesso_avaliador.md   Como testar: perfis, portal, demo e acesso local
   readme_produto.md     README de produto (1 página)
-  plano_melhoria.md     Plano que guiou a fatia funcional
   testes/               Evidências de teste por perfil e por fluxo
 dados/                  Base original do case
 scripts/                Deploy, contas de teste, usuários por squad, reset de MFA e estado de demonstração

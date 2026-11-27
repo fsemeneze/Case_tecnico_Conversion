@@ -2,14 +2,13 @@
 
 Contas de teste (uma por papel) e o resultado de login + permissões (RLS).
 
-## Outros testes
+| Papel | E-mail | Arquivo |
+| :--- | :--- | :--- |
+| admin | admin@planhub.case | [admin.md](./admin.md) |
+| gestor | gestor@planhub.case | [gestor.md](./gestor.md) |
+| operador | operador@planhub.case | [operador.md](./operador.md) |
+| leitor | leitor@planhub.case | [leitor.md](./leitor.md) |
 
-| Teste | Arquivo |
-| :--- | :--- |
-| Listagem: filtros, busca e paginação | [listagem.md](./listagem.md) |
-| Cadastro de nova entrega (validação + inserção) | [cadastro.md](./cadastro.md) |
-| Aprovação: recusa, uso único e caminho até a entrega | [aprovacao-recusa.md](./aprovacao-recusa.md) |
+_Senhas não versionadas: consultar o e-mail de entrega._
 
-> As contas de teste (um por papel) existem no banco do case, mas as **senhas não
-> ficam versionadas** neste repositório público. Elas são enviadas à parte, no
-> pacote de avaliação — ver [`docs/acesso_avaliador.md`](../acesso_avaliador.md).
+_Login testado contra a mesma API de autenticação usada pela tela /login (Supabase Auth)._
