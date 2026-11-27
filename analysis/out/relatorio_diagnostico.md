@@ -1,8 +1,8 @@
 # Diagnóstico dos dados — controle de entregas
 
-Gerado automaticamente por `analysis/diagnostico.py` em 2026-11-25T23:37:07.
+Gerado automaticamente por `analysis/diagnostico.py` em 2026-11-26T21:30:55.
 Arquivo de origem: `dados/controle_entregas.csv`.
-Data de referência para "em atraso hoje": **2026-11-25**.
+Data de referência para "em atraso hoje": **2026-11-26**.
 
 ## 1. Visão geral
 
@@ -116,6 +116,32 @@ Ocorrências contam registros de problema; linhas contam entregas distintas.
 São 302 ocorrências em 210 linhas;
 121 ocorrências críticas em 47 linhas.
 
+### Concluídas sem data de entrega (15 casos)
+
+São entregas com status final (entregue/aprovada) e `data_entrega` em branco.
+Sem a data, o atraso e o ciclo não são calculados — ficam fora dos
+comparáveis. A decisão de produto (D14): o time preenche a data real na fila
+de revisão do app, ou confirma "não sei". O diagnóstico **não infere** data
+para esses casos: a sujeira fica visível de propósito.
+
+| legacy_id | Cliente | Título | Prazo |
+| :--- | :--- | :--- | :--- |
+| 37 | Farmácia Bem Estar | Análise de backlinks | 2025-11-17 |
+| 40 | Distribuidora Sol | Artigo: tendências de serviços | 2025-11-18 |
+| 236 | Casa Bela Móveis | Artigo: erros comuns em preços | 2026-02-10 |
+| 282 | Ótica Visão | Artigo: erros comuns em manutenção | 2026-02-17 |
+| 396 | Moda Urbana | Auditoria técnica do site | 2026-04-10 |
+| 465 | Editora Páginas | Auditoria técnica do site | 2026-05-04 |
+| 536 | Distribuidora Sol | Pesquisa de palavras-chave | 2026-05-29 |
+| 585 | Seguros Confia | Relatório mensal 06/2026 | 2026-06-10 |
+| 644 | Loja Alfa | Artigo: guia completo de inovação | 2026-07-05 |
+| 680 | TechNova Software | Artigo: comparativo de atendimento | 2026-07-11 |
+| 696 | Farmácia Bem Estar | Artigo: guia completo de preços | 2026-07-22 |
+| 712 | Casa Bela Móveis | Mapeamento de conteúdo | 2026-08-01 |
+| 733 | AutoPeças Rodas | Artigo: comparativo de planos | 2026-08-07 |
+| 812 | Hotel Mirante | Análise de backlinks | 2026-09-03 |
+| 943 | Viagens Atlântico | Artigo: comparativo de produtos | 2026-10-20 |
+
 ### Todos os códigos de qualidade encontrados
 
 | Código | Linhas |
@@ -225,3 +251,7 @@ Aprovação de entrega após normalização:
    grafias para 25 clientes.
 5. **O cliente não tem visibilidade**: não existe status voltado ao cliente nem registro
    de aprovação com autor e data. O fluxo de aprovação por link resolve isso.
+6. **Concluídas sem data de entrega** (15 casos):
+   status final sem `data_entrega`. A decisão (D14) é o time preencher a data
+   real na fila de revisão do app — o diagnóstico não infere, a sujeira fica
+   visível.

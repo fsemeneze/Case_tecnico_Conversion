@@ -666,6 +666,16 @@ def calcular_metricas(linhas: list[dict], brutas: list[dict], extras: dict, erro
         ],
         "observacoes": dict(observacoes),
         "flags": dict(resumo_flags.most_common()),
+        "sem_data_entrega": [
+            {
+                "legacy_id": l["legacy_id"],
+                "cliente": l["cliente"],
+                "titulo": l["titulo"],
+                "data_prevista": l["data_prevista"],
+            }
+            for l in linhas
+            if "concluida_sem_data_entrega" in filter(None, l["flags"].split("|"))
+        ],
         "fila_revisao": fila_revisao,
         "qualidade": qualidade,
         "ids_duplicados_distintos": extras.get("ids_duplicados_distintos", 0),
@@ -729,6 +739,10 @@ def gerar_relatorio(metricas: dict) -> str:
     )
     linhas_flags = "\n".join(
         f"| `{flag}` | {total} |" for flag, total in metricas["flags"].items()
+    )
+    linhas_sem_data_entrega = "\n".join(
+        f"| {l['legacy_id']} | {l['cliente']} | {l['titulo']} | {l['data_prevista'] or '—'} |"
+        for l in metricas["sem_data_entrega"]
     )
 
     return f"""# Diagnóstico dos dados — controle de entregas
@@ -828,6 +842,18 @@ Ocorrências contam registros de problema; linhas contam entregas distintas.
 São {q['ocorrencias']} ocorrências em {q['linhas_distintas']} linhas;
 {q['ocorrencias_criticas']} ocorrências críticas em {q['linhas_criticas']} linhas.
 
+### Concluídas sem data de entrega ({c.get('concluida_sem_data_entrega', 0)} casos)
+
+São entregas com status final (entregue/aprovada) e `data_entrega` em branco.
+Sem a data, o atraso e o ciclo não são calculados — ficam fora dos
+comparáveis. A decisão de produto (D14): o time preenche a data real na fila
+de revisão do app, ou confirma "não sei". O diagnóstico **não infere** data
+para esses casos: a sujeira fica visível de propósito.
+
+| legacy_id | Cliente | Título | Prazo |
+| :--- | :--- | :--- | :--- |
+{linhas_sem_data_entrega}
+
 ### Todos os códigos de qualidade encontrados
 
 | Código | Linhas |
@@ -877,6 +903,10 @@ Aprovação de entrega após normalização:
    grafias para {metricas['clientes_canonicos']} clientes.
 5. **O cliente não tem visibilidade**: não existe status voltado ao cliente nem registro
    de aprovação com autor e data. O fluxo de aprovação por link resolve isso.
+6. **Concluídas sem data de entrega** ({c.get('concluida_sem_data_entrega', 0)} casos):
+   status final sem `data_entrega`. A decisão (D14) é o time preencher a data
+   real na fila de revisão do app — o diagnóstico não infere, a sujeira fica
+   visível.
 """
 
 

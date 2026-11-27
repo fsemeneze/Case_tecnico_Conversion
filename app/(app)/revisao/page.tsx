@@ -3,6 +3,7 @@ import { criarClienteSupabaseServidor } from "@/lib/supabase/servidor";
 import { rotuloCodigo } from "@/lib/eventos";
 import { BotaoResolver } from "./botao-resolver";
 import { BotaoEncerrar } from "./botao-encerrar";
+import { BotaoDataEntrega } from "./botao-data-entrega";
 
 type Busca = { codigo?: string; severidade?: string; status?: string };
 
@@ -31,6 +32,22 @@ export default async function Revisao({ searchParams }: { searchParams: Promise<
   const filaEncerramento = (abertas ?? []).filter(
     (e) => !canceladasSet.has(Number(e.id)),
   );
+
+  // D14: concluídas sem data de entrega (flag da importação) — o time
+  // preenche a data real ou confirma que não sabe.
+  const { data: semData } = await supabase
+    .from("entregas_detalhadas")
+    .select("id, titulo, cliente, fase_rotulo, data_prevista")
+    .contains("flags", ["concluida_sem_data_entrega"])
+    .not("data_entrega", "is", null)
+    .limit(200);
+  const { data: comData } = await supabase
+    .from("entregas_detalhadas")
+    .select("id")
+    .contains("flags", ["concluida_sem_data_entrega"])
+    .not("data_entrega", "is", null);
+  const comDataSet = new Set((comData ?? []).map((e) => Number(e.id)));
+  const filaSemData = (semData ?? []).filter((e) => !comDataSet.has(Number(e.id)));
 
   let consulta = supabase
     .from("erros_importacao")
@@ -80,6 +97,47 @@ export default async function Revisao({ searchParams }: { searchParams: Promise<
         linha original está preservada na entrega. Marque como resolvido quando
         conferir.
       </p>
+
+      {filaSemData.length > 0 && (
+        <div className="cartao">
+          <h2>Concluídas sem data de entrega</h2>
+          <p className="muted">
+            O status diz que a entrega foi concluída, mas a data de entrega está
+            em branco — sem ela, o atraso e o ciclo não são calculados. Informe
+            a data real ou confirme que não sabe; o app nunca inventa a data.
+          </p>
+          <div className="tabela-wrap">
+            <table className="tabela">
+              <thead>
+                <tr>
+                  <th>Entrega</th>
+                  <th>Cliente</th>
+                  <th>Fase</th>
+                  <th>Prazo</th>
+                  <th>Ação</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filaSemData.map((e) => (
+                  <tr key={e.id}>
+                    <td>
+                      <Link href={`/entregas/${e.id}`} className="titulo-link">
+                        {e.titulo}
+                      </Link>
+                    </td>
+                    <td>{e.cliente}</td>
+                    <td>{e.fase_rotulo}</td>
+                    <td>{e.data_prevista ?? "—"}</td>
+                    <td>
+                      <BotaoDataEntrega entregaId={Number(e.id)} />
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
 
       {filaEncerramento.length > 0 && (
         <div className="cartao">

@@ -164,6 +164,21 @@ com decisão humana, a lista só cresce e o número de atraso perde credibilidad
 Cancelar em massa por regra seria o "apagar em silêncio" que o case proíbe;
 por isso a saída é uma fila com dono, prazo e motivo.
 
+## D14. Concluída sem data de entrega: o time preenche, o app nunca inventa
+
+**Decisão:** as 15 entregas com status final e `data_entrega` em branco (flag
+`concluida_sem_data_entrega`) entram na fila de revisão da importação. O time
+preenche a data real — ou confirma "não sei". Ao preencher, o app corrige a
+entrega, recalcula os indicadores e registra evento no histórico. A data
+inferida (fallback pela prevista) **não** é gravada no banco: sem preenchimento,
+a entrega segue fora dos comparáveis, com a flag visível. A sujeira continua
+registrada no diagnóstico (o normalizador não muda).
+
+**Por quê:** a data de entrega é o que torna o atraso e o ciclo mensuráveis;
+inventá-la (fallback silencioso) contaminaria o indicador que o avaliador vai
+olhar. Em 15 casos, o certo é a decisão humana — e o "não sei" também é uma
+resposta válida, que fecha o item sem mentir o dado.
+
 ## Premissas
 
 1. Os dados são fictícios, mas as inconsistências são tratadas como sujeira real.

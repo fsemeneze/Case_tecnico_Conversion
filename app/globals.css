@@ -1477,21 +1477,30 @@ main.auth {
 }
 
 /* Formulário de encerramento dentro da tabela (D13). */
-.encerramento-form {
+.encerramento-form,
+.data-entrega-form {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
   align-items: end;
 }
 
-.encerramento-form label {
+.encerramento-form label,
+.data-entrega-form label {
   display: grid;
   gap: 4px;
   font-size: 0.82rem;
   color: var(--text-soft);
 }
 
-.encerramento-form input {
+.data-entrega-form .filtro-check {
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.encerramento-form input,
+.data-entrega-form input {
   border: 1px solid var(--border);
   border-radius: 9px;
   padding: 7px 10px;
@@ -1500,10 +1509,23 @@ main.auth {
   font: inherit;
 }
 
-.encerramento-form input:focus {
+.encerramento-form input:focus,
+.data-entrega-form input:focus {
   outline: none;
   border-color: var(--accent);
   box-shadow: 0 0 0 3px var(--ring);
+}
+
+.data-entrega-form button {
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  padding: 7px 14px;
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+  font: inherit;
+  font-weight: 550;
+  cursor: pointer;
 }
 
 .cartao .tabela-wrap {

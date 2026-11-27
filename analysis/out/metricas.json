@@ -1,7 +1,7 @@
 {
-  "gerado_em": "2026-11-25T23:37:07",
+  "gerado_em": "2026-11-26T21:30:55",
   "arquivo_origem": "dados/controle_entregas.csv",
-  "data_referencia": "2026-11-25",
+  "data_referencia": "2026-11-26",
   "total_linhas_origem": 1007,
   "total_linhas_normalizadas": 1007,
   "periodo": {
@@ -224,6 +224,98 @@
     "entrega_antes_solicitacao": 2,
     "revisoes_texto_nao_numerico": 1
   },
+  "sem_data_entrega": [
+    {
+      "legacy_id": "37",
+      "cliente": "Farmácia Bem Estar",
+      "titulo": "Análise de backlinks",
+      "data_prevista": "2025-11-17"
+    },
+    {
+      "legacy_id": "40",
+      "cliente": "Distribuidora Sol",
+      "titulo": "Artigo: tendências de serviços",
+      "data_prevista": "2025-11-18"
+    },
+    {
+      "legacy_id": "236",
+      "cliente": "Casa Bela Móveis",
+      "titulo": "Artigo: erros comuns em preços",
+      "data_prevista": "2026-02-10"
+    },
+    {
+      "legacy_id": "282",
+      "cliente": "Ótica Visão",
+      "titulo": "Artigo: erros comuns em manutenção",
+      "data_prevista": "2026-02-17"
+    },
+    {
+      "legacy_id": "396",
+      "cliente": "Moda Urbana",
+      "titulo": "Auditoria técnica do site",
+      "data_prevista": "2026-04-10"
+    },
+    {
+      "legacy_id": "465",
+      "cliente": "Editora Páginas",
+      "titulo": "Auditoria técnica do site",
+      "data_prevista": "2026-05-04"
+    },
+    {
+      "legacy_id": "536",
+      "cliente": "Distribuidora Sol",
+      "titulo": "Pesquisa de palavras-chave",
+      "data_prevista": "2026-05-29"
+    },
+    {
+      "legacy_id": "585",
+      "cliente": "Seguros Confia",
+      "titulo": "Relatório mensal 06/2026",
+      "data_prevista": "2026-06-10"
+    },
+    {
+      "legacy_id": "644",
+      "cliente": "Loja Alfa",
+      "titulo": "Artigo: guia completo de inovação",
+      "data_prevista": "2026-07-05"
+    },
+    {
+      "legacy_id": "680",
+      "cliente": "TechNova Software",
+      "titulo": "Artigo: comparativo de atendimento",
+      "data_prevista": "2026-07-11"
+    },
+    {
+      "legacy_id": "696",
+      "cliente": "Farmácia Bem Estar",
+      "titulo": "Artigo: guia completo de preços",
+      "data_prevista": "2026-07-22"
+    },
+    {
+      "legacy_id": "712",
+      "cliente": "Casa Bela Móveis",
+      "titulo": "Mapeamento de conteúdo",
+      "data_prevista": "2026-08-01"
+    },
+    {
+      "legacy_id": "733",
+      "cliente": "AutoPeças Rodas",
+      "titulo": "Artigo: comparativo de planos",
+      "data_prevista": "2026-08-07"
+    },
+    {
+      "legacy_id": "812",
+      "cliente": "Hotel Mirante",
+      "titulo": "Análise de backlinks",
+      "data_prevista": "2026-09-03"
+    },
+    {
+      "legacy_id": "943",
+      "cliente": "Viagens Atlântico",
+      "titulo": "Artigo: comparativo de produtos",
+      "data_prevista": "2026-10-20"
+    }
+  ],
   "fila_revisao": 47,
   "qualidade": {
     "ocorrencias": 302,
