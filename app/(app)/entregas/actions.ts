@@ -91,15 +91,48 @@ export async function cadastrarEntrega(
     supabase.from("origens").select("id").eq("codigo", "app").single(),
   ]);
 
-  if (!tipo.data || !fase.data || !decisao.data || !origem.data) {
-    return { ok: false, erro: "Não foi possível resolver as dimensões da entrega." };
+  // Subtipo inexistente na dimensão (ex.: digitado à mão) cai no genérico —
+  // a entrega é cadastrada, não bloqueada (D9).
+  let tipoId = tipo.data?.id ?? null;
+  if (!tipoId) {
+    const generico =
+      v.tipo === "Análise"
+        ? "Análise não especificada"
+        : v.tipo === "Conteúdo"
+          ? "Artigo"
+          : null;
+    if (generico && generico !== subtipoBase) {
+      const { data: alternativo } = await supabase
+        .from("tipos_entrega")
+        .select("id")
+        .eq("tipo", v.tipo)
+        .is("subtipo", generico)
+        .maybeSingle();
+      tipoId = alternativo?.id ?? null;
+    }
+  }
+
+  if (!tipoId || !fase.data || !decisao.data || !origem.data) {
+    const faltando: string[] = [];
+    if (!tipoId) {
+      faltando.push(
+        `tipo "${v.tipo}"${subtipoBase ? ` · ${subtipoBase}` : ""} (nem o genérico)`,
+      );
+    }
+    if (!fase.data) faltando.push('fase "solicitada"');
+    if (!decisao.data) faltando.push('decisão "pendente"');
+    if (!origem.data) faltando.push('origem "app"');
+    return {
+      ok: false,
+      erro: `Não foi possível resolver: ${faltando.join(", ")}.`,
+    };
   }
 
   const { data, error } = await supabase
     .from("entregas")
     .insert({
       cliente_id: clienteId,
-      tipo_entrega_id: tipo.data.id,
+      tipo_entrega_id: tipoId,
       fase_id: fase.data.id,
       origem_id: origem.data.id,
       aprovacao_planejamento_id: decisao.data.id,
