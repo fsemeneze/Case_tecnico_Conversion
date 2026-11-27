@@ -8,6 +8,17 @@ import { BotaoLinkEntrega } from "./botao-link-entrega";
 
 type Busca = { codigo?: string; severidade?: string; status?: string };
 
+type LinhaRevisao = {
+  id: string;
+  legacy_id: number | null;
+  codigo: string;
+  severidade: string;
+  detalhe: string | null;
+  resolvido: boolean;
+  entrega_id: number | null;
+  sintetico?: boolean;
+};
+
 export default async function Revisao({ searchParams }: { searchParams: Promise<Busca> }) {
   const params = await searchParams;
   const codigo = params.codigo ?? "";
@@ -33,6 +44,24 @@ export default async function Revisao({ searchParams }: { searchParams: Promise<
   const filaEncerramento = (abertas ?? []).filter(
     (e) => !canceladasSet.has(Number(e.id)),
   );
+
+  // A fila de encerramento entra na mesma tabela dos outros problemas, como
+  // linha sintética (não é erro de importação; é entrega parada).
+  const encerramentoLinhas = filaEncerramento.map((e) => {
+    const dias = Math.floor(
+      (Date.parse(hoje) - Date.parse(String(e.data_prevista))) / 86_400_000,
+    );
+    return {
+      id: `enc-${e.id}`,
+      legacy_id: null as number | null,
+      codigo: "encerramento_parada",
+      severidade: "aviso",
+      detalhe: `vencida há ${dias} dias`,
+      resolvido: false,
+      entrega_id: Number(e.id),
+      sintetico: true,
+    };
+  });
 
   // D14: concluídas sem data de entrega (flag da importação) — o time
   // preenche a data real ou confirma que não sabe.
@@ -98,6 +127,18 @@ export default async function Revisao({ searchParams }: { searchParams: Promise<
     contar("aviso"),
   ]);
 
+  // Encerramento entra na tabela geral quando o filtro deixa (aviso/pendentes).
+  const mostrarEncerramento =
+    (!severidade || severidade === "aviso") &&
+    status !== "resolvidos" &&
+    (!codigo || codigo === "encerramento_parada");
+  const extraEncerramento = mostrarEncerramento ? encerramentoLinhas.length : 0;
+  const linhasTabela: LinhaRevisao[] = [
+    ...((erros ?? []) as LinhaRevisao[]),
+    ...(mostrarEncerramento ? encerramentoLinhas : []),
+  ];
+  const totalLinhas = (count ?? 0) + extraEncerramento;
+
   // O seletor de tipos conta só o que está pendente: código sem pendência
   // não deve aparecer como se ainda houvesse trabalho.
   const { data: contagem } = await supabase
@@ -109,6 +150,9 @@ export default async function Revisao({ searchParams }: { searchParams: Promise<
   for (const linha of contagem ?? []) {
     const c = String(linha.codigo);
     porCodigo.set(c, (porCodigo.get(c) ?? 0) + 1);
+  }
+  if (filaEncerramento.length > 0) {
+    porCodigo.set("encerramento_parada", filaEncerramento.length);
   }
 
   const temFiltro = Boolean(codigo || severidade || status !== "pendentes");
@@ -214,69 +258,17 @@ export default async function Revisao({ searchParams }: { searchParams: Promise<
         </div>
       )}
 
-      {filaEncerramento.length > 0 && (
-        <div className="cartao">
-          <h2>Encerramento de entregas paradas</h2>
-          <p className="muted">
-            Abertas e vencidas há mais de 90 dias. Nada é apagado: retome com
-            novo prazo, entregue ou cancele com motivo — a decisão fica no
-            histórico.
-          </p>
-          <div className="tabela-wrap">
-            <table className="tabela">
-              <thead>
-                <tr>
-                  <th>Entrega</th>
-                  <th>Cliente</th>
-                  <th>Fase</th>
-                  <th>Prazo</th>
-                  <th>Ação</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filaEncerramento.map((e) => {
-                  const dias = Math.floor(
-                    (Date.parse(hoje) - Date.parse(String(e.data_prevista))) /
-                      86_400_000,
-                  );
-                  return (
-                    <tr key={e.id}>
-                      <td>
-                        <Link href={`/entregas/${e.id}`} className="titulo-link">
-                          {e.titulo}
-                        </Link>
-                      </td>
-                      <td>{e.cliente}</td>
-                      <td>
-                        <span className="badge tom-alerta">{e.fase_rotulo}</span>
-                      </td>
-                      <td>
-                        {e.data_prevista}
-                        <div className="muted">vencida há {dias} dias</div>
-                      </td>
-                      <td>
-                        <BotaoEncerrar entregaId={Number(e.id)} />
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      )}
-
       <div className="stats">
         <div className="stat alert">
           <span className="value">{totalCriticos}</span>
           <span className="label">críticos</span>
         </div>
         <div className="stat">
-          <span className="value">{totalAvisos}</span>
+          <span className="value">{totalAvisos + extraEncerramento}</span>
           <span className="label">avisos</span>
         </div>
         <div className="stat">
-          <span className="value">{count ?? 0}</span>
+          <span className="value">{totalLinhas}</span>
           <span className="label">no total</span>
         </div>
       </div>
@@ -311,7 +303,7 @@ export default async function Revisao({ searchParams }: { searchParams: Promise<
       </form>
 
       <p className="muted resumo">
-        {count ?? 0} registro{(count ?? 0) === 1 ? "" : "s"}
+        {totalLinhas} registro{totalLinhas === 1 ? "" : "s"}
         {temFiltro ? " com o filtro aplicado" : ""} · mostrando até 200.
       </p>
 
@@ -327,7 +319,7 @@ export default async function Revisao({ searchParams }: { searchParams: Promise<
             </tr>
           </thead>
           <tbody>
-            {(erros ?? []).map((e) => (
+            {linhasTabela.map((e) => (
               <tr key={e.id}>
                 <td>
                   <span className={`badge tom-${e.severidade === "critico" ? "erro" : "alerta"}`}>
@@ -348,7 +340,9 @@ export default async function Revisao({ searchParams }: { searchParams: Promise<
                 </td>
                 <td className="muted">{e.detalhe ?? "—"}</td>
                 <td>
-                  {e.codigo === "concluida_sem_data_entrega" && e.entrega_id ? (
+                  {e.sintetico && e.entrega_id ? (
+                    <BotaoEncerrar entregaId={Number(e.entrega_id)} />
+                  ) : e.codigo === "concluida_sem_data_entrega" && e.entrega_id ? (
                     <BotaoDataEntrega entregaId={Number(e.entrega_id)} />
                   ) : (e.codigo === "sem_link" || e.codigo === "link_textual") && e.entrega_id ? (
                     <BotaoLinkEntrega entregaId={Number(e.entrega_id)} />
@@ -358,7 +352,7 @@ export default async function Revisao({ searchParams }: { searchParams: Promise<
                 </td>
               </tr>
             ))}
-            {(erros ?? []).length === 0 && (
+            {linhasTabela.length === 0 && (
               <tr>
                 <td colSpan={5} className="muted">
                   Nenhum registro com esses filtros.

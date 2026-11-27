@@ -28,6 +28,7 @@ export function rotuloCampo(campo: string | null): string | null {
 
 // Sinalizações de qualidade da carga de dados (códigos -> rótulos legíveis).
 export const ROTULO_CODIGO: Record<string, string> = {
+  encerramento_parada: "Entrega parada há mais de 90 dias",
   id_duplicado: "ID repetido no arquivo original",
   possivel_duplicata: "Possível duplicata",
   link_repetido: "Link repetido",
