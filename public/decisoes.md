@@ -208,6 +208,48 @@ Quem discordar de uma data corrige na própria entrega.
 inferência é determinística e auditável (a regra está em `docs/decisoes.md` e
 no notebook). O que não pode é a flag ficar eterna sem dono.
 
+## D18. Data em serial do Excel: conversão aceita
+
+**Decisão:** as 37 entregas com data em serial do Excel (13 na prevista, 14 na
+entrega, 10 na solicitação) ficam com a data convertida pelo normalizador
+(epoch 1899-12-30, `parse_data`) e a flag é removida. A conversão é
+determinística — serial é número, não texto ambíguo.
+
+**Por quê:** diferente do ano inferido, aqui não existe premissa: o serial
+carrega a data exata. Manter a flag seria ruído puro.
+
+## D19. Entrega fora da janela: manter com a premissa declarada
+
+**Decisão:** as 5 entregas com data de entrega em nov/2026 (fora da janela
+declarada nov/2025–out/2026) são mantidas como estão. A janela é premissa do
+case, não regra de negócio: as datas são internamente consistentes
+(solicitação → previsão → entrega) e não há evidência de erro de digitação.
+
+**Por quê:** mexer na data seria inventar; a premissa fica registrada no README
+e no notebook. Se o avaliador considerar a janela um limite rígido, a flag
+continua no diagnóstico (a base não muda).
+
+## D20. Aprovação contraditória: prevalece a decisão do cliente
+
+**Decisão:** quando o status diz "aguardando aprovação" e a coluna de aprovação
+do cliente diz "Sim" (ou "aprovado c/ ressalvas"), vale a decisão do cliente:
+a fase vai para `aprovada`. Foram 4 casos, todos com aprovação de entrega
+registrada e status defasado.
+
+**Por quê:** a aprovação é o fato (cliente decidiu); o status é o campo do time,
+que não acompanhou. Manter a contradição deixaria a entrega "aguardando" algo
+que já foi decidido.
+
+## D21. Tipo inferido e revisões inválidas: aceitar em bloco
+
+**Decisão:** tipo vazio inferido pelo título (4), revisões `-1`/`99`/vazio/
+"1 ou 2" (8) e "duas"/"2x" convertidas (2) ficam como o normalizador deixou —
+tipo e número plausível; valor inválido vira nulo. A correção pontual é feita
+na própria entrega.
+
+**Por quê:** são regras determinísticas (título → tipo; número → revisão), não
+premissas. Confirmar uma a uma não muda o dado.
+
 ## Premissas
 
 1. Os dados são fictícios, mas as inconsistências são tratadas como sujeira real.

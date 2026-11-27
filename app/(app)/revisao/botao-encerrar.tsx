@@ -44,7 +44,7 @@ export function BotaoEncerrar({ entregaId }: { entregaId: number }) {
           <button
             key={d}
             type="button"
-            className="secundario"
+            className="botao secundario"
             onClick={() => setDecisao(d)}
           >
             {ROTULO[d]}
@@ -55,7 +55,7 @@ export function BotaoEncerrar({ entregaId }: { entregaId: number }) {
   }
 
   return (
-    <form onSubmit={confirmar} className="encerramento-form">
+    <form onSubmit={confirmar} className="form-linha">
       <label>
         Motivo *
         <input
@@ -83,12 +83,12 @@ export function BotaoEncerrar({ entregaId }: { entregaId: number }) {
         </label>
       )}
       <span className="acao-linha">
-        <button type="submit" disabled={pendente}>
+        <button type="submit" className="botao primario" disabled={pendente}>
           {pendente ? "…" : `Confirmar ${ROTULO[decisao].toLowerCase()}`}
         </button>
         <button
           type="button"
-          className="secundario"
+          className="botao secundario"
           disabled={pendente}
           onClick={() => {
             setDecisao(null);

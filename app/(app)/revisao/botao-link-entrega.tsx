@@ -29,7 +29,7 @@ export function BotaoLinkEntrega({ entregaId }: { entregaId: number }) {
   }
 
   return (
-    <form onSubmit={confirmar} className="link-entrega-form">
+    <form onSubmit={confirmar} className="form-linha">
       <label>
         Link do arquivo
         <input
@@ -48,8 +48,8 @@ export function BotaoLinkEntrega({ entregaId }: { entregaId: number }) {
         />
         Não tem arquivo
       </label>
-      <button type="submit" disabled={pendente}>
-        {pendente ? "…" : "Salvar"}
+      <button type="submit" className="botao primario" disabled={pendente}>
+        {pendente ? "…" : "Confirmar"}
       </button>
       {erro && <span className="erro-campo">{erro}</span>}
     </form>

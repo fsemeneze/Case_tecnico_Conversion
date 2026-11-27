@@ -29,7 +29,7 @@ export function BotaoDataEntrega({ entregaId }: { entregaId: number }) {
   }
 
   return (
-    <form onSubmit={confirmar} className="data-entrega-form">
+    <form onSubmit={confirmar} className="form-linha">
       <label>
         Data de entrega
         <input
@@ -47,8 +47,8 @@ export function BotaoDataEntrega({ entregaId }: { entregaId: number }) {
         />
         Não sei
       </label>
-      <button type="submit" disabled={pendente}>
-        {pendente ? "…" : "Salvar"}
+      <button type="submit" className="botao primario" disabled={pendente}>
+        {pendente ? "…" : "Confirmar"}
       </button>
       {erro && <span className="erro-campo">{erro}</span>}
     </form>

@@ -1476,83 +1476,47 @@ main.auth {
   box-shadow: var(--shadow-card);
 }
 
-/* Formulário de encerramento dentro da tabela (D13). */
-.encerramento-form,
-.data-entrega-form {
+/* Formulários inline da fila de revisão (D13–D16): um padrão só.
+   Botões usam .botao/.botao.secundario do app; aqui só o layout e o input. */
+.form-linha {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
   align-items: end;
 }
 
-.encerramento-form label,
-.data-entrega-form label {
+.form-linha label {
   display: grid;
   gap: 4px;
   font-size: 0.82rem;
   color: var(--text-soft);
 }
 
-.data-entrega-form .filtro-check {
+.form-linha input {
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  padding: 7px 10px;
+  background: var(--bg);
+  color: var(--fg);
+  font: inherit;
+}
+
+.form-linha input:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--ring);
+}
+
+.form-linha .filtro-check {
   display: inline-flex;
   gap: 6px;
   align-items: center;
+  padding-bottom: 7px;
+  font-size: 0.9rem;
 }
 
-.encerramento-form input,
-.data-entrega-form input {
-  border: 1px solid var(--border);
-  border-radius: 9px;
-  padding: 7px 10px;
-  background: var(--bg);
-  color: var(--fg);
-  font: inherit;
-}
-
-.encerramento-form input:focus,
-.data-entrega-form input:focus {
-  outline: none;
-  border-color: var(--accent);
-  box-shadow: 0 0 0 3px var(--ring);
-}
-
-.data-entrega-form button {
-  border: 1px solid var(--border);
-  border-radius: 9px;
-  padding: 7px 14px;
-  background: var(--accent);
-  border-color: var(--accent);
-  color: #fff;
-  font: inherit;
-  font-weight: 550;
-  cursor: pointer;
-}
-
-.link-entrega-form input {
-  border: 1px solid var(--border);
-  border-radius: 9px;
-  padding: 7px 10px;
-  background: var(--bg);
-  color: var(--fg);
-  font: inherit;
-}
-
-.link-entrega-form input:focus {
-  outline: none;
-  border-color: var(--accent);
-  box-shadow: 0 0 0 3px var(--ring);
-}
-
-.link-entrega-form button {
-  border: 1px solid var(--border);
-  border-radius: 9px;
-  padding: 7px 14px;
-  background: var(--accent);
-  border-color: var(--accent);
-  color: #fff;
-  font: inherit;
-  font-weight: 550;
-  cursor: pointer;
+.form-linha .erro-campo {
+  flex-basis: 100%;
 }
 
 .cartao .tabela-wrap {
@@ -1823,7 +1787,7 @@ main.auth {
   flex-wrap: wrap;
 }
 
-.acao-linha button {
+.acao-linha button:not(.botao) {
   border: 1px solid var(--border);
   background: var(--card);
   color: var(--fg);
@@ -1834,12 +1798,12 @@ main.auth {
   cursor: pointer;
 }
 
-.acao-linha button:hover:not(:disabled) {
+.acao-linha button:not(.botao):hover:not(:disabled) {
   border-color: var(--accent);
   color: var(--accent);
 }
 
-.acao-linha button:disabled {
+.acao-linha button:not(.botao):disabled {
   opacity: 0.55;
   cursor: not-allowed;
 }

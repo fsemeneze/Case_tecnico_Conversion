@@ -25,7 +25,7 @@ export function BotaoResolver({
     <span className="acao-linha">
       <button
         type="button"
-        className={resolvido ? "secundario" : ""}
+        className="botao secundario"
         disabled={pendente}
         onClick={alternar}
       >
