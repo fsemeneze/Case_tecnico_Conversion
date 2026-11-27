@@ -35,6 +35,7 @@ function celula(valor: unknown): string {
 
 function filtrosDaUrl(url: URL): FiltrosLista {
   const situacao = url.searchParams.get("situacao") ?? "";
+  const planejamento = url.searchParams.get("planejamento") ?? "";
   return {
     busca: url.searchParams.get("q")?.trim() || undefined,
     clienteId: url.searchParams.get("cliente")
@@ -44,6 +45,10 @@ function filtrosDaUrl(url: URL): FiltrosLista {
     tipo: url.searchParams.get("tipo") || undefined,
     situacao:
       situacao === "atrasadas" || situacao === "vencidas" ? situacao : "",
+    planejamento:
+      planejamento === "pendente" || planejamento === "aprovado"
+        ? planejamento
+        : undefined,
     ordenar: url.searchParams.get("ord") || undefined,
     direcao: url.searchParams.get("dir") === "desc" ? "desc" : "asc",
   };

@@ -10,6 +10,7 @@ type Busca = {
   fase?: string;
   tipo?: string;
   situacao?: string;
+  planejamento?: string;
   pagina?: string;
   ord?: string;
   dir?: string;
@@ -42,6 +43,10 @@ export default async function ListaEntregas({
   const fase = params.fase ?? "";
   const tipo = params.tipo ?? "";
   const situacao = params.situacao ?? "";
+  const planejamento =
+    params.planejamento === "pendente" || params.planejamento === "aprovado"
+      ? params.planejamento
+      : "";
   const pagina = Math.max(1, Number(params.pagina ?? 1) || 1);
   const ordenar = params.ord && ORDENAVEIS.has(params.ord) ? params.ord : "";
   const direcao: "asc" | "desc" = params.dir === "desc" ? "desc" : "asc";
@@ -56,6 +61,7 @@ export default async function ListaEntregas({
       fase,
       tipo,
       situacao: situacao === "atrasadas" || situacao === "vencidas" ? situacao : "",
+      planejamento: planejamento || undefined,
       pagina,
       porPagina: POR_PAGINA,
       ordenar: ordenar || undefined,
@@ -65,7 +71,7 @@ export default async function ListaEntregas({
   ]);
 
   const paginas = Math.max(1, Math.ceil(total / POR_PAGINA));
-  const temFiltro = Boolean(busca || cliente || fase || tipo || situacao);
+  const temFiltro = Boolean(busca || cliente || fase || tipo || situacao || planejamento);
 
   const parametrosBase = () => {
     const parametros = new URLSearchParams();
@@ -74,6 +80,7 @@ export default async function ListaEntregas({
     if (fase) parametros.set("fase", fase);
     if (tipo) parametros.set("tipo", tipo);
     if (situacao) parametros.set("situacao", situacao);
+    if (planejamento) parametros.set("planejamento", planejamento);
     if (ordenar) {
       parametros.set("ord", ordenar);
       parametros.set("dir", direcao);
@@ -146,6 +153,11 @@ export default async function ListaEntregas({
               {t}
             </option>
           ))}
+        </select>
+        <select name="planejamento" defaultValue={planejamento}>
+          <option value="">Planejamento: todos</option>
+          <option value="pendente">Aguardando planejamento</option>
+          <option value="aprovado">Planejamento aprovado</option>
         </select>
         <label className="filtro-check">
           <input

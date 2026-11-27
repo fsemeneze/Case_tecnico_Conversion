@@ -306,7 +306,7 @@ por funções `SECURITY DEFINER`.
 | `/conta` | Segurança da conta: verificação em duas etapas (TOTP) |
 | `/inicio` | Indicadores (atraso, vencidas, aguardando cliente, fila de revisão) |
 | `/dashboard` | Visão executiva: taxa de atraso, por tipo, por fase, por mês e clientes com mais atraso |
-| `/entregas` | Lista com busca, filtros (cliente, fase, tipo, atraso), ordenação por coluna, paginação e exportação CSV |
+| `/entregas` | Lista com busca, filtros (cliente, fase, tipo, atraso, planejamento), ordenação por coluna, paginação e exportação CSV |
 | `/entregas/nova` | Cadastro de entrega com validação |
 | `/entregas/[id]` | Detalhe: situação, aprovação em 2 etapas, histórico e aprovações |
 | `/entregas/[id]/editar` | Edição da entrega — prazo, revisões, link, observações, squad e responsável (admin/gestor) |

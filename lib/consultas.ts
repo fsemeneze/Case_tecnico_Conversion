@@ -49,6 +49,7 @@ export type FiltrosLista = {
   porPagina?: number;
   ordenar?: string;
   direcao?: "asc" | "desc";
+  planejamento?: "pendente" | "aprovado" | "";
 };
 
 // Colunas que a lista pode ordenar. Só estas valem: o valor vem da URL e
@@ -104,6 +105,20 @@ export async function listarEntregas(
     consulta = consulta
       .lt("data_prevista", hoje)
       .in("fase", FASES_ABERTAS);
+  }
+  // Planejamento (D2): a decisão do cliente no planejamento. Se a entrega
+  // já foi aprovada, o planejamento é considerado aprovado também.
+  const APROVADAS = ["aprovada", "aprovada_com_ressalvas"];
+  if (filtros.planejamento === "pendente") {
+    consulta = consulta
+      .in("aprovacao_planejamento", ["pendente", "nao_informado"])
+      .or(
+        `not(or(fase.eq.aprovada,aprovacao_entrega.in.(${APROVADAS.join(",")})))`,
+      );
+  } else if (filtros.planejamento === "aprovado") {
+    consulta = consulta.or(
+      `aprovacao_planejamento.in.(${APROVADAS.join(",")}),fase.eq.aprovada,aprovacao_entrega.in.(${APROVADAS.join(",")})`,
+    );
   }
 
   const offset = (pagina - 1) * porPagina;
