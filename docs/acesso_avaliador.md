@@ -85,8 +85,10 @@ mostra que o envio não saiu.
 ```bash
 npm run diagnostico               # gera analysis/out/* e o relatório interno
 npm run test:diagnostico          # testes do normalizador
-node scripts/importar-para-supabase.mjs   # migrations + carga no Supabase
 ```
+
+As migrations `0001`–`0039` recriam o modelo, a RLS, as funções e a carga —
+não há passo separado de importação.
 
 ## Duas limitações declaradas
 

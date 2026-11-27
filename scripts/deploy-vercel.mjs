@@ -34,7 +34,6 @@ const arquivos = [
   "app/login/layout.tsx",
   "app/login/esqueci-senha/page.tsx",
   "app/login/nova-senha/page.tsx",
-  "app/sobre/page.tsx",
   "app/(app)/layout.tsx",
   "app/(app)/loading.tsx",
   "app/(app)/error.tsx",

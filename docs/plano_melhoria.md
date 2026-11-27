@@ -113,7 +113,7 @@ Cadastro **só por convite**. A tela de login não tem "Criar conta".
 
 - `/` redireciona: sessão ativa → `/inicio`; sem sessão → `/login`.
 - `/login` é a porta de entrada: e-mail, senha, "esqueci a senha". Sem cadastro.
-- Diagnóstico do case sai da raiz e vai para `/sobre` (ou para o README), acessível sem login.
+- Diagnóstico do case sai da raiz e vai para o README (acessível sem login).
 - Layout de app com barra lateral: **Início, Entregas, Clientes, Revisão de dados, Equipe** (admin). Menu do usuário com papel e sair.
 - Rota pública `/aprovacao/[token]` fica fora do layout interno, com visual próprio e simples.
 

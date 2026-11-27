@@ -63,7 +63,7 @@ lib/                      Clientes Supabase, consultas, validação, e-mail, fas
   email.ts eventos.ts fases.ts
 proxy.ts                  Guarda de login e usuário ativo (Next 16: ex-middleware)
 analysis/                 diagnostico.py, test_diagnostico.py, out/ (saídas geradas)
-supabase/migrations/      Modelo estrela, RLS, funções e carga (0001…0024)
+supabase/migrations/      Modelo estrela, RLS, funções e carga (0001…0039)
 docs/                     Diagnóstico, decisões, acessos, README de produto, testes
 dados/                    Base original do case (CSV)
 scripts/                  Importação, deploy, contas de teste, estado de demo

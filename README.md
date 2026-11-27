@@ -16,7 +16,7 @@ Dados fictícios, criados para o case.
 | :--- | :--- |
 | `app/` | App Next.js (App Router): rotas internas, login, aprovação do cliente e portal read-only |
 | `lib/` | Clientes Supabase, consultas às visões, validação Zod, e-mail e rótulos de tela |
-| `supabase/` | 25 migrations: modelo estrela, RLS, funções, carga e limite de tentativas |
+| `supabase/` | 39 migrations: modelo estrela, RLS, funções, carga, tokens e filas |
 | `analysis/` | Diagnóstico em Python, testes do normalizador e saídas geradas |
 | `docs/` | Diagnóstico, decisões, acesso do cliente, README de produto e evidências de teste |
 | `scripts/` | Importação, deploy, contas de teste e reset do estado de demonstração |
@@ -33,7 +33,7 @@ Na raiz ficam o `README.md`, o `AGENTS.md` (contrato do agente), o `DESIGN.md`
 | # | Entregável | Onde está |
 | :--- | :--- | :--- |
 | 1 | Diagnóstico dos dados | Notebook executado em [`docs/diagnostico.ipynb`](docs/diagnostico.ipynb) · saídas em `analysis/out/` · resumo abaixo |
-| 2 | Modelagem Postgres | 25 migrations em [`supabase/migrations/`](supabase/migrations) · diagrama ER abaixo |
+| 2 | Modelagem Postgres | 39 migrations em [`supabase/migrations/`](supabase/migrations) · diagrama ER abaixo |
 | 3 | Fatia funcional do app | App publicado · rotas e roteiro de teste abaixo · evidências em [`docs/testes/`](docs/testes) |
 | 4 | README de produto (até 1 página) | [`docs/readme_produto.md`](docs/readme_produto.md) |
 | — | Vídeo de demonstração (5–10 min) | Entregue à parte, fora do repositório |
@@ -310,9 +310,9 @@ por funções `SECURITY DEFINER`.
 | `/entregas/[id]` | Detalhe: situação, aprovação em 2 etapas, histórico e aprovações |
 | `/entregas/[id]/editar` | Edição da entrega — prazo, revisões, link, observações, squad e responsável (admin/gestor) |
 | `/clientes` | Clientes canônicos e grafias da planilha |
-| `/revisao` | Fila de revisão da importação (resolver/reabrir) e encerramento de entregas paradas (retomar/entregar/cancelar) |
+| `/revisao` | Fila de revisão da importação (resolver/reabrir), encerramento de entregas paradas e preenchimento de data/link |
 | `/dashboard` | Visão executiva: taxa de atraso, por tipo, por fase, por mês e clientes com mais atraso |
-| `/equipe` | Pessoas, papéis e convites (admin) |
+| `/equipe` | Pessoas, papéis, squad e convites (admin) |
 | `/aprovacao/[token]` | Página pública do cliente, sem login |
 | `/cliente/[token]` | Portal read-only do cliente: acompanhamento e aprovações pendentes |
 
@@ -373,20 +373,19 @@ npm run dev                  # http://localhost:3000
 
 Variáveis: `NEXT_PUBLIC_SUPABASE_URL`,
 `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`, `SUPABASE_SERVICE_ROLE_KEY` (só no
-servidor) e, para reimportar a planilha, `DATABASE_URL` ou `DB_PASSWORD`.
-E-mail (`RESEND_API_KEY`, `EMAIL_FROM`, `EMAIL_EQUIPE`) é opcional: sem ele, o
-app gera o link e avisa que o envio não saiu.
+servidor). E-mail (`RESEND_API_KEY`, `EMAIL_FROM`, `EMAIL_EQUIPE`) é opcional:
+sem ele, o app gera o link e avisa que o envio não saiu.
 
-Para reproduzir a base em outro projeto Supabase:
+Para reproduzir a base em outro projeto Supabase, aplique as migrations
+`0001`–`0039` (modelo, RLS, funções e carga) e rode o diagnóstico:
 
 ```bash
 npm run diagnostico          # gera analysis/out/*
 npm run test:diagnostico     # testes do normalizador
-node scripts/importar-para-supabase.mjs
 ```
 
-A conexão usa o pooler (`*.pooler.supabase.com`, IPv4): o host direto
-`db.<ref>.supabase.co` resolve só IPv6.
+O host direto `db.<ref>.supabase.co` resolve só IPv6; use o pooler
+(`*.pooler.supabase.com`) quando precisar de IPv4.
 
 ## Uso de IA
 
@@ -416,8 +415,8 @@ decisão de negócio foi delegada à IA.
 app/                    App Next.js (App Router)
   (app)/                Rotas internas com menu lateral
   aprovacao/[token]/    Página pública do cliente
+  cliente/[token]/      Portal read-only do cliente
   login/                Porta de entrada
-  sobre/                README de produto
 lib/                    Clientes Supabase, consultas e validação
 proxy.ts                Guarda de login e usuário ativo
 analysis/
@@ -425,7 +424,7 @@ analysis/
   test_diagnostico.py   Testes do normalizador
   out/                  Base normalizada, erros, métricas e relatório
 supabase/
-  migrations/           Modelo estrela, RLS, funções e carga (0001–0025)
+  migrations/           Modelo estrela, RLS, funções e carga (0001–0039)
 docs/
   diagnostico.ipynb     Diagnóstico em notebook (executado)
   decisoes.md           Decisões, premissas e alternativas descartadas
@@ -435,7 +434,7 @@ docs/
   plano_melhoria.md     Plano que guiou a fatia funcional
   testes/               Evidências de teste por perfil e por fluxo
 dados/                  Base original do case
-scripts/                Importação, deploy, contas de teste e estado de demonstração
+scripts/                Deploy, contas de teste, usuários por squad e estado de demonstração
 ```
 
 ## Premissas e limitações
