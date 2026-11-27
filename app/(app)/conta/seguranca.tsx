@@ -34,9 +34,12 @@ export default function Seguranca() {
     setSegredo(null);
     setCodigo("");
     const supabase = criarClienteSupabaseNavegador();
+    // O Supabase recusa dois fatores com o mesmo friendly_name. Como pode
+    // haver um fator antigo não verificado, o nome ganha um sufixo.
+    const nomeFator = `PlanHub${fatores.length ? ` ${fatores.length + 1}` : ""}`;
     const { data, error } = await supabase.auth.mfa.enroll({
       factorType: "totp",
-      friendlyName: "PlanHub",
+      friendlyName: nomeFator,
     });
     if (error || !data) {
       // Mostra o motivo real: sem isso, a tela só diz "não foi possível"
