@@ -12,12 +12,18 @@ export function FormularioEdicao({
 }: {
   entrega: EntregaLista;
   squads: string[];
-  pessoas: string[];
+  pessoas: { nome: string; squad: string | null }[];
 }) {
   const router = useRouter();
   const [erro, setErro] = useState<string | null>(null);
   const [salvo, setSalvo] = useState(false);
   const [pendente, setPendente] = useState(false);
+  const [squad, setSquad] = useState(entrega.squad ?? "");
+
+  // Responsável filtrado pelo squad selecionado; sem squad, lista todos.
+  const pessoasDoSquad = squad
+    ? pessoas.filter((p) => p.squad === squad)
+    : pessoas;
 
   async function enviar(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -98,7 +104,11 @@ export function FormularioEdicao({
 
       <label>
         Squad
-        <select name="squad" defaultValue={entrega.squad ?? ""} disabled={false}>
+        <select
+          name="squad"
+          value={squad}
+          onChange={(e) => setSquad(e.target.value)}
+        >
           <option value="">Selecione…</option>
           {squads.map((s) => (
             <option key={s} value={s}>
@@ -110,11 +120,11 @@ export function FormularioEdicao({
 
       <label>
         Responsável
-        <select name="responsavel" defaultValue={entrega.responsavel ?? ""}>
+        <select name="responsavel" defaultValue={entrega.responsavel ?? ""} key={squad}>
           <option value="">Selecione…</option>
-          {pessoas.map((p) => (
-            <option key={p} value={p}>
-              {p}
+          {pessoasDoSquad.map((p) => (
+            <option key={p.nome} value={p.nome}>
+              {p.nome}
             </option>
           ))}
         </select>

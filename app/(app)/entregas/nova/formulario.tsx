@@ -16,12 +16,18 @@ export function FormularioNovaEntrega({
   clientes: Cliente[];
   tipos: string[];
   squads: string[];
-  pessoas: string[];
+  pessoas: { nome: string; squad: string | null }[];
 }) {
   const router = useRouter();
   const [pendente, iniciar] = useTransition();
   const [erro, setErro] = useState<string | null>(null);
   const [campos, setCampos] = useState<Campos>({});
+  const [squad, setSquad] = useState("");
+
+  // Responsável filtrado pelo squad selecionado; sem squad, lista todos.
+  const pessoasDoSquad = squad
+    ? pessoas.filter((p) => p.squad === squad)
+    : pessoas;
 
   function enviar(formulario: FormData) {
     setErro(null);
@@ -100,7 +106,12 @@ export function FormularioNovaEntrega({
 
       <label>
         Squad
-        <select name="squad" defaultValue="">
+        <select
+          name="squad"
+          defaultValue=""
+          value={squad}
+          onChange={(e) => setSquad(e.target.value)}
+        >
           <option value="">Selecione…</option>
           {squads.map((s) => (
             <option key={s} value={s}>
@@ -112,11 +123,11 @@ export function FormularioNovaEntrega({
 
       <label>
         Responsável
-        <select name="responsavel" defaultValue="">
+        <select name="responsavel" defaultValue="" key={squad}>
           <option value="">Selecione…</option>
-          {pessoas.map((p) => (
-            <option key={p} value={p}>
-              {p}
+          {pessoasDoSquad.map((p) => (
+            <option key={p.nome} value={p.nome}>
+              {p.nome}
             </option>
           ))}
         </select>
