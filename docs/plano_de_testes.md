@@ -4,8 +4,8 @@ Como validar o app antes de mostrar. Cada caso tem um resultado esperado
 concreto, para dar para marcar "passou" ou "falhou" sem interpretação.
 
 **Conta de teste:** credenciais enviadas à parte (não versionadas neste repositório público).
-**Base:** 1.007 entregas, 25 clientes, 273 atrasadas, 71 abertas com prazo
-vencido na data de referência.
+**Base:** 1.007 linhas na planilha, 1.000 entregas no banco (997 importadas +
+3 de demonstração, após a deduplicação de 10 IDs repetidos), 25 clientes.
 
 ---
 
@@ -26,7 +26,7 @@ vencido na data de referência.
 
 | # | Cenário | Passos | Esperado |
 | :-- | :--- | :--- | :--- |
-| 2.1 | Lista completa | Abrir `/entregas` | 50 linhas, total "1.007 entregas", ordenadas por prazo |
+| 2.1 | Lista completa | Abrir `/entregas` | 50 linhas, total "1.000 entregas", ordenadas por prazo |
 | 2.2 | Busca por título | Digitar "Relatório mensal" | Só títulos que contêm o termo; total muda |
 | 2.3 | Filtro por cliente | Selecionar "Loja Alfa" | Só entregas da Loja Alfa |
 | 2.4 | Filtro por fase | Selecionar "Aprovada" | 799 entregas |
@@ -34,7 +34,7 @@ vencido na data de referência.
 | 2.6 | Apenas em atraso | Marcar o checkbox | 273 entregas (D8: concluídas após o prazo + abertas vencidas) |
 | 2.7 | Vencidas (em aberto) | Marcar o checkbox | 71 entregas |
 | 2.8 | Filtros combinados | Cliente + fase + atraso | Interseção coerente, total menor que cada filtro isolado |
-| 2.9 | Limpar filtros | Clicar em "Limpar" | Volta aos 1.007 |
+| 2.9 | Limpar filtros | Clicar em "Limpar" | Volta aos 1.000 |
 | 2.10 | Paginação | Ir para a página 2 | 50 linhas novas, sem repetir as da página 1 |
 | 2.11 | Sem resultado | Buscar "zzzz" | "Nenhuma entrega com esses filtros." |
 | 2.12 | Filtro na URL | Copiar a URL com filtros e abrir em outra aba | Os filtros continuam aplicados |
