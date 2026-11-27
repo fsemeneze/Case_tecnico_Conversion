@@ -11,6 +11,7 @@ const PAPEIS = ["admin", "gestor", "operador", "leitor"] as const;
 export async function convidarUsuario(
   email: string,
   papel: string,
+  squadId: number | null,
 ): Promise<ResultadoEquipe> {
   if (!PAPEIS.includes(papel as (typeof PAPEIS)[number])) {
     return { ok: false, erro: "Papel inválido." };
@@ -20,7 +21,7 @@ export async function convidarUsuario(
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  if (!user) return { ok: false, erro: "Sua sessão expiriu." };
+  if (!user) return { ok: false, erro: "Sua sessão expirou." };
 
   const { data: perfil } = await supabase
     .from("usuario")
@@ -40,8 +41,39 @@ export async function convidarUsuario(
   await supabase.from("convite").insert({
     email,
     papel,
+    squad_id: squadId,
     convocado_por: user.id,
   });
+
+  revalidatePath("/equipe");
+  return { ok: true };
+}
+
+// Squad do usuário (admin). O RLS do banco também exige admin.
+export async function alterarSquad(
+  usuarioId: string,
+  squadId: number | null,
+): Promise<ResultadoEquipe> {
+  const supabase = await criarClienteSupabaseServidor();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return { ok: false, erro: "Sua sessão expirou." };
+
+  const { data: perfil } = await supabase
+    .from("usuario")
+    .select("papel")
+    .eq("id", user.id)
+    .maybeSingle();
+  if (perfil?.papel !== "admin") {
+    return { ok: false, erro: "Só o administrador altera o squad." };
+  }
+
+  const { error } = await supabase
+    .from("usuario")
+    .update({ squad_id: squadId })
+    .eq("id", usuarioId);
+  if (error) return { ok: false, erro: error.message };
 
   revalidatePath("/equipe");
   return { ok: true };

@@ -3,9 +3,14 @@
 import { useState, useTransition } from "react";
 import { convidarUsuario } from "./actions";
 
-export function ConvidarUsuario() {
+export function ConvidarUsuario({
+  squads,
+}: {
+  squads: { id: number; nome: string }[];
+}) {
   const [email, setEmail] = useState("");
   const [papel, setPapel] = useState("operador");
+  const [squadId, setSquadId] = useState("");
   const [pendente, iniciar] = useTransition();
   const [erro, setErro] = useState<string | null>(null);
   const [ok, setOk] = useState<string | null>(null);
@@ -14,8 +19,9 @@ export function ConvidarUsuario() {
     e.preventDefault();
     setErro(null);
     setOk(null);
+    const squad = squadId ? Number(squadId) : null;
     iniciar(async () => {
-      const r = await convidarUsuario(email.trim(), papel);
+      const r = await convidarUsuario(email.trim(), papel, squad);
       if (r.ok) {
         setOk(`Convite enviado para ${email.trim()}.`);
         setEmail("");
@@ -48,6 +54,17 @@ export function ConvidarUsuario() {
           <option value="gestor">Gestor</option>
           <option value="leitor">Leitor</option>
           <option value="admin">Administrador</option>
+        </select>
+      </label>
+      <label>
+        Squad
+        <select value={squadId} onChange={(e) => setSquadId(e.target.value)}>
+          <option value="">Sem squad</option>
+          {squads.map((s) => (
+            <option key={s.id} value={s.id}>
+              {s.nome}
+            </option>
+          ))}
         </select>
       </label>
       {erro && <p className="erro">{erro}</p>}

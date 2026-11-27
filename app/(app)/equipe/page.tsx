@@ -17,8 +17,13 @@ export default async function Equipe() {
 
   const { data: usuarios } = await supabase
     .from("usuario")
-    .select("id, nome, email, papel, ativo, criado_em")
+    .select("id, nome, email, papel, ativo, squad_id, criado_em")
     .order("criado_em", { ascending: true });
+
+  const { data: squads } = await supabase
+    .from("squads")
+    .select("id, nome")
+    .order("nome");
 
   const { data: convites } = await supabase
     .from("convite")
@@ -29,6 +34,7 @@ export default async function Equipe() {
   const ehAdmin = (usuarios ?? []).some(
     (u: { id: string; papel: string }) => u.id === user?.id && u.papel === "admin",
   );
+  const listaSquads = squads ?? [];
 
   return (
     <>
@@ -43,7 +49,7 @@ export default async function Equipe() {
         papel decide o que ela pode fazer no app.
       </p>
 
-      {ehAdmin && <ConvidarUsuario />}
+      {ehAdmin && <ConvidarUsuario squads={listaSquads} />}
 
       <h2>Pessoas</h2>
       <div className="tabela-wrap">
@@ -64,6 +70,7 @@ export default async function Equipe() {
               email: string;
               papel: string;
               ativo: boolean;
+              squad_id: number | null;
             }) => (
               <tr key={u.id}>
                 <td>
@@ -84,6 +91,8 @@ export default async function Equipe() {
                       papel={u.papel}
                       ativo={u.ativo}
                       ehProprio={u.id === user?.id}
+                      squads={listaSquads}
+                      squadId={u.squad_id}
                     />
                   </td>
                 )}

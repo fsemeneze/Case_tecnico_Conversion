@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { alterarPapel, alternarAtivo } from "./actions";
+import { alterarPapel, alternarAtivo, alterarSquad } from "./actions";
 
 const ROTULO: Record<string, string> = {
   admin: "Administrador",
@@ -15,11 +15,15 @@ export function ControlesUsuario({
   papel,
   ativo,
   ehProprio,
+  squads,
+  squadId,
 }: {
   id: string;
   papel: string;
   ativo: boolean;
   ehProprio: boolean;
+  squads: { id: number; nome: string }[];
+  squadId: number | null;
 }) {
   const [pendente, iniciar] = useTransition();
   const [erro, setErro] = useState<string | null>(null);
@@ -28,6 +32,14 @@ export function ControlesUsuario({
     setErro(null);
     iniciar(async () => {
       const r = await alterarPapel(id, novo);
+      if (!r.ok) setErro(r.erro ?? "Não foi possível alterar.");
+    });
+  }
+
+  function trocarSquad(novo: string) {
+    setErro(null);
+    iniciar(async () => {
+      const r = await alterarSquad(id, novo ? Number(novo) : null);
       if (!r.ok) setErro(r.erro ?? "Não foi possível alterar.");
     });
   }
@@ -51,6 +63,19 @@ export function ControlesUsuario({
         {Object.entries(ROTULO).map(([valor, rotulo]) => (
           <option key={valor} value={valor}>
             {rotulo}
+          </option>
+        ))}
+      </select>
+      <select
+        value={squadId ?? ""}
+        disabled={pendente}
+        onChange={(e) => trocarSquad(e.target.value)}
+        aria-label="Squad"
+      >
+        <option value="">Sem squad</option>
+        {squads.map((s) => (
+          <option key={s.id} value={s.id}>
+            {s.nome}
           </option>
         ))}
       </select>
