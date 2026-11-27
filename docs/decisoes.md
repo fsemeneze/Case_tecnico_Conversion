@@ -218,6 +218,17 @@ determinística — serial é número, não texto ambíguo.
 **Por quê:** diferente do ano inferido, aqui não existe premissa: o serial
 carrega a data exata. Manter a flag seria ruído puro.
 
+## D19. Entrega fora da janela: manter com a premissa declarada
+
+**Decisão:** as 5 entregas com data de entrega em nov/2026 (fora da janela
+declarada nov/2025–out/2026) são mantidas como estão. A janela é premissa do
+case, não regra de negócio: as datas são internamente consistentes
+(solicitação → previsão → entrega) e não há evidência de erro de digitação.
+
+**Por quê:** mexer na data seria inventar; a premissa fica registrada no README
+e no notebook. Se o avaliador considerar a janela um limite rígido, a flag
+continua no diagnóstico (a base não muda).
+
 ## Premissas
 
 1. Os dados são fictícios, mas as inconsistências são tratadas como sujeira real.
