@@ -54,7 +54,6 @@ export default async function DetalheEntrega({
     .eq("id", user?.id ?? "")
     .maybeSingle();
   const podeEditar = perfil?.papel === "admin" || perfil?.papel === "gestor";
-  const podeGerarLink = podeEditar;
   const { data: fases } = await supabase
     .from("fases")
     .select("id, codigo, rotulo")
@@ -67,6 +66,17 @@ export default async function DetalheEntrega({
   ]);
 
   if (!entrega) notFound();
+
+  // Pode gerar link: admin/gestor, ou o responsável pela entrega (pessoa
+  // vinculada ao usuário). Operador comum não.
+  const { data: pessoa } = await supabase
+    .from("pessoas")
+    .select("usuario_id")
+    .eq("id", entrega.pessoa_id)
+    .maybeSingle();
+  const eResponsavel = Boolean(pessoa?.usuario_id && pessoa.usuario_id === user?.id);
+  const podeGerarLink =
+    podeEditar || (perfil?.papel === "operador" && eResponsavel);
 
   const admin = criarClienteSupabaseAdmin();
   const [{ data: linksAtivos }, { data: emails }] = await Promise.all([

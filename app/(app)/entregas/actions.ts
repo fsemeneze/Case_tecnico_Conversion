@@ -384,9 +384,6 @@ export async function gerarLinkAprovacao(formulario: FormData) {
     .select("papel")
     .eq("id", user.id)
     .maybeSingle();
-  if (!perfil || !["admin", "gestor"].includes(perfil.papel)) {
-    redirect("/entregas?erro=Seu+perfil+não+pode+gerar+links+de+aprovação");
-  }
 
   const entregaId = Number(formulario.get("entrega_id"));
   const etapa = String(formulario.get("etapa") ?? "");
@@ -394,7 +391,64 @@ export async function gerarLinkAprovacao(formulario: FormData) {
     redirect("/entregas");
   }
 
+  // Pode gerar: admin/gestor, ou o responsável pela entrega (pessoa vinculada
+  // ao usuário). Operador comum não.
+  let podeGerar = Boolean(perfil && ["admin", "gestor"].includes(perfil.papel));
+  if (!podeGerar && perfil?.papel === "operador") {
+    const { data: vinculo } = await supabase
+      .from("pessoas")
+      .select("id, usuario_id")
+      .eq("usuario_id", user.id)
+      .maybeSingle();
+    const { data: ent } = await supabase
+      .from("entregas")
+      .select("pessoa_id")
+      .eq("id", entregaId)
+      .maybeSingle();
+    podeGerar = Boolean(vinculo && ent && ent.pessoa_id === vinculo.id);
+  }
+  if (!podeGerar) {
+    redirect(
+      `/entregas/${entregaId}?erro=${encodeURIComponent(
+        "Apenas admin, gestor ou o responsável pela entrega podem gerar o link.",
+      )}`,
+    );
+  }
+
   const admin = criarClienteSupabaseAdmin();
+
+  // A entrega passa para a fase que aguarda a etapa (D2): planejamento →
+  // "Aguardando o cliente"; entrega → "Aguardando aprovação da entrega".
+  const { data: ent } = await admin
+    .from("entregas")
+    .select("fase_id")
+    .eq("id", entregaId)
+    .maybeSingle();
+  const { data: faseAtual } = ent
+    ? await admin
+        .from("fases")
+        .select("codigo, grupo")
+        .eq("id", ent.fase_id)
+        .maybeSingle()
+    : { data: null };
+  if (faseAtual?.grupo === "aberta") {
+    const faseAlvo = etapa === "planejamento" ? "aguardando_cliente" : "aguardando_aprovacao_entrega";
+    if (faseAtual.codigo !== faseAlvo) {
+      await admin
+        .from("entregas")
+        .update({ fase_id: (await admin.from("fases").select("id").eq("codigo", faseAlvo).single()).data?.id })
+        .eq("id", entregaId);
+      await admin.from("eventos_entrega").insert({
+        entrega_id: entregaId,
+        tipo_evento: "fase",
+        campo: "fase",
+        valor_antigo: faseAtual.codigo,
+        valor_novo: faseAlvo,
+        autor: "Time (link de aprovação)",
+      });
+    }
+  }
+
   const { data, error } = await admin.rpc("criar_token_aprovacao", {
     p_entrega_id: entregaId,
     p_etapa: etapa,
@@ -423,23 +477,23 @@ export async function gerarLinkAprovacao(formulario: FormData) {
     enderecoPermitido?: string;
   } = { status: "sem_email" };
 
-  const { data: ent } = await admin
+  const { data: entregaInfo } = await admin
     .from("entregas_detalhadas")
     .select("titulo, cliente, data_prevista")
     .eq("id", entregaId)
     .maybeSingle();
-  if (ent) {
+  if (entregaInfo) {
     const { data: cli } = await admin
       .from("clientes")
       .select("email")
-      .eq("nome", ent.cliente)
+      .eq("nome", entregaInfo.cliente)
       .maybeSingle();
     if (cli?.email) {
       const tpl = emailLinkAprovacao({
-        cliente: ent.cliente,
-        titulo: ent.titulo,
+        cliente: entregaInfo.cliente,
+        titulo: entregaInfo.titulo,
         etapa,
-        prazo: ent.data_prevista,
+        prazo: entregaInfo.data_prevista,
         url,
         validadeDias: 7,
       });
