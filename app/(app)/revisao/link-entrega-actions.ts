@@ -26,6 +26,13 @@ export async function preencherLinkEntrega(
 
   if (error) return { ok: false, erro: error.message };
 
+  // Marca o erro de revisão como resolvido (se houver).
+  await supabase
+    .from("erros_importacao")
+    .update({ resolvido: true, resolvido_por: user.id, resolvido_em: new Date().toISOString() })
+    .eq("entrega_id", entregaId)
+    .eq("codigo", "sem_link");
+
   revalidatePath("/revisao");
   revalidatePath(`/entregas/${entregaId}`);
   return { ok: true };
