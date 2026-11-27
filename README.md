@@ -88,8 +88,8 @@ Aprovar pelo link consome o token — por isso existe o reset.
 ## Diagnóstico
 
 Base: `dados/controle_entregas.csv`, 1.007 linhas, nov/2025 a out/2026.
-Após a deduplicação de 10 IDs repetidos idênticos, o banco fica com 997
-entregas importadas (mais 3 de demonstração).
+Após a deduplicação (10 IDs repetidos + 11 links repetidos de reimportação),
+o banco fica com 986 entregas importadas (mais 3 de demonstração).
 
 | Indicador | Valor |
 | :--- | ---: |
@@ -320,8 +320,8 @@ por funções `SECURITY DEFINER`.
 
 ### O que migrou igual
 
-- As 1.007 entregas da planilha (997 após a deduplicação de 10 IDs repetidos
-  idênticos), com as datas originais e a linha da planilha preservada em
+- As 1.007 entregas da planilha (986 após a deduplicação de IDs e links
+  repetidos), com as datas originais e a linha da planilha preservada em
   cada registro (`origem_linha`).
 - Os 25 clientes canônicos, com as 31 grafias originais guardadas como alias.
 - A fila de revisão: 302 ocorrências, 121 críticas, em 47 linhas.

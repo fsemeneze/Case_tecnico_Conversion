@@ -13,8 +13,8 @@ o cliente, que aprova pelo link sem precisar de conta.
 
 ## O que migrou igual
 
-- As 1.007 entregas da planilha (997 após a deduplicação de 10 IDs repetidos
-  idênticos), com as datas originais e a linha da planilha
+- As 1.007 entregas da planilha (986 após a deduplicação de IDs e links
+  repetidos), com as datas originais e a linha da planilha
   preservada em cada registro.
 - Os 25 clientes canônicos, com as 31 grafias originais guardadas como alias.
 - A fila de revisão: 302 ocorrências encontradas na importação, 121 críticas (47 linhas).
