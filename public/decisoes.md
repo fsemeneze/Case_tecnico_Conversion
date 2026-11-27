@@ -185,6 +185,17 @@ resposta válida, que fecha o item sem mentir o dado.
 
 **Por quê:** o link de arquivo é o conteúdo da entrega — sem ele, o cliente não recebe nada pelo portal e a aprovação perde sentido. Em 62 casos, o certo é a decisão humana: preencher ou registrar formalmente que não existe arquivo (por exemplo, entregas canceladas ou entregues por outro canal). Nada é apagado nem inventado.
 
+## D16. Link textual ("no e-mail", "ver drive"): URL real ou confirmação de ausência
+
+**Decisão:** as 20 entregas com texto no campo `link` em vez de URL entram na
+fila de revisão. O time informa a URL real (substitui o texto) ou confirma que
+não há arquivo (o campo é limpo e a entrega passa para a fila de "sem link").
+Um link `http(s)` válido nunca é sobrescrito.
+
+**Por quê:** "ver drive" não é link — o cliente não consegue abrir, e o portal
+mostraria um texto morto. A decisão é a mesma da D15, com a diferença de que
+aqui existe um valor para substituir, não um vazio.
+
 ## Premissas
 
 1. Os dados são fictícios, mas as inconsistências são tratadas como sujeira real.

@@ -31,7 +31,7 @@ export async function preencherLinkEntrega(
     .from("erros_importacao")
     .update({ resolvido: true, resolvido_por: user.id, resolvido_em: new Date().toISOString() })
     .eq("entrega_id", entregaId)
-    .eq("codigo", "sem_link");
+    .in("codigo", ["sem_link", "link_textual"]);
 
   revalidatePath("/revisao");
   revalidatePath(`/entregas/${entregaId}`);
