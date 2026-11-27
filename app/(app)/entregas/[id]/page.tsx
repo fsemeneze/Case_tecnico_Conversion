@@ -209,14 +209,16 @@ export default async function DetalheEntrega({
             <span className={`badge tom-${situ.tom}`}>{situ.rotulo}</span>{" "}
             <span className="badge tom-info">{entrega.fase_rotulo}</span>
           </p>
-          {!podeEditar && (
-            <AlterarSituacao
-              entregaId={entrega.id}
-              faseAtualId={entrega.fase_id}
-              faseAtualCodigo={entrega.fase}
-              fases={fases ?? []}
-            />
-          )}
+          {/* O controle de situação aparece para todos os papéis que o banco
+              autoriza (alterar_fase_entrega): admin/gestor mudam a situação de
+              qualquer cliente/squad; operador, só do próprio. A fase final
+              (aprovada/entregue) é bloqueada na função e no componente. */}
+          <AlterarSituacao
+            entregaId={entrega.id}
+            faseAtualId={entrega.fase_id}
+            faseAtualCodigo={entrega.fase}
+            fases={fases ?? []}
+          />
           <ul className="lista-chave">
             <li>
               <span>Prazo</span>
