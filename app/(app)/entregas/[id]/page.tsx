@@ -54,6 +54,7 @@ export default async function DetalheEntrega({
     .eq("id", user?.id ?? "")
     .maybeSingle();
   const podeEditar = perfil?.papel === "admin" || perfil?.papel === "gestor";
+  const podeGerarLink = podeEditar;
   const { data: fases } = await supabase
     .from("fases")
     .select("id, codigo, rotulo")
@@ -255,6 +256,9 @@ export default async function DetalheEntrega({
           <h2>Aprovação em 2 etapas</h2>
           <p className="muted">
             O cliente não tem login: recebe um link de uso único por etapa.
+            {podeGerarLink
+              ? ""
+              : " A geração do link é feita pelo admin ou gestor do squad."}
           </p>
 
           <div className="etapas-aprovacao">
@@ -265,7 +269,7 @@ export default async function DetalheEntrega({
                   {ROTULO_APROVACAO[entrega.aprovacao_planejamento]}
                 </span>
               </p>
-              {planejamentoAberto && (
+              {podeGerarLink && planejamentoAberto && (
                 <form action={gerarLinkAprovacao}>
                   <input type="hidden" name="entrega_id" value={entrega.id} />
                   <input type="hidden" name="etapa" value="planejamento" />
@@ -282,7 +286,7 @@ export default async function DetalheEntrega({
                   {ROTULO_APROVACAO[entrega.aprovacao_entrega]}
                 </span>
               </p>
-              {entregaAberta && (
+              {podeGerarLink && entregaAberta && (
                 <form action={gerarLinkAprovacao}>
                   <input type="hidden" name="entrega_id" value={entrega.id} />
                   <input type="hidden" name="etapa" value="entrega" />
