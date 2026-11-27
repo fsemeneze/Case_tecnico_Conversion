@@ -230,7 +230,7 @@ export default async function DetalheEntrega({
               <form action={gerarLinkAprovacao}>
                 <input type="hidden" name="entrega_id" value={entrega.id} />
                 <input type="hidden" name="etapa" value="planejamento" />
-                <button type="submit" className="secundario">
+                <button type="submit" className="botao primario">
                   Gerar link de planejamento
                 </button>
               </form>
@@ -245,7 +245,7 @@ export default async function DetalheEntrega({
               <form action={gerarLinkAprovacao}>
                 <input type="hidden" name="entrega_id" value={entrega.id} />
                 <input type="hidden" name="etapa" value="entrega" />
-                <button type="submit" className="secundario">
+                <button type="submit" className="botao primario">
                   Gerar link de entrega
                 </button>
               </form>

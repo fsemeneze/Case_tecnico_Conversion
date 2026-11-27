@@ -78,11 +78,13 @@ export default async function DetalheCliente({
         <div className="cartao">
           <h2>Acompanhamento</h2>
           <p className="muted">
-            Gera um link somente leitura (90 dias) com todas as entregas deste cliente.
+            Gera um link somente leitura (90 dias) com todas as entregas deste
+            cliente. O cliente recebe o link por e-mail quando tem endereço
+            cadastrado.
           </p>
           <form action={gerarAcessoCliente}>
             <input type="hidden" name="cliente_id" value={cliente.id} />
-            <button type="submit" className="secundario">
+            <button type="submit" className="botao primario">
               Gerar link de acompanhamento
             </button>
           </form>
