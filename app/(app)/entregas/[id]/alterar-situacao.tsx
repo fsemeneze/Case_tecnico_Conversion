@@ -7,10 +7,12 @@ import { alterarFaseEntrega } from "../actions";
 export function AlterarSituacao({
   entregaId,
   faseAtualId,
+  faseAtualCodigo,
   fases,
 }: {
   entregaId: number;
   faseAtualId: number;
+  faseAtualCodigo: string;
   fases: { id: number; codigo: string; rotulo: string }[];
 }) {
   const router = useRouter();
@@ -18,6 +20,11 @@ export function AlterarSituacao({
   const [erro, setErro] = useState<string | null>(null);
   const [pendente, setPendente] = useState(false);
   const [salvo, setSalvo] = useState(false);
+
+  // Entrega aprovada/entregue não muda mais de situação: a decisão do
+  // cliente é final. Voltar exige cancelar via fila de encerramento ou
+  // recusar por novo link — não um clique no seletor.
+  const bloqueada = ["aprovada", "entregue"].includes(faseAtualCodigo);
 
   async function enviar(e: React.FormEvent) {
     e.preventDefault();
@@ -34,6 +41,15 @@ export function AlterarSituacao({
   }
 
   if (salvo) return <span className="muted">Situação atualizada.</span>;
+
+  if (bloqueada) {
+    return (
+      <p className="muted">
+        Situação final — a entrega foi {faseAtualCodigo === "aprovada" ? "aprovada" : "entregue"}.
+        Não é possível alterar manualmente.
+      </p>
+    );
+  }
 
   return (
     <form onSubmit={enviar} className="form-linha">
