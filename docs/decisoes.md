@@ -265,6 +265,19 @@ premissas. Confirmar uma a uma não muda o dado.
 preenchido à mão e pode ficar para trás. A linha original segue preservada em
 `origem_linha` (D4).
 
+## D23. Entrega aprovada implica planejamento aprovado
+
+**Decisão:** se a entrega foi aprovada (fase aprovada ou aprovação de entrega
+aprovada/com ressalvas), o planejamento é tratado como aprovado. Padronizado na
+migration 0036: 7 entregas com planejamento "não informado" foram normalizadas,
+e um trigger mantém a regra nas próximas atualizações.
+
+**Exceções preservadas:** `nao_aplica` (D6 — relatório não tem planejamento) e
+`recusada` (decisão real do cliente, com o histórico guardando a recusa).
+
+**Por quê:** sem a regra, uma entrega aprovada podia aparecer com planejamento
+"pendente" ou "não informado" — contradição que confundia filtro e leitura.
+
 ## Premissas
 
 1. Os dados são fictícios, mas as inconsistências são tratadas como sujeira real.
