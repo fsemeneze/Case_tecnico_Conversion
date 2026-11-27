@@ -79,21 +79,29 @@ export async function cadastrarEntrega(
         ? "Artigo"
         : null);
 
-  const [tipo, fase, decisao, origem] = await Promise.all([
-    supabase
-      .from("tipos_entrega")
-      .select("id")
-      .eq("tipo", v.tipo)
-      .is("subtipo", subtipoBase)
-      .maybeSingle(),
+  // Subtipo inexistente na dimensão (ex.: digitado à mão, ou de outro tipo)
+  // cai no genérico — a entrega é cadastrada, não bloqueada (D9).
+  //
+  // O filtro `is` do PostgREST só aceita null/true/false: com um texto, a
+  // requisição falha no parse ("failed to parse filter") e volta vazia —
+  // igualdade de texto é `eq`. Só o nulo continua em `is`.
+  const buscaTipoId = async (subtipo: string | null): Promise<number | null> => {
+    const consulta = supabase.from("tipos_entrega").select("id").eq("tipo", v.tipo);
+    const { data } = await (subtipo === null
+      ? consulta.is("subtipo", null)
+      : consulta.eq("subtipo", subtipo)
+    ).maybeSingle();
+    return data?.id ?? null;
+  };
+
+  const [fase, decisao, origem, tipoPrimeiro] = await Promise.all([
     supabase.from("fases").select("id").eq("codigo", "solicitada").single(),
     supabase.from("decisoes_aprovacao").select("id").eq("codigo", "pendente").single(),
     supabase.from("origens").select("id").eq("codigo", "app").single(),
+    buscaTipoId(subtipoBase),
   ]);
 
-  // Subtipo inexistente na dimensão (ex.: digitado à mão, ou de outro tipo)
-  // cai no genérico — a entrega é cadastrada, não bloqueada (D9).
-  let tipoId = tipo.data?.id ?? null;
+  let tipoId = tipoPrimeiro;
   if (!tipoId) {
     const generico =
       v.tipo === "Análise"
@@ -102,14 +110,14 @@ export async function cadastrarEntrega(
           ? "Artigo"
           : null;
     if (generico !== subtipoBase) {
-      const { data: alternativo } = await supabase
-        .from("tipos_entrega")
-        .select("id")
-        .eq("tipo", v.tipo)
-        .is("subtipo", generico)
-        .maybeSingle();
-      tipoId = alternativo?.id ?? null;
+      tipoId = await buscaTipoId(generico);
     }
+  }
+
+  // Último recurso: a linha (tipo, subtipo null) — o "sem subtipo" nativo da
+  // dimensão (todo Relatório e toda Análise importada sem subtipo derivável).
+  if (!tipoId && subtipoBase !== null) {
+    tipoId = await buscaTipoId(null);
   }
 
   if (!tipoId || !fase.data || !decisao.data || !origem.data) {
