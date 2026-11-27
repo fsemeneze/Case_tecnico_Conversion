@@ -176,7 +176,7 @@ export default async function DetalheEntrega({
               <strong>{entrega.data_entrega ?? "—"}</strong>
             </li>
             <li>
-              <span>Atraso (D8)</span>
+              <span>Atraso</span>
               <strong>
                 {entrega.dias_atraso === null ? "—" : `${entrega.dias_atraso} dia(s)`}
               </strong>

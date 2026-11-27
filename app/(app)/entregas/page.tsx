@@ -176,7 +176,7 @@ export default async function ListaEntregas({
       <p className="muted resumo">
         {total} entrega{total === 1 ? "" : "s"}
         {temFiltro ? " com os filtros aplicados" : ""} · atraso pela definição
-        única (D8): concluída após o prazo ou em aberto com prazo vencido.
+        única: concluída após o prazo ou em aberto com prazo vencido.
       </p>
 
       <div className="tabela-wrap">

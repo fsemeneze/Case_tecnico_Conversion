@@ -149,7 +149,7 @@ export default async function Dashboard({
               </span>
             </div>
           ))}
-          <p className="muted">Taxa = atrasadas (D8) sobre o total de cada tipo.</p>
+          <p className="muted">Taxa = atrasadas sobre o total de cada tipo.</p>
         </section>
 
         <section className="cartao">
