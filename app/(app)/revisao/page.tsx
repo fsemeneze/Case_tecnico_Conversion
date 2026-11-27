@@ -79,9 +79,12 @@ export default async function Revisao({ searchParams }: { searchParams: Promise<
     .order("codigo")
     .limit(200);
 
+  // O seletor de tipos conta só o que está pendente: código sem pendência
+  // não deve aparecer como se ainda houvesse trabalho.
   const { data: contagem } = await supabase
     .from("erros_importacao")
-    .select("codigo");
+    .select("codigo")
+    .eq("resolvido", false);
 
   const porCodigo = new Map<string, number>();
   for (const linha of contagem ?? []) {
