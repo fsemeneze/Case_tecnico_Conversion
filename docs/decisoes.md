@@ -250,6 +250,21 @@ na própria entrega.
 **Por quê:** são regras determinísticas (título → tipo; número → revisão), não
 premissas. Confirmar uma a uma não muda o dado.
 
+## D22. Observação do cliente prevalece sobre o status
+
+**Decisão:** quando a coluna `observacoes` registra um fato do cliente e o
+`status` não acompanhou, vale a observação. Aplicado em dois casos:
+
+- **Cancelamento** — "cliente cancelou", "CANCELADO pelo cliente em reunião",
+  "suspenso - cliente pediu pra parar": 22 entregas em fase `cancelada`,
+  com evento no histórico.
+- **Prazo renegociado** — "prazo renegociado com o cliente para DD/MM": 26
+  entregas com `data_prevista` atualizado para a data combinada.
+
+**Por quê:** a observação é o registro do que o cliente decidiu; o status é
+preenchido à mão e pode ficar para trás. A linha original segue preservada em
+`origem_linha` (D4).
+
 ## Premissas
 
 1. Os dados são fictícios, mas as inconsistências são tratadas como sujeira real.
